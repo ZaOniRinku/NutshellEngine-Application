@@ -9,7 +9,7 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Entity camera = ecs->createEntity();
 
 	NtshEngn::Transform& cameraTransform = ecs->getComponent<NtshEngn::Transform>(camera);
-	cameraTransform.position = { 0.0f, 2.0f, 5.0f };
+	cameraTransform.position = { 0.0f, 200.0f, 0.0f };
 	cameraTransform.rotation = { 0.0f, 0.0f, -1.0f };
 
 	NtshEngn::Camera cameraCamera;
