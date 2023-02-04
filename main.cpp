@@ -1,9 +1,21 @@
 #include "external/Core/src/ntshengn_core.h"
 #include "scripts/camerascript.h"
+#include "scripts/rootscript.h"
 
 void scene(NtshEngn::Core& core) {
 	NtshEngn::ECS* ecs = core.getECS();
 	NtshEngn::AssetManager* assetManager = core.getAssetManager();
+
+	// Create the root
+	NtshEngn::Entity root = ecs->createEntity();
+
+	NtshEngn::Transform& rootTransform = ecs->getComponent<NtshEngn::Transform>(root);
+	rootTransform.position = { 0.0f, 0.0f, 0.0f };
+	rootTransform.rotation = { 0.0f, 0.0f, 0.0f };
+
+	NtshEngn::Scriptable rootScriptable;
+	rootScriptable.script = std::make_unique<RootScript>();
+	ecs->addComponent(root, rootScriptable);
 
 	// Create the camera
 	NtshEngn::Entity camera = ecs->createEntity();
