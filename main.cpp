@@ -22,12 +22,16 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Entity root = ecs->createEntity();
 
 	NtshEngn::Transform& rootTransform = ecs->getComponent<NtshEngn::Transform>(root);
-	rootTransform.position = { 0.0f, 0.0f, 0.0f };
-	rootTransform.rotation = { 0.0f, 0.0f, 0.0f };
+	rootTransform.position = { 0.0f, 0.0f, 0.0f }; // Center
+	rootTransform.rotation = { -100.0f, 0.0f, 0.0f }; // Head
+	rootTransform.scale = { 100.0f, 0.0f, 0.0f }; // Tail
 
 	NtshEngn::Scriptable rootScriptable;
 	rootScriptable.script = std::make_unique<RootScript>();
 	ecs->addComponent(root, rootScriptable);
+
+	NtshEngn::Renderable rootRenderable;
+	ecs->addComponent(root, rootRenderable);
 }
 
 int main() {
