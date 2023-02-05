@@ -1,6 +1,7 @@
 #include "external/Core/src/ntshengn_core.h"
 #include "scripts/camerascript.h"
 #include "scripts/rootscript.h"
+#include <random>
 
 void scene(NtshEngn::Core& core) {
 	NtshEngn::ECS* ecs = core.getECS();
@@ -32,6 +33,42 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Renderable rootRenderable;
 	ecs->addComponent(root, rootRenderable);
+
+	NtshEngn::SphereCollidable rootCollidable;
+	rootCollidable.collider.center = rootTransform.rotation;
+	rootCollidable.collider.radius = 10.0f;
+	ecs->addComponent(root, rootCollidable);
+
+	// Lights
+	std::vector<nml::vec2> lightPositions;
+	std::vector<nml::vec3> lightColors;
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> pos(-10000.0f, 10000.0f);
+	std::uniform_real_distribution<float> col(0.0f, 1.0f);
+	for (size_t i = 0; i < 25; i++) {
+		lightPositions.push_back({ pos(gen), pos(gen) });
+		lightColors.push_back({ col(gen), col(gen), col(gen) });
+	}
+
+	NtshEngn::AABBCollidable lightAABB;
+	lightAABB.collider.min = { -10.0f, -10.0f, -10.0f };
+	lightAABB.collider.max = { 10.0f, 10.0f, 10.0f };
+
+	for (size_t i = 0; i < lightPositions.size(); i++) {
+		NtshEngn::Entity light = ecs->createEntity();
+
+		NtshEngn::Transform& lightTransform = ecs->getComponent<NtshEngn::Transform>(light);
+		lightTransform.position[0] = lightPositions[i].x;
+		lightTransform.position[1] = 10.0f;
+		lightTransform.position[2] = lightPositions[i].y;
+		lightTransform.rotation[0] = lightColors[i].x;
+		lightTransform.rotation[1] = lightColors[i].y;
+		lightTransform.rotation[2] = lightColors[i].z;
+
+		ecs->addComponent(light, lightAABB);
+	}
 }
 
 int main() {
@@ -39,6 +76,7 @@ int main() {
 
 	// Initialize
 	core.init();
+	core.getWindowModule()->setTitle(NTSHENGN_MAIN_WINDOW, "The Origin of Light");
 
 	// Scene
 	scene(core);
