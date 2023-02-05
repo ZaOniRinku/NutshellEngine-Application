@@ -6,6 +6,9 @@ struct RootScript : NtshEngn::Script {
 	NTSHENGN_SCRIPT(RootScript);
 
 	void init() {
+		NtshEngn::Sound* lightGetSound = assetManager->loadSound("light_get.wav");
+		m_lightGet = audioModule->load(*lightGetSound);
+		audioModule->setPitch(m_lightGet, m_pitch);
 	}
 
 	void update(double dt) {
@@ -55,6 +58,9 @@ struct RootScript : NtshEngn::Script {
 						const float distance = (otherPosition - headPosition).length();
 						if (distance < 100.0f) {
 							m_entitiesToDestroy.push_back(other);
+							m_pitch += 0.5f / 25.0f;
+							audioModule->setPitch(m_lightGet, m_pitch);
+							audioModule->play(m_lightGet);
 						}
 					}
 				}
@@ -80,4 +86,7 @@ private:
 	const NtshEngn::Entity m_camera = 0;
 
 	std::vector<NtshEngn::Entity> m_entitiesToDestroy;
+
+	NtshEngn::SoundId m_lightGet;
+	float m_pitch = 0.5f;
 };
