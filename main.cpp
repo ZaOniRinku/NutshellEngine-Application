@@ -86,6 +86,42 @@ void scene(NtshEngn::Core& core) {
 	cubeRenderable.mesh = &cubeMesh->primitives[0].first;
 	cubeRenderable.material = &cubeMesh->primitives[0].second;
 	ecs->addComponent(cube, cubeRenderable);
+
+	// Create lights
+	// Directional Light
+	NtshEngn::Entity light = ecs->createEntity();
+
+	NtshEngn::Transform& lightTransform = ecs->getComponent<NtshEngn::Transform>(light);
+	lightTransform.rotation = { 0.0f, -1.0f, 1.0f };
+
+	NtshEngn::Light lightLight;
+	lightLight.type = NtshEngn::LightType::Directional;
+	lightLight.color = { 0.0f, 0.0f, 1.0f };
+	ecs->addComponent(light, lightLight);
+
+	// Point Light
+	NtshEngn::Entity light2 = ecs->createEntity();
+
+	NtshEngn::Transform& light2Transform = ecs->getComponent<NtshEngn::Transform>(light2);
+	light2Transform.position = { -2.0f, 0.0f, 0.0f };
+
+	NtshEngn::Light light2Light;
+	light2Light.type = NtshEngn::LightType::Point;
+	light2Light.color = { 0.0f, 1.0f, 0.0f };
+	ecs->addComponent(light2, light2Light);
+
+	// Spot Light
+	NtshEngn::Entity light3 = ecs->createEntity();
+
+	NtshEngn::Transform& light3Transform = ecs->getComponent<NtshEngn::Transform>(light3);
+	light3Transform.position = { 0.0f, 1.25f, 0.0f };
+	light3Transform.rotation = { 0.0f, -1.0f, 0.0f };
+	light3Transform.scale = { 60.0f * 3.1415926535897932384626433832795f / 180.0f, 100.0f * 3.1415926535897932384626433832795f / 180.0f, 0.0f };
+
+	NtshEngn::Light light3Light;
+	light3Light.type = NtshEngn::LightType::Spot;
+	light3Light.color = { 1.0f, 0.0f, 0.0f };
+	ecs->addComponent(light3, light3Light);
 }
 
 int main() {
