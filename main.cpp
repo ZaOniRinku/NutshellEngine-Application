@@ -1,6 +1,45 @@
 #include "external/Core/src/ntshengn_core.h"
 #include "scripts/camerascript.h"
 
+void calculateTangents(NtshEngn::Mesh& mesh) {
+	std::vector<nml::vec3> tan1(mesh.vertices.size());
+	std::vector<nml::vec3> tan2(mesh.vertices.size());
+	for (size_t i = 0; i < mesh.indices.size(); i += 3) {
+		NtshEngn::Vertex& vertex0 = mesh.vertices[mesh.indices[i]];
+		NtshEngn::Vertex& vertex1 = mesh.vertices[mesh.indices[i + 1]];
+		NtshEngn::Vertex& vertex2 = mesh.vertices[mesh.indices[i + 2]];
+
+		const nml::vec3 dPos1 = nml::vec3(vertex1.position.data()) - nml::vec3(vertex0.position.data());
+		const nml::vec3 dPos2 = nml::vec3(vertex2.position.data()) - nml::vec3(vertex0.position.data());
+
+		const nml::vec2 dUV1 = nml::vec2(vertex1.uv.data()) - nml::vec2(vertex0.uv.data());
+		const nml::vec2 dUV2 = nml::vec2(vertex2.uv.data()) - nml::vec2(vertex0.uv.data());
+
+		const float r = 1.0f / (dUV1.x * dUV2.y - dUV1.y * dUV2.x);
+
+		const nml::vec3 uDir = (dPos1 * dUV2.y - dPos2 * dUV1.y) * r;
+		const nml::vec3 vDir = (dPos2 * dUV1.x - dPos1 * dUV2.x) * r;
+
+		tan1[mesh.indices[i]] += uDir;
+		tan1[mesh.indices[i + 1]] += uDir;
+		tan1[mesh.indices[i + 2]] += uDir;
+
+		tan2[mesh.indices[i]] += vDir;
+		tan2[mesh.indices[i + 1]] += vDir;
+		tan2[mesh.indices[i + 2]] += vDir;
+	}
+
+	for (size_t i = 0; i < mesh.vertices.size(); i++) {
+		const nml::vec3 n = mesh.vertices[i].normal.data();
+		const nml::vec3 t = tan1[i].data();
+
+		const nml::vec4 tangent = nml::vec4(nml::normalize(t - n * nml::dot(n, t)),
+			(nml::dot(nml::cross(n, t), tan2[i]) < 0.0f) ? -1.0f : 1.0f);
+
+		mesh.vertices[i].tangent = { tangent.x, tangent.y, tangent.z, tangent.w };
+	}
+}
+
 void scene(NtshEngn::Core& core) {
 	NtshEngn::ECS* ecs = core.getECS();
 	NtshEngn::AssetManager* assetManager = core.getAssetManager();
@@ -65,6 +104,7 @@ void scene(NtshEngn::Core& core) {
 	20, 21, 22,
 	20, 22, 23
 	};
+	calculateTangents(cubeMesh->primitives[0].first);
 
 	NtshEngn::Image* cubeTexture = assetManager->createImage();
 	cubeTexture->width = 30;
