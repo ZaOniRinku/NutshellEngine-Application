@@ -165,15 +165,63 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Transform& leftCubeTransform = ecs->getComponent<NtshEngn::Transform>(leftCube);
 	leftCubeTransform.position[0] = -0.75f;
-	leftCubeTransform.position[1] = -1.5f;
+	leftCubeTransform.position[1] = -1.0f;
 	leftCubeTransform.position[2] = -0.5f;
 	leftCubeTransform.rotation[1] = -45.0f * toRad;
 	leftCubeTransform.scale = { 0.5f, 1.0f, 0.5f };
 
-	NtshEngn::Renderable cubeRenderable;
-	cubeRenderable.mesh = &cubeMesh->primitives[0].first;
-	cubeRenderable.material = &cubeMesh->primitives[0].second;
-	ecs->addComponent(leftCube, cubeRenderable);
+	NtshEngn::Image* leftCubeImage = assetManager->createImage();
+	leftCubeImage->width = 1;
+	leftCubeImage->height = 1;
+	leftCubeImage->format = NtshEngn::ImageFormat::R8G8B8A8;
+	leftCubeImage->colorSpace = NtshEngn::ImageColorSpace::SRGB;
+	leftCubeImage->data = { 0, 0, 255, 255 };
+
+	NtshEngn::Image* leftCubeORM = assetManager->createImage();
+	leftCubeORM->width = 1;
+	leftCubeORM->height = 1;
+	leftCubeORM->format = NtshEngn::ImageFormat::R8G8B8A8;
+	leftCubeORM->colorSpace = NtshEngn::ImageColorSpace::Linear;
+	leftCubeORM->data = { 255, 255, 255, 255 };
+
+	NtshEngn::Material leftCubeMaterial;
+	leftCubeMaterial.diffuseTexture.first = leftCubeImage;
+	leftCubeMaterial.diffuseTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.diffuseTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.diffuseTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.diffuseTexture.second.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.diffuseTexture.second.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.diffuseTexture.second.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.diffuseTexture.second.anisotropyLevel = 0.0f;
+	leftCubeMaterial.occlusionTexture.first = leftCubeORM;
+	leftCubeMaterial.occlusionTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.occlusionTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.occlusionTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.occlusionTexture.second.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.occlusionTexture.second.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.occlusionTexture.second.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.occlusionTexture.second.anisotropyLevel = 0.0f;
+	leftCubeMaterial.roughnessTexture.first = leftCubeORM;
+	leftCubeMaterial.roughnessTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.roughnessTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.roughnessTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.roughnessTexture.second.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.roughnessTexture.second.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.roughnessTexture.second.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.roughnessTexture.second.anisotropyLevel = 0.0f;
+	leftCubeMaterial.metalnessTexture.first = leftCubeORM;
+	leftCubeMaterial.metalnessTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.metalnessTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.metalnessTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.metalnessTexture.second.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.metalnessTexture.second.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.metalnessTexture.second.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.metalnessTexture.second.anisotropyLevel = 0.0f;
+
+	NtshEngn::Renderable leftCubeRenderable;
+	leftCubeRenderable.mesh = &cubeMesh->primitives[0].first;
+	leftCubeRenderable.material = &leftCubeMaterial;
+	ecs->addComponent(leftCube, leftCubeRenderable);
 
 	// right cube
 	NtshEngn::Entity rightCube = ecs->createEntity();
@@ -185,7 +233,10 @@ void scene(NtshEngn::Core& core) {
 	rightCubeTransform.rotation[1] = 45.0f * toRad;
 	rightCubeTransform.scale = { 0.5f, 0.5f, 0.5f };
 
-	ecs->addComponent(rightCube, cubeRenderable);
+	NtshEngn::Renderable rightCubeRenderable;
+	rightCubeRenderable.mesh = &cubeMesh->primitives[0].first;
+	rightCubeRenderable.material = &cubeMesh->primitives[0].second;
+	ecs->addComponent(rightCube, rightCubeRenderable);
 
 	NtshEngn::Scriptable cubeScriptable;
 	cubeScriptable.script = std::make_unique<CubeScript>();
