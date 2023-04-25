@@ -41,6 +41,36 @@ void calculateTangents(NtshEngn::Mesh& mesh) {
 	}
 }
 
+std::array<nml::vec3, 2> getMeshMinMax(const NtshEngn::Mesh& mesh) {
+	nml::vec3 min = nml::vec3(std::numeric_limits<float>::max());
+	nml::vec3 max = nml::vec3(std::numeric_limits<float>::lowest());
+	for (const NtshEngn::Vertex& vertex : mesh.vertices) {
+		if (vertex.position[0] < min.x) {
+			min.x = vertex.position[0];
+		}
+		if (vertex.position[0] > max.x) {
+			max.x = vertex.position[0];
+		}
+
+		if (vertex.position[1] < min.y) {
+			min.y = vertex.position[1];
+		}
+		if (vertex.position[1] > max.y) {
+			max.y = vertex.position[1];
+		}
+
+		if (vertex.position[2] < min.z) {
+			min.z = vertex.position[2];
+		}
+		if (vertex.position[2] > max.z) {
+			max.z = vertex.position[2];
+		}
+	}
+
+
+	return { min, max };
+}
+
 void scene(NtshEngn::Core& core) {
 	NtshEngn::ECS* ecs = core.getECS();
 	NtshEngn::AssetManager* assetManager = core.getAssetManager();
@@ -160,6 +190,11 @@ void scene(NtshEngn::Core& core) {
 	cubeMesh->primitives[0].second.metalnessTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	cubeMesh->primitives[0].second.metalnessTexture.second.anisotropyLevel = 0.0f;
 
+	std::array<nml::vec3, 2> cubeMeshAABB = getMeshMinMax(cubeMesh->primitives[0].first);
+	NtshEngn::AABBCollidable cubeCollidable;
+	cubeCollidable.collider.min = { cubeMeshAABB[0].x, cubeMeshAABB[0].y, cubeMeshAABB[0].z };
+	cubeCollidable.collider.max = { cubeMeshAABB[1].x, cubeMeshAABB[1].y, cubeMeshAABB[1].z };
+
 	// left cube
 	NtshEngn::Entity leftCube = ecs->createEntity();
 
@@ -223,6 +258,8 @@ void scene(NtshEngn::Core& core) {
 	leftCubeRenderable.material = &leftCubeMaterial;
 	ecs->addComponent(leftCube, leftCubeRenderable);
 
+	ecs->addComponent(leftCube, cubeCollidable);
+
 	// right cube
 	NtshEngn::Entity rightCube = ecs->createEntity();
 
@@ -242,6 +279,8 @@ void scene(NtshEngn::Core& core) {
 	cubeScriptable.script = std::make_unique<CubeScript>();
 	ecs->addComponent(rightCube, cubeScriptable);
 
+	ecs->addComponent(rightCube, cubeCollidable);
+
 	// Create a plane model
 	NtshEngn::Model* planeMesh = assetManager->createModel();
 	planeMesh->primitives.resize(1);
@@ -256,6 +295,11 @@ void scene(NtshEngn::Core& core) {
 	0, 2, 3
 	};
 	calculateTangents(planeMesh->primitives[0].first);
+
+	std::array<nml::vec3, 2> planeMeshAABB = getMeshMinMax(planeMesh->primitives[0].first);
+	NtshEngn::AABBCollidable planeCollidable;
+	planeCollidable.collider.min = { planeMeshAABB[0].x, planeMeshAABB[0].y, planeMeshAABB[0].z };
+	planeCollidable.collider.max = { planeMeshAABB[1].x, planeMeshAABB[1].y, planeMeshAABB[1].z };
 
 	// Create a plane Entity
 	// bot
@@ -284,6 +328,8 @@ void scene(NtshEngn::Core& core) {
 	botPlaneRenderable.material = &botPlaneMaterial;
 	ecs->addComponent(botPlane, botPlaneRenderable);
 
+	ecs->addComponent(botPlane, planeCollidable);
+
 	// top
 	NtshEngn::Entity topPlane = ecs->createEntity();
 
@@ -293,6 +339,8 @@ void scene(NtshEngn::Core& core) {
 	topPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
 
 	ecs->addComponent(topPlane, botPlaneRenderable);
+
+	ecs->addComponent(topPlane, planeCollidable);
 	
 	// Back
 	NtshEngn::Entity backPlane = ecs->createEntity();
@@ -304,6 +352,8 @@ void scene(NtshEngn::Core& core) {
 	backPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
 
 	ecs->addComponent(backPlane, botPlaneRenderable);
+
+	ecs->addComponent(backPlane, planeCollidable);
 
 	// Left
 	NtshEngn::Entity leftPlane = ecs->createEntity();
@@ -333,6 +383,8 @@ void scene(NtshEngn::Core& core) {
 	leftPlaneRenderable.mesh = &planeMesh->primitives[0].first;
 	leftPlaneRenderable.material = &leftPlaneMaterial;
 	ecs->addComponent(leftPlane, leftPlaneRenderable);
+
+	ecs->addComponent(leftPlane, planeCollidable);
 
 	// Right
 	NtshEngn::Entity rightPlane = ecs->createEntity();
