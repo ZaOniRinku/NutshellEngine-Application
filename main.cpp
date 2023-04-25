@@ -45,11 +45,13 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::ECS* ecs = core.getECS();
 	NtshEngn::AssetManager* assetManager = core.getAssetManager();
 
+	const float toRad = 3.1415926535897932384626433832795f / 180.0f;
+
 	// Create the camera
 	NtshEngn::Entity camera = ecs->createEntity();
 
 	NtshEngn::Transform& cameraTransform = ecs->getComponent<NtshEngn::Transform>(camera);
-	cameraTransform.position = { 0.0f, 2.0f, 5.0f };
+	cameraTransform.position = { 0.0f, 0.0f, 7.0f };
 	cameraTransform.rotation = { 0.0f, 0.0f, -1.0f };
 
 	NtshEngn::Camera cameraCamera;
@@ -158,17 +160,36 @@ void scene(NtshEngn::Core& core) {
 	cubeMesh->primitives[0].second.metalnessTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	cubeMesh->primitives[0].second.metalnessTexture.second.anisotropyLevel = 0.0f;
 
-	// Create a cube Entity
-	NtshEngn::Entity cube = ecs->createEntity();
+	// left cube
+	NtshEngn::Entity leftCube = ecs->createEntity();
+
+	NtshEngn::Transform& leftCubeTransform = ecs->getComponent<NtshEngn::Transform>(leftCube);
+	leftCubeTransform.position[0] = -0.75f;
+	leftCubeTransform.position[1] = -1.5f;
+	leftCubeTransform.position[2] = -0.5f;
+	leftCubeTransform.rotation[1] = -45.0f * toRad;
+	leftCubeTransform.scale = { 0.5f, 1.0f, 0.5f };
 
 	NtshEngn::Renderable cubeRenderable;
 	cubeRenderable.mesh = &cubeMesh->primitives[0].first;
 	cubeRenderable.material = &cubeMesh->primitives[0].second;
-	ecs->addComponent(cube, cubeRenderable);
+	ecs->addComponent(leftCube, cubeRenderable);
+
+	// right cube
+	NtshEngn::Entity rightCube = ecs->createEntity();
+
+	NtshEngn::Transform& rightCubeTransform = ecs->getComponent<NtshEngn::Transform>(rightCube);
+	rightCubeTransform.position[0] = 0.75f;
+	rightCubeTransform.position[1] = -1.5f;
+	rightCubeTransform.position[2] = 0.5f;
+	rightCubeTransform.rotation[1] = 45.0f * toRad;
+	rightCubeTransform.scale = { 0.5f, 0.5f, 0.5f };
+
+	ecs->addComponent(rightCube, cubeRenderable);
 
 	NtshEngn::Scriptable cubeScriptable;
 	cubeScriptable.script = std::make_unique<CubeScript>();
-	ecs->addComponent(cube, cubeScriptable);
+	ecs->addComponent(rightCube, cubeScriptable);
 
 	// Create a plane model
 	NtshEngn::Model* planeMesh = assetManager->createModel();
@@ -186,52 +207,118 @@ void scene(NtshEngn::Core& core) {
 	calculateTangents(planeMesh->primitives[0].first);
 
 	// Create a plane Entity
-	NtshEngn::Entity plane = ecs->createEntity();
+	// bot
+	NtshEngn::Entity botPlane = ecs->createEntity();
 
-	NtshEngn::Transform& planeTransform = ecs->getComponent<NtshEngn::Transform>(plane);
-	planeTransform.position[1] = -2.0f;
-	planeTransform.scale = { 3.0f, 3.0f, 3.0f };
+	NtshEngn::Transform& botPlaneTransform = ecs->getComponent<NtshEngn::Transform>(botPlane);
+	botPlaneTransform.position[1] = -2.0f;
+	botPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
 
-	NtshEngn::Renderable planeRenderable;
-	planeRenderable.mesh = &planeMesh->primitives[0].first;
-	planeRenderable.material = &cubeMesh->primitives[0].second;
-	ecs->addComponent(plane, planeRenderable);
+	NtshEngn::Image* botPlaneImage = assetManager->createImage();
+	botPlaneImage->width = 1;
+	botPlaneImage->height = 1;
+	botPlaneImage->format = NtshEngn::ImageFormat::R8G8B8A8;
+	botPlaneImage->colorSpace = NtshEngn::ImageColorSpace::SRGB;
+	botPlaneImage->data = { 255, 255, 255, 255 };
 
-	// Create lights
-	// Directional Light
+	NtshEngn::Material botPlaneMaterial;
+	botPlaneMaterial.diffuseTexture.first = botPlaneImage;
+	botPlaneMaterial.diffuseTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	botPlaneMaterial.diffuseTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	botPlaneMaterial.diffuseTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	botPlaneMaterial.diffuseTexture.second.anisotropyLevel = 0.0f;
+
+	NtshEngn::Renderable botPlaneRenderable;
+	botPlaneRenderable.mesh = &planeMesh->primitives[0].first;
+	botPlaneRenderable.material = &botPlaneMaterial;
+	ecs->addComponent(botPlane, botPlaneRenderable);
+
+	// top
+	NtshEngn::Entity topPlane = ecs->createEntity();
+
+	NtshEngn::Transform& topPlaneTransform = ecs->getComponent<NtshEngn::Transform>(topPlane);
+	topPlaneTransform.position[1] = 2.0f;
+	topPlaneTransform.rotation[0] = 180.0f * toRad;
+	topPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
+
+	ecs->addComponent(topPlane, botPlaneRenderable);
+	
+	// Back
+	NtshEngn::Entity backPlane = ecs->createEntity();
+
+	NtshEngn::Transform& backPlaneTransform = ecs->getComponent<NtshEngn::Transform>(backPlane);
+	backPlaneTransform.position[1] = 0.0f;
+	backPlaneTransform.position[2] = -2.0f;
+	backPlaneTransform.rotation[0] = 90.0f * toRad;
+	backPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
+
+	ecs->addComponent(backPlane, botPlaneRenderable);
+
+	// Left
+	NtshEngn::Entity leftPlane = ecs->createEntity();
+
+	NtshEngn::Transform& leftPlaneTransform = ecs->getComponent<NtshEngn::Transform>(leftPlane);
+	leftPlaneTransform.position[0] = -2.0f;
+	leftPlaneTransform.position[1] = 0.0f;
+	leftPlaneTransform.rotation[0] = 90.0f * toRad;
+	leftPlaneTransform.rotation[2] = 270.0f * toRad;
+	leftPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
+
+	NtshEngn::Image* leftPlaneImage = assetManager->createImage();
+	leftPlaneImage->width = 1;
+	leftPlaneImage->height = 1;
+	leftPlaneImage->format = NtshEngn::ImageFormat::R8G8B8A8;
+	leftPlaneImage->colorSpace = NtshEngn::ImageColorSpace::SRGB;
+	leftPlaneImage->data = { 255, 0, 0, 255 };
+
+	NtshEngn::Material leftPlaneMaterial;
+	leftPlaneMaterial.diffuseTexture.first = leftPlaneImage;
+	leftPlaneMaterial.diffuseTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftPlaneMaterial.diffuseTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftPlaneMaterial.diffuseTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftPlaneMaterial.diffuseTexture.second.anisotropyLevel = 0.0f;
+
+	NtshEngn::Renderable leftPlaneRenderable;
+	leftPlaneRenderable.mesh = &planeMesh->primitives[0].first;
+	leftPlaneRenderable.material = &leftPlaneMaterial;
+	ecs->addComponent(leftPlane, leftPlaneRenderable);
+
+	// Right
+	NtshEngn::Entity rightPlane = ecs->createEntity();
+
+	NtshEngn::Transform& rightPlaneTransform = ecs->getComponent<NtshEngn::Transform>(rightPlane);
+	rightPlaneTransform.position[0] = 2.0f;
+	rightPlaneTransform.position[1] = 0.0f;
+	rightPlaneTransform.rotation[0] = 90.0f * toRad;
+	rightPlaneTransform.rotation[2] = 90.0f * toRad;
+	rightPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
+
+	NtshEngn::Image* rightPlaneImage = assetManager->createImage();
+	rightPlaneImage->width = 1;
+	rightPlaneImage->height = 1;
+	rightPlaneImage->format = NtshEngn::ImageFormat::R8G8B8A8;
+	rightPlaneImage->colorSpace = NtshEngn::ImageColorSpace::SRGB;
+	rightPlaneImage->data = { 0, 255, 0, 255 };
+
+	NtshEngn::Material rightPlaneMaterial;
+	rightPlaneMaterial.diffuseTexture.first = rightPlaneImage;
+	rightPlaneMaterial.diffuseTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	rightPlaneMaterial.diffuseTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	rightPlaneMaterial.diffuseTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	rightPlaneMaterial.diffuseTexture.second.anisotropyLevel = 0.0f;
+
+	NtshEngn::Renderable rightPlaneRenderable;
+	rightPlaneRenderable.mesh = &planeMesh->primitives[0].first;
+	rightPlaneRenderable.material = &rightPlaneMaterial;
+	ecs->addComponent(rightPlane, rightPlaneRenderable);
+
+	// Light
 	NtshEngn::Entity light = ecs->createEntity();
 
-	NtshEngn::Transform& lightTransform = ecs->getComponent<NtshEngn::Transform>(light);
-	lightTransform.rotation = { 0.0f, -1.0f, 1.0f };
-
 	NtshEngn::Light lightLight;
-	lightLight.type = NtshEngn::LightType::Directional;
-	lightLight.color = { 0.0f, 0.0f, 1.0f };
+	lightLight.color = { 1.0f, 1.0f, 1.0f };
+	lightLight.type = NtshEngn::LightType::Point;
 	ecs->addComponent(light, lightLight);
-
-	// Point Light
-	NtshEngn::Entity light2 = ecs->createEntity();
-
-	NtshEngn::Transform& light2Transform = ecs->getComponent<NtshEngn::Transform>(light2);
-	light2Transform.position = { -2.0f, 0.0f, 0.0f };
-
-	NtshEngn::Light light2Light;
-	light2Light.type = NtshEngn::LightType::Point;
-	light2Light.color = { 0.0f, 1.0f, 0.0f };
-	ecs->addComponent(light2, light2Light);
-
-	// Spot Light
-	NtshEngn::Entity light3 = ecs->createEntity();
-
-	NtshEngn::Transform& light3Transform = ecs->getComponent<NtshEngn::Transform>(light3);
-	light3Transform.position = { 0.0f, 1.25f, 0.0f };
-	light3Transform.rotation = { 0.0f, -1.0f, 0.0f };
-	light3Transform.scale = { 60.0f * 3.1415926535897932384626433832795f / 180.0f, 100.0f * 3.1415926535897932384626433832795f / 180.0f, 0.0f };
-
-	NtshEngn::Light light3Light;
-	light3Light.type = NtshEngn::LightType::Spot;
-	light3Light.color = { 1.0f, 0.0f, 0.0f };
-	ecs->addComponent(light3, light3Light);
 }
 
 int main() {
