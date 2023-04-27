@@ -83,12 +83,18 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Transform& cameraTransform = ecs->getComponent<NtshEngn::Transform>(camera);
 	cameraTransform.position = { 0.0f, 0.0f, 7.0f };
 	cameraTransform.rotation = { 0.0f, 0.0f, -1.0f };
+	cameraTransform.scale = { 5.0f * toRad, 10.0f * toRad, 0.0f };
 
 	NtshEngn::Camera cameraCamera;
 	cameraCamera.fov = 45.0f;
 	cameraCamera.nearPlane = 0.03f;
 	cameraCamera.farPlane = 100.0f;
 	ecs->addComponent(camera, cameraCamera);
+
+	NtshEngn::Light cameraLight;
+	cameraLight.color = { 1.0f, 1.0f, 1.0f };
+	cameraLight.type = NtshEngn::LightType::Spot;
+	ecs->addComponent(camera, cameraLight);
 
 	NtshEngn::Scriptable cameraScriptable;
 	cameraScriptable.script = std::make_unique<CameraScript>();
@@ -415,13 +421,15 @@ void scene(NtshEngn::Core& core) {
 	rightPlaneRenderable.material = &rightPlaneMaterial;
 	ecs->addComponent(rightPlane, rightPlaneRenderable);
 
+	ecs->addComponent(rightPlane, planeCollidable);
+
 	// Light
-	NtshEngn::Entity light = ecs->createEntity();
+	/*NtshEngn::Entity light = ecs->createEntity();
 
 	NtshEngn::Light lightLight;
 	lightLight.color = { 1.0f, 1.0f, 1.0f };
 	lightLight.type = NtshEngn::LightType::Point;
-	ecs->addComponent(light, lightLight);
+	ecs->addComponent(light, lightLight);*/
 }
 
 int main() {
