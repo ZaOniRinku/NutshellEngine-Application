@@ -2,45 +2,6 @@
 #include "scripts/camerascript.h"
 #include "scripts/cubescript.h"
 
-void calculateTangents(NtshEngn::Mesh& mesh) {
-	std::vector<nml::vec3> tan1(mesh.vertices.size());
-	std::vector<nml::vec3> tan2(mesh.vertices.size());
-	for (size_t i = 0; i < mesh.indices.size(); i += 3) {
-		NtshEngn::Vertex& vertex0 = mesh.vertices[mesh.indices[i]];
-		NtshEngn::Vertex& vertex1 = mesh.vertices[mesh.indices[i + 1]];
-		NtshEngn::Vertex& vertex2 = mesh.vertices[mesh.indices[i + 2]];
-
-		const nml::vec3 dPos1 = nml::vec3(vertex1.position.data()) - nml::vec3(vertex0.position.data());
-		const nml::vec3 dPos2 = nml::vec3(vertex2.position.data()) - nml::vec3(vertex0.position.data());
-
-		const nml::vec2 dUV1 = nml::vec2(vertex1.uv.data()) - nml::vec2(vertex0.uv.data());
-		const nml::vec2 dUV2 = nml::vec2(vertex2.uv.data()) - nml::vec2(vertex0.uv.data());
-
-		const float r = 1.0f / (dUV1.x * dUV2.y - dUV1.y * dUV2.x);
-
-		const nml::vec3 uDir = (dPos1 * dUV2.y - dPos2 * dUV1.y) * r;
-		const nml::vec3 vDir = (dPos2 * dUV1.x - dPos1 * dUV2.x) * r;
-
-		tan1[mesh.indices[i]] += uDir;
-		tan1[mesh.indices[i + 1]] += uDir;
-		tan1[mesh.indices[i + 2]] += uDir;
-
-		tan2[mesh.indices[i]] += vDir;
-		tan2[mesh.indices[i + 1]] += vDir;
-		tan2[mesh.indices[i + 2]] += vDir;
-	}
-
-	for (size_t i = 0; i < mesh.vertices.size(); i++) {
-		const nml::vec3 n = mesh.vertices[i].normal.data();
-		const nml::vec3 t = tan1[i].data();
-
-		const nml::vec4 tangent = nml::vec4(nml::normalize(t - n * nml::dot(n, t)),
-			(nml::dot(nml::cross(n, t), tan2[i]) < 0.0f) ? -1.0f : 1.0f);
-
-		mesh.vertices[i].tangent = { tangent.x, tangent.y, tangent.z, tangent.w };
-	}
-}
-
 std::array<nml::vec3, 2> getMeshMinMax(const NtshEngn::Mesh& mesh) {
 	nml::vec3 min = nml::vec3(std::numeric_limits<float>::max());
 	nml::vec3 max = nml::vec3(std::numeric_limits<float>::lowest());
@@ -94,7 +55,7 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Light cameraLight;
 	cameraLight.color = { 1.0f, 1.0f, 1.0f };
 	cameraLight.type = NtshEngn::LightType::Spot;
-	ecs->addComponent(camera, cameraLight);
+	//ecs->addComponent(camera, cameraLight);
 
 	NtshEngn::Scriptable cameraScriptable;
 	cameraScriptable.script = std::make_unique<CameraScript>();
@@ -143,7 +104,7 @@ void scene(NtshEngn::Core& core) {
 	20, 21, 22,
 	20, 22, 23
 	};
-	calculateTangents(cubeMesh->primitives[0].first);
+	assetManager->calculateTangents(cubeMesh->primitives[0].first);
 
 	NtshEngn::Image* cubeTexture = assetManager->createImage();
 	cubeTexture->width = 30;
@@ -262,7 +223,7 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Renderable leftCubeRenderable;
 	leftCubeRenderable.mesh = &cubeMesh->primitives[0].first;
 	leftCubeRenderable.material = &leftCubeMaterial;
-	ecs->addComponent(leftCube, leftCubeRenderable);
+	//ecs->addComponent(leftCube, leftCubeRenderable);
 
 	ecs->addComponent(leftCube, cubeCollidable);
 
@@ -279,13 +240,67 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Renderable rightCubeRenderable;
 	rightCubeRenderable.mesh = &cubeMesh->primitives[0].first;
 	rightCubeRenderable.material = &cubeMesh->primitives[0].second;
-	ecs->addComponent(rightCube, rightCubeRenderable);
+	//ecs->addComponent(rightCube, rightCubeRenderable);
 
 	NtshEngn::Scriptable cubeScriptable;
 	cubeScriptable.script = std::make_unique<CubeScript>();
 	ecs->addComponent(rightCube, cubeScriptable);
 
 	ecs->addComponent(rightCube, cubeCollidable);
+
+	// Create a nutshell
+	NtshEngn::Model* nutshellModel = assetManager->loadModel("nutshell.obj");
+
+	NtshEngn::Image* nutshellImage = assetManager->createImage();
+	nutshellImage->width = 1;
+	nutshellImage->height = 1;
+	nutshellImage->format = NtshEngn::ImageFormat::R8G8B8A8;
+	nutshellImage->colorSpace = NtshEngn::ImageColorSpace::SRGB;
+	nutshellImage->data = { 255, 255, 255, 255 };
+
+	NtshEngn::Image* nutshellORMImage = assetManager->createImage();
+	nutshellORMImage->width = 1;
+	nutshellORMImage->height = 1;
+	nutshellORMImage->format = NtshEngn::ImageFormat::R8G8B8A8;
+	nutshellORMImage->colorSpace = NtshEngn::ImageColorSpace::Linear;
+	nutshellORMImage->data = { 255, 255, 255, 255 };
+
+	NtshEngn::Entity nutshellEntity = ecs->createEntity();
+
+	NtshEngn::Transform& nutshellTransform = ecs->getComponent<NtshEngn::Transform>(nutshellEntity);
+	nutshellTransform.position[1] = 0.0f;
+	nutshellTransform.scale = { 0.5f, 0.5f, 0.5f };
+
+	NtshEngn::Material nutshellMaterial;
+	nutshellMaterial.diffuseTexture.first = nutshellImage;
+	nutshellMaterial.diffuseTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	nutshellMaterial.diffuseTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	nutshellMaterial.diffuseTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	nutshellMaterial.diffuseTexture.second.anisotropyLevel = 0.0f;
+	nutshellMaterial.metalnessTexture.first = nutshellORMImage;
+	nutshellMaterial.metalnessTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	nutshellMaterial.metalnessTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	nutshellMaterial.metalnessTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	nutshellMaterial.metalnessTexture.second.anisotropyLevel = 0.0f;
+	nutshellMaterial.roughnessTexture.first = nutshellORMImage;
+	nutshellMaterial.roughnessTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	nutshellMaterial.roughnessTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	nutshellMaterial.roughnessTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	nutshellMaterial.roughnessTexture.second.anisotropyLevel = 0.0f;
+	nutshellMaterial.occlusionTexture.first = nutshellORMImage;
+	nutshellMaterial.occlusionTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	nutshellMaterial.occlusionTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	nutshellMaterial.occlusionTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	nutshellMaterial.occlusionTexture.second.anisotropyLevel = 0.0f;
+	
+	NtshEngn::Renderable nutshellRenderable;
+	nutshellRenderable.mesh = &nutshellModel->primitives[0].first;
+	nutshellRenderable.material = &nutshellMaterial;
+	ecs->addComponent(nutshellEntity, nutshellRenderable);
+
+	NtshEngn::Scriptable nutshellScriptable;
+	nutshellScriptable.script = std::make_unique<CubeScript>();
+	ecs->addComponent(nutshellEntity, nutshellScriptable);
 
 	// Create a plane model
 	NtshEngn::Model* planeMesh = assetManager->createModel();
@@ -300,7 +315,7 @@ void scene(NtshEngn::Core& core) {
 	0, 1, 2,
 	0, 2, 3
 	};
-	calculateTangents(planeMesh->primitives[0].first);
+	assetManager->calculateTangents(cubeMesh->primitives[0].first);
 
 	std::array<nml::vec3, 2> planeMeshAABB = getMeshMinMax(planeMesh->primitives[0].first);
 	NtshEngn::AABBCollidable planeCollidable;
@@ -312,7 +327,7 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Entity botPlane = ecs->createEntity();
 
 	NtshEngn::Transform& botPlaneTransform = ecs->getComponent<NtshEngn::Transform>(botPlane);
-	botPlaneTransform.position[1] = -2.0f;
+	botPlaneTransform.position[1] = -0.75f;
 	botPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
 
 	NtshEngn::Image* botPlaneImage = assetManager->createImage();
@@ -320,7 +335,7 @@ void scene(NtshEngn::Core& core) {
 	botPlaneImage->height = 1;
 	botPlaneImage->format = NtshEngn::ImageFormat::R8G8B8A8;
 	botPlaneImage->colorSpace = NtshEngn::ImageColorSpace::SRGB;
-	botPlaneImage->data = { 255, 255, 255, 255 };
+	botPlaneImage->data = { 0, 255, 0, 255 };
 
 	NtshEngn::Material botPlaneMaterial;
 	botPlaneMaterial.diffuseTexture.first = botPlaneImage;
@@ -332,7 +347,7 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Renderable botPlaneRenderable;
 	botPlaneRenderable.mesh = &planeMesh->primitives[0].first;
 	botPlaneRenderable.material = &botPlaneMaterial;
-	ecs->addComponent(botPlane, botPlaneRenderable);
+	//ecs->addComponent(botPlane, botPlaneRenderable);
 
 	ecs->addComponent(botPlane, planeCollidable);
 
@@ -340,11 +355,11 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Entity topPlane = ecs->createEntity();
 
 	NtshEngn::Transform& topPlaneTransform = ecs->getComponent<NtshEngn::Transform>(topPlane);
-	topPlaneTransform.position[1] = 2.0f;
+	topPlaneTransform.position[1] = 0.75f;
 	topPlaneTransform.rotation[0] = 180.0f * toRad;
 	topPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
 
-	ecs->addComponent(topPlane, botPlaneRenderable);
+	//ecs->addComponent(topPlane, botPlaneRenderable);
 
 	ecs->addComponent(topPlane, planeCollidable);
 	
@@ -353,7 +368,7 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Transform& backPlaneTransform = ecs->getComponent<NtshEngn::Transform>(backPlane);
 	backPlaneTransform.position[1] = 0.0f;
-	backPlaneTransform.position[2] = -2.0f;
+	backPlaneTransform.position[2] = -0.75f;
 	backPlaneTransform.rotation[0] = 90.0f * toRad;
 	backPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
 
@@ -365,7 +380,7 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Entity leftPlane = ecs->createEntity();
 
 	NtshEngn::Transform& leftPlaneTransform = ecs->getComponent<NtshEngn::Transform>(leftPlane);
-	leftPlaneTransform.position[0] = -2.0f;
+	leftPlaneTransform.position[0] = -0.75f;
 	leftPlaneTransform.position[1] = 0.0f;
 	leftPlaneTransform.rotation[0] = 90.0f * toRad;
 	leftPlaneTransform.rotation[2] = 270.0f * toRad;
@@ -396,7 +411,7 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Entity rightPlane = ecs->createEntity();
 
 	NtshEngn::Transform& rightPlaneTransform = ecs->getComponent<NtshEngn::Transform>(rightPlane);
-	rightPlaneTransform.position[0] = 2.0f;
+	rightPlaneTransform.position[0] = 0.75f;
 	rightPlaneTransform.position[1] = 0.0f;
 	rightPlaneTransform.rotation[0] = 90.0f * toRad;
 	rightPlaneTransform.rotation[2] = 90.0f * toRad;
@@ -407,7 +422,7 @@ void scene(NtshEngn::Core& core) {
 	rightPlaneImage->height = 1;
 	rightPlaneImage->format = NtshEngn::ImageFormat::R8G8B8A8;
 	rightPlaneImage->colorSpace = NtshEngn::ImageColorSpace::SRGB;
-	rightPlaneImage->data = { 0, 255, 0, 255 };
+	rightPlaneImage->data = { 0, 0, 255, 255 };
 
 	NtshEngn::Material rightPlaneMaterial;
 	rightPlaneMaterial.diffuseTexture.first = rightPlaneImage;
@@ -424,12 +439,12 @@ void scene(NtshEngn::Core& core) {
 	ecs->addComponent(rightPlane, planeCollidable);
 
 	// Light
-	/*NtshEngn::Entity light = ecs->createEntity();
+	NtshEngn::Entity light = ecs->createEntity();
 
 	NtshEngn::Light lightLight;
 	lightLight.color = { 1.0f, 1.0f, 1.0f };
 	lightLight.type = NtshEngn::LightType::Point;
-	ecs->addComponent(light, lightLight);*/
+	ecs->addComponent(light, lightLight);
 }
 
 int main() {
