@@ -443,7 +443,7 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Entity light = ecs->createEntity();
 
 	NtshEngn::Light lightLight;
-	lightLight.color = { 0.5f, 0.5f, 0.5f };
+	lightLight.color = { 1.0f, 1.0f, 1.0f };
 	lightLight.type = NtshEngn::LightType::Point;
 	ecs->addComponent(light, lightLight);
 }
