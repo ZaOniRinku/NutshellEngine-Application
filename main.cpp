@@ -269,6 +269,7 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Transform& nutshellTransform = ecs->getComponent<NtshEngn::Transform>(nutshellEntity);
 	nutshellTransform.position[1] = 0.0f;
+	nutshellTransform.rotation[1] = 270.0f * toRad;
 	nutshellTransform.scale = { 0.5f, 0.5f, 0.5f };
 
 	NtshEngn::Material nutshellMaterial;
