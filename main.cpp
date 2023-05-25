@@ -184,7 +184,7 @@ void scene(NtshEngn::Core& core) {
 	leftCubeORM->height = 1;
 	leftCubeORM->format = NtshEngn::ImageFormat::R8G8B8A8;
 	leftCubeORM->colorSpace = NtshEngn::ImageColorSpace::Linear;
-	leftCubeORM->data = { 255, 12, 255, 255 };
+	leftCubeORM->data = { 255, 1, 255, 255 };
 
 	NtshEngn::Material leftCubeMaterial;
 	leftCubeMaterial.diffuseTexture.first = leftCubeImage;
@@ -281,7 +281,7 @@ void scene(NtshEngn::Core& core) {
 	botPlaneImage->height = 1;
 	botPlaneImage->format = NtshEngn::ImageFormat::R8G8B8A8;
 	botPlaneImage->colorSpace = NtshEngn::ImageColorSpace::SRGB;
-	botPlaneImage->data = { 255, 255, 255, 255 };
+	botPlaneImage->data = { 55, 55, 55, 255 };
 
 	NtshEngn::Image* botPlaneORM = assetManager->createImage();
 	botPlaneORM->width = 1;
@@ -370,13 +370,20 @@ void scene(NtshEngn::Core& core) {
 	leftPlaneImage->colorSpace = NtshEngn::ImageColorSpace::SRGB;
 	leftPlaneImage->data = { 255, 0, 0, 255 };
 
+	NtshEngn::Image* leftPlaneORM = assetManager->createImage();
+	leftPlaneORM->width = 1;
+	leftPlaneORM->height = 1;
+	leftPlaneORM->format = NtshEngn::ImageFormat::R8G8B8A8;
+	leftPlaneORM->colorSpace = NtshEngn::ImageColorSpace::Linear;
+	leftPlaneORM->data = { 255, 255, 0, 255 };
+
 	NtshEngn::Material leftPlaneMaterial;
 	leftPlaneMaterial.diffuseTexture.first = leftPlaneImage;
 	leftPlaneMaterial.diffuseTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	leftPlaneMaterial.diffuseTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	leftPlaneMaterial.diffuseTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	leftPlaneMaterial.diffuseTexture.second.anisotropyLevel = 0.0f;
-	leftPlaneMaterial.occlusionTexture.first = botPlaneORM;
+	leftPlaneMaterial.occlusionTexture.first = leftPlaneORM;
 	leftPlaneMaterial.occlusionTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	leftPlaneMaterial.occlusionTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	leftPlaneMaterial.occlusionTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
@@ -384,7 +391,7 @@ void scene(NtshEngn::Core& core) {
 	leftPlaneMaterial.occlusionTexture.second.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
 	leftPlaneMaterial.occlusionTexture.second.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
 	leftPlaneMaterial.occlusionTexture.second.anisotropyLevel = 0.0f;
-	leftPlaneMaterial.roughnessTexture.first = botPlaneORM;
+	leftPlaneMaterial.roughnessTexture.first = leftPlaneORM;
 	leftPlaneMaterial.roughnessTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	leftPlaneMaterial.roughnessTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	leftPlaneMaterial.roughnessTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
@@ -392,7 +399,7 @@ void scene(NtshEngn::Core& core) {
 	leftPlaneMaterial.roughnessTexture.second.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
 	leftPlaneMaterial.roughnessTexture.second.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
 	leftPlaneMaterial.roughnessTexture.second.anisotropyLevel = 0.0f;
-	leftPlaneMaterial.metalnessTexture.first = botPlaneORM;
+	leftPlaneMaterial.metalnessTexture.first = leftPlaneORM;
 	leftPlaneMaterial.metalnessTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	leftPlaneMaterial.metalnessTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	leftPlaneMaterial.metalnessTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
@@ -431,6 +438,30 @@ void scene(NtshEngn::Core& core) {
 	rightPlaneMaterial.diffuseTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	rightPlaneMaterial.diffuseTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	rightPlaneMaterial.diffuseTexture.second.anisotropyLevel = 0.0f;
+	rightPlaneMaterial.occlusionTexture.first = leftPlaneORM;
+	rightPlaneMaterial.occlusionTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	rightPlaneMaterial.occlusionTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	rightPlaneMaterial.occlusionTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	rightPlaneMaterial.occlusionTexture.second.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	rightPlaneMaterial.occlusionTexture.second.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	rightPlaneMaterial.occlusionTexture.second.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	rightPlaneMaterial.occlusionTexture.second.anisotropyLevel = 0.0f;
+	rightPlaneMaterial.roughnessTexture.first = leftPlaneORM;
+	rightPlaneMaterial.roughnessTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	rightPlaneMaterial.roughnessTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	rightPlaneMaterial.roughnessTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	rightPlaneMaterial.roughnessTexture.second.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	rightPlaneMaterial.roughnessTexture.second.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	rightPlaneMaterial.roughnessTexture.second.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	rightPlaneMaterial.roughnessTexture.second.anisotropyLevel = 0.0f;
+	rightPlaneMaterial.metalnessTexture.first = leftPlaneORM;
+	rightPlaneMaterial.metalnessTexture.second.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	rightPlaneMaterial.metalnessTexture.second.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	rightPlaneMaterial.metalnessTexture.second.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	rightPlaneMaterial.metalnessTexture.second.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	rightPlaneMaterial.metalnessTexture.second.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	rightPlaneMaterial.metalnessTexture.second.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	rightPlaneMaterial.metalnessTexture.second.anisotropyLevel = 0.0f;
 
 	NtshEngn::Renderable rightPlaneRenderable;
 	rightPlaneRenderable.mesh = &planeMesh->primitives[0].first;
