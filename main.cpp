@@ -442,10 +442,27 @@ void scene(NtshEngn::Core& core) {
 	// Light
 	NtshEngn::Entity light = ecs->createEntity();
 
+	NtshEngn::Transform& lightTransform = ecs->getComponent<NtshEngn::Transform>(light);
+	lightTransform.rotation = { 1.0f, -1.0f, 0.0f };
+
 	NtshEngn::Light lightLight;
 	lightLight.color = { 1.0f, 1.0f, 1.0f };
-	lightLight.type = NtshEngn::LightType::Point;
+	lightLight.type = NtshEngn::LightType::Directional;
 	ecs->addComponent(light, lightLight);
+
+	NtshEngn::Entity light2 = ecs->createEntity();
+
+	NtshEngn::Transform& light2Transform = ecs->getComponent<NtshEngn::Transform>(light2);
+	light2Transform.rotation = { -1.0f, -1.0f, 0.0f };
+
+	ecs->addComponent(light2, lightLight);
+
+	NtshEngn::Entity light3 = ecs->createEntity();
+
+	NtshEngn::Transform& light3Transform = ecs->getComponent<NtshEngn::Transform>(light3);
+	light3Transform.rotation = { 0.0f, -1.0f, -1.0f };
+
+	ecs->addComponent(light3, lightLight);
 }
 
 int main() {
