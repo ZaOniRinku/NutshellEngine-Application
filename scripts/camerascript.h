@@ -90,6 +90,15 @@ struct CameraScript : NtshEngn::Script {
 
 			transform.position = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
 			transform.rotation = { cameraRotation.x, cameraRotation.y, cameraRotation.z };
+
+			frameCounter++;
+
+			timeAcc += dt;
+			if (timeAcc > 1000.0) {
+				windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "NutshellShaderEditor - " + std::to_string(frameCounter));
+				timeAcc = 0.0;
+				frameCounter = 0;
+			}
 		}
 	}
 
@@ -110,4 +119,7 @@ private:
 
 	float m_yaw = 0.0f;
 	float m_pitch = 0.0f;
+
+	uint32_t frameCounter = 0;
+	double timeAcc = 0.0;
 };
