@@ -87,9 +87,24 @@ struct CameraScript : NtshEngn::Script {
 			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::Shift) == NtshEngn::InputState::Held) {
 				cameraPosition.y -= cameraSpeed;
 			}
+			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::B) == NtshEngn::InputState::Pressed) {
+				windowModule->setBorderless(NTSHENGN_MAIN_WINDOW, !windowModule->isBorderless(NTSHENGN_MAIN_WINDOW));
+			}
+			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::V) == NtshEngn::InputState::Pressed) {
+				windowModule->setResizable(NTSHENGN_MAIN_WINDOW, !windowModule->isResizable(NTSHENGN_MAIN_WINDOW));
+			}
 
 			transform.position = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
 			transform.rotation = { cameraRotation.x, cameraRotation.y, cameraRotation.z };
+
+			frameCounter++;
+
+			timeAcc += dt;
+			if (timeAcc > 1000.0) {
+				std::cout << frameCounter << std::endl;
+				timeAcc = 0.0;
+				frameCounter = 0;
+			}
 		}
 	}
 
@@ -110,4 +125,7 @@ private:
 
 	float m_yaw = 0.0f;
 	float m_pitch = 0.0f;
+
+	uint32_t frameCounter = 0;
+	double timeAcc = 0.0;
 };

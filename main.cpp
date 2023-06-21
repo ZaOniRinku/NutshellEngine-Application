@@ -240,6 +240,8 @@ int main() {
 	// Initialize
 	core.init();
 
+	core.setMaxFPS(60);
+
 	// Scene
 	scene(core);
 
