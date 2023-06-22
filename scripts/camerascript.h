@@ -93,10 +93,10 @@ struct CameraScript : NtshEngn::Script {
 			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::V) == NtshEngn::InputState::Pressed) {
 				windowModule->setResizable(NTSHENGN_MAIN_WINDOW, !windowModule->isResizable(NTSHENGN_MAIN_WINDOW));
 			}
-			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::G) == NtshEngn::InputState::Pressed) {
+			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::NumPlus) == NtshEngn::InputState::Pressed) {
 				frameLimiter->setMaxFPS(frameLimiter->getMaxFPS() + 15);
 			}
-			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::F) == NtshEngn::InputState::Pressed) {
+			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::NumMinus) == NtshEngn::InputState::Pressed) {
 				frameLimiter->setMaxFPS(frameLimiter->getMaxFPS() - 15);
 			}
 
@@ -107,7 +107,7 @@ struct CameraScript : NtshEngn::Script {
 
 			timeAcc += dt;
 			if (timeAcc > 1000.0) {
-				windowModule->setTitle(NTSHENGN_MAIN_WINDOW, std::to_string(frameCounter));
+				windowModule->setTitle(NTSHENGN_MAIN_WINDOW, std::to_string(frameCounter) + " - Max: " + std::to_string(frameLimiter->getMaxFPS()));
 				timeAcc = 0.0;
 				frameCounter = 0;
 			}
