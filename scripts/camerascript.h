@@ -93,6 +93,12 @@ struct CameraScript : NtshEngn::Script {
 			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::V) == NtshEngn::InputState::Pressed) {
 				windowModule->setResizable(NTSHENGN_MAIN_WINDOW, !windowModule->isResizable(NTSHENGN_MAIN_WINDOW));
 			}
+			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::G) == NtshEngn::InputState::Pressed) {
+				frameLimiter->setMaxFPS(frameLimiter->getMaxFPS() + 15);
+			}
+			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::F) == NtshEngn::InputState::Pressed) {
+				frameLimiter->setMaxFPS(frameLimiter->getMaxFPS() - 15);
+			}
 
 			transform.position = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
 			transform.rotation = { cameraRotation.x, cameraRotation.y, cameraRotation.z };
@@ -101,7 +107,7 @@ struct CameraScript : NtshEngn::Script {
 
 			timeAcc += dt;
 			if (timeAcc > 1000.0) {
-				std::cout << frameCounter << std::endl;
+				windowModule->setTitle(NTSHENGN_MAIN_WINDOW, std::to_string(frameCounter));
 				timeAcc = 0.0;
 				frameCounter = 0;
 			}
