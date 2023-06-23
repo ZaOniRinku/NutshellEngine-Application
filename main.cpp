@@ -29,7 +29,7 @@ int main() {
 	core.init();
 
 	core.getWindowModule()->setTitle(NTSHENGN_MAIN_WINDOW, "NutshellShaderEditor");
-	core.setMaxFPS(60);
+	core.getFrameLimiter()->setMaxFPS(60);
 
 	// Scene
 	scene(core);
