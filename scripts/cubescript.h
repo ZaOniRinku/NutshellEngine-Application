@@ -41,7 +41,7 @@ struct CubeScript : NtshEngn::Script {
 	}
 
 private:
-	const float m_cubeSpeed = 1.5f;
+	const float m_cubeSpeed = 10.0f;
 
 	NtshEngn::Entity m_camera = 0;
 };

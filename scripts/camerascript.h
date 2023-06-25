@@ -123,7 +123,7 @@ private:
 
 	bool m_mouseMiddleMode = false;
 
-	const float m_cameraSpeed = 0.0015f;
+	const float m_cameraSpeed = 0.015f;
 	const float m_mouseSensitivity = 0.12f;
 
 	int m_prevMouseX = 0;

@@ -187,6 +187,8 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Rigidbody cubeRigidbody;
 	cubeRigidbody.mass = 10.0f;
 	cubeRigidbody.restitution = 1.0f;
+	cubeRigidbody.staticFriction = 0.0f;
+	cubeRigidbody.dynamicFriction = 0.0f;
 	ecs->addComponent(cube, cubeRigidbody);
 
 	NtshEngn::Scriptable cubeScriptable;
@@ -206,18 +208,20 @@ void scene(NtshEngn::Core& core) {
 	cube2Renderable.material = &cubeMesh->primitives[0].material;
 	ecs->addComponent(cube2, cube2Renderable);
 
-	/*NtshEngn::SphereCollidable cube2Collidable;
+	NtshEngn::SphereCollidable cube2Collidable;
 	cube2Collidable.collider.center = { 0.0f, 0.0f, 0.0f };
 	cube2Collidable.collider.radius = 1.0f;
-	ecs->addComponent(cube2, cube2Collidable);*/
-	NtshEngn::AABBCollidable cube2Collidable;
+	ecs->addComponent(cube2, cube2Collidable);
+	/*NtshEngn::AABBCollidable cube2Collidable;
 	cube2Collidable.collider.min = { -1.0f, -1.0f, -1.0f };
 	cube2Collidable.collider.max = { 1.0f, 1.0f, 1.0f };
-	ecs->addComponent(cube2, cube2Collidable);
+	ecs->addComponent(cube2, cube2Collidable);*/
 
 	NtshEngn::Rigidbody cube2Rigidbody;
 	cube2Rigidbody.mass = 10.0f;
 	cube2Rigidbody.restitution = 1.0f;
+	cube2Rigidbody.staticFriction = 0.25f;
+	cube2Rigidbody.dynamicFriction = 0.25f;
 	ecs->addComponent(cube2, cube2Rigidbody);
 
 	// Create a plane model
@@ -230,8 +234,8 @@ void scene(NtshEngn::Core& core) {
 		{ {1.0f, 0.0f, -1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} }
 	};
 	planeMesh->primitives[0].mesh.indices = {
-	0, 1, 2,
-	0, 2, 3
+		0, 1, 2,
+		0, 2, 3
 	};
 	assetManager->calculateTangents(planeMesh->primitives[0].mesh);
 	std::array<nml::vec3, 2> planeMeshAABB = getMeshMinMax(planeMesh->primitives[0].mesh);
@@ -241,7 +245,7 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Transform& planeTransform = ecs->getComponent<NtshEngn::Transform>(plane);
 	planeTransform.position[1] = -0.5f;
-	planeTransform.scale = { 10.0f, 10.0f, 10.0f };
+	planeTransform.scale = { 100.0f, 100.0f, 100.0f };
 
 	NtshEngn::Renderable planeRenderable;
 	planeRenderable.mesh = &planeMesh->primitives[0].mesh;
@@ -257,6 +261,8 @@ void scene(NtshEngn::Core& core) {
 	planeRigidbody.isStatic = true;
 	planeRigidbody.mass = 1.0f;
 	planeRigidbody.restitution = 1.0f;
+	planeRigidbody.staticFriction = 0.5f;
+	planeRigidbody.dynamicFriction = 0.5f;
 	ecs->addComponent(plane, planeRigidbody);
 
 	// Create lights
