@@ -10,32 +10,30 @@ struct CubeScript : NtshEngn::Script {
 
 	void update(double dt) {
 		if (windowModule && windowModule->isOpen(NTSHENGN_MAIN_WINDOW)) {
-			NtshEngn::Transform& transform = ecs->getComponent<NtshEngn::Transform>(entityID);
 			NtshEngn::Transform& cameraTransform = ecs->getComponent<NtshEngn::Transform>(m_camera);
 			const float cubeSpeed = m_cubeSpeed * static_cast<float>(dt);
 
-			nml::vec3 position = nml::vec3(transform.position.data());
+			NtshEngn::Rigidbody& rigidbody = ecs->getComponent<NtshEngn::Rigidbody>(entityID);
+
 			nml::vec3 cameraRotation = nml::vec3(cameraTransform.rotation.data());
 			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::Up) == NtshEngn::InputState::Held) {
-				position.x += (cameraRotation.x * cubeSpeed);
-				position.z += (cameraRotation.z * cubeSpeed);
+				rigidbody.force[0] += (cameraRotation.x * cubeSpeed);
+				rigidbody.force[2] += (cameraRotation.z * cubeSpeed);
 			}
 			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::Down) == NtshEngn::InputState::Held) {
-				position.x -= (cameraRotation.x * cubeSpeed);
-				position.z -= (cameraRotation.z * cubeSpeed);
+				rigidbody.force[0] -= (cameraRotation.x * cubeSpeed);
+				rigidbody.force[2] -= (cameraRotation.z * cubeSpeed);
 			}
 			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::Left) == NtshEngn::InputState::Held) {
 				nml::vec3 t = nml::normalize(nml::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
-				position.x -= (t.x * cubeSpeed);
-				position.z -= (t.z * cubeSpeed);
+				rigidbody.force[0] -= (t.x * cubeSpeed);
+				rigidbody.force[2] -= (t.z * cubeSpeed);
 			}
 			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::Right) == NtshEngn::InputState::Held) {
 				nml::vec3 t = nml::normalize(nml::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
-				position.x += (t.x * cubeSpeed);
-				position.z += (t.z * cubeSpeed);
+				rigidbody.force[0] += (t.x * cubeSpeed);
+				rigidbody.force[2] += (t.z * cubeSpeed);
 			}
-
-			transform.position = { position.x, position.y, position.z };
 		}
 	}
 
@@ -43,7 +41,7 @@ struct CubeScript : NtshEngn::Script {
 	}
 
 private:
-	const float m_cubeSpeed = 0.005f;
+	const float m_cubeSpeed = 1.5f;
 
 	NtshEngn::Entity m_camera = 0;
 };

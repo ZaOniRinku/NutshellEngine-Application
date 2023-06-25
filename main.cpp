@@ -2,6 +2,48 @@
 #include "scripts/camerascript.h"
 #include "scripts/cubescript.h"
 
+std::array<nml::vec3, 2> getMeshMinMax(const NtshEngn::Mesh& mesh) {
+	nml::vec3 min = nml::vec3(std::numeric_limits<float>::max());
+	nml::vec3 max = nml::vec3(std::numeric_limits<float>::lowest());
+	for (const NtshEngn::Vertex& vertex : mesh.vertices) {
+		if (vertex.position[0] < min.x) {
+			min.x = vertex.position[0];
+		}
+		if (vertex.position[0] > max.x) {
+			max.x = vertex.position[0];
+		}
+
+		if (vertex.position[1] < min.y) {
+			min.y = vertex.position[1];
+		}
+		if (vertex.position[1] > max.y) {
+			max.y = vertex.position[1];
+		}
+
+		if (vertex.position[2] < min.z) {
+			min.z = vertex.position[2];
+		}
+		if (vertex.position[2] > max.z) {
+			max.z = vertex.position[2];
+		}
+	}
+
+	if (min.x == max.x) {
+		min.x -= 0.01f;
+		max.x += 0.01f;
+	}
+	if (min.y == max.y) {
+		min.y -= 0.01f;
+		max.y += 0.01f;
+	}
+	if (min.z == max.z) {
+		min.z -= 0.01f;
+		max.z += 0.01f;
+	}
+
+	return { min, max };
+}
+
 void scene(NtshEngn::Core& core) {
 	NtshEngn::ECS* ecs = core.getECS();
 	NtshEngn::AssetManager* assetManager = core.getAssetManager();
@@ -122,10 +164,24 @@ void scene(NtshEngn::Core& core) {
 	// Create a cube Entity
 	NtshEngn::Entity cube = ecs->createEntity();
 
+	NtshEngn::Transform& cubeTransform = ecs->getComponent<NtshEngn::Transform>(cube);
+	cubeTransform.position[1] = 10.0f;
+	cubeTransform.scale = { 1.0f, 1.0f, 1.0f };
+
 	NtshEngn::Renderable cubeRenderable;
 	cubeRenderable.mesh = &cubeMesh->primitives[0].mesh;
 	cubeRenderable.material = &cubeMesh->primitives[0].material;
 	ecs->addComponent(cube, cubeRenderable);
+
+	NtshEngn::AABBCollidable cubeCollidable;
+	cubeCollidable.collider.min = { -1.0f, -1.0f, -1.0f };
+	cubeCollidable.collider.max = { 1.0f, 1.0f, 1.0f };
+	ecs->addComponent(cube, cubeCollidable);
+
+	NtshEngn::Rigidbody cubeRigidbody;
+	cubeRigidbody.mass = 10.0f;
+	cubeRigidbody.restitution = 1.0f;
+	ecs->addComponent(cube, cubeRigidbody);
 
 	NtshEngn::Scriptable cubeScriptable;
 	cubeScriptable.script = std::make_unique<CubeScript>();
@@ -145,18 +201,30 @@ void scene(NtshEngn::Core& core) {
 	0, 2, 3
 	};
 	assetManager->calculateTangents(planeMesh->primitives[0].mesh);
+	std::array<nml::vec3, 2> planeMeshAABB = getMeshMinMax(planeMesh->primitives[0].mesh);
 
 	// Create a plane Entity
 	NtshEngn::Entity plane = ecs->createEntity();
 
 	NtshEngn::Transform& planeTransform = ecs->getComponent<NtshEngn::Transform>(plane);
-	planeTransform.position[1] = -2.0f;
-	planeTransform.scale = { 3.0f, 3.0f, 3.0f };
+	planeTransform.position[1] = -0.5f;
+	planeTransform.scale = { 10.0f, 10.0f, 10.0f };
 
 	NtshEngn::Renderable planeRenderable;
 	planeRenderable.mesh = &planeMesh->primitives[0].mesh;
 	planeRenderable.material = &cubeMesh->primitives[0].material;
 	ecs->addComponent(plane, planeRenderable);
+
+	NtshEngn::AABBCollidable planeCollidable;
+	planeCollidable.collider.min = { planeMeshAABB[0].x, planeMeshAABB[0].y, planeMeshAABB[0].z };
+	planeCollidable.collider.max = { planeMeshAABB[1].x, planeMeshAABB[1].y, planeMeshAABB[1].z };
+	ecs->addComponent(plane, planeCollidable);
+
+	NtshEngn::Rigidbody planeRigidbody;
+	planeRigidbody.isStatic = true;
+	planeRigidbody.mass = 1.0f;
+	planeRigidbody.restitution = 1.0f;
+	ecs->addComponent(plane, planeRigidbody);
 
 	// Create lights
 	// Directional Light
