@@ -114,6 +114,11 @@ void scene(NtshEngn::Core& core) {
 	cameraScript.script = std::make_unique<CameraScript>();
 	ecs->addComponent(camera, cameraScript);
 
+	Rigidbody cameraRigidbody;
+	cameraRigidbody.restitution = 1.0;
+	cameraRigidbody.isAffectedByConstants = false;
+	ecs->addComponent(camera, cameraRigidbody);
+
 	SphereCollidable cameraCollidable;
 	cameraCollidable.collider.radius = 0.25f;
 	ecs->addComponent(camera, cameraCollidable);
@@ -209,9 +214,15 @@ void scene(NtshEngn::Core& core) {
 
 	std::array<nml::vec3, 2> floorMeshAABB = getMeshMinMax(floorMesh);
 
+	Rigidbody floorRigidbody;
+	floorRigidbody.restitution = 1.0;
+	floorRigidbody.isStatic = true;
+	ecs->addComponent(floor, floorRigidbody);
+
 	AABBCollidable floorCollidable;
 	floorCollidable.collider.min = { floorMeshAABB[0].x, floorMeshAABB[0].y, floorMeshAABB[0].z };
 	floorCollidable.collider.max = { floorMeshAABB[1].x, floorMeshAABB[1].y, floorMeshAABB[1].z };
+	ecs->addComponent(floor, floorCollidable);
 
 	// Grass
 	Mesh grassMesh;
@@ -349,6 +360,10 @@ void scene(NtshEngn::Core& core) {
 
 	std::array<nml::vec3, 2> wallMeshAABB = getMeshMinMax(wallMesh);
 
+	Rigidbody wallRigidbody;
+	wallRigidbody.restitution = 1.0;
+	wallRigidbody.isStatic = true;
+
 	AABBCollidable wallCollidable;
 	wallCollidable.collider.min = { wallMeshAABB[0].x, wallMeshAABB[0].y, wallMeshAABB[0].z };
 	wallCollidable.collider.max = { wallMeshAABB[1].x, wallMeshAABB[1].y, wallMeshAABB[1].z };
@@ -437,6 +452,10 @@ void scene(NtshEngn::Core& core) {
 	wallCubeRenderable.mesh = &wallCubeMesh;
 	wallCubeRenderable.material = &wallCubeMaterial;
 
+	Rigidbody cubeRigidbody;
+	cubeRigidbody.restitution = 1.0;
+	cubeRigidbody.isStatic = true;
+
 	AABBCollidable cubeCollidable;
 	cubeCollidable.collider.min = { -1.0f, -1.0f, -1.0f };
 	cubeCollidable.collider.max = { 1.0f, 1.0f, 1.0f };
@@ -453,6 +472,7 @@ void scene(NtshEngn::Core& core) {
 	windowBrokenFootballTransform.scale[2] = 0.5f;
 
 	ecs->addComponent(windowBrokenFootball, windowBrokenRenderable);
+	ecs->addComponent(windowBrokenFootball, wallRigidbody);
 	ecs->addComponent(windowBrokenFootball, wallCollidable);
 
 	for (size_t i = 0; i < 10; i++) {
@@ -475,6 +495,7 @@ void scene(NtshEngn::Core& core) {
 			else {
 				ecs->addComponent(wallBack, windowRenderable);
 			}
+			ecs->addComponent(wallBack, wallRigidbody);
 			ecs->addComponent(wallBack, wallCollidable);
 		}
 
@@ -494,6 +515,7 @@ void scene(NtshEngn::Core& core) {
 		else {
 			ecs->addComponent(wallFront, windowRenderable);
 		}
+		ecs->addComponent(wallFront, wallRigidbody);
 		ecs->addComponent(wallFront, wallCollidable);
 
 		// Left walls
@@ -513,6 +535,7 @@ void scene(NtshEngn::Core& core) {
 		else {
 			ecs->addComponent(wallLeft, windowRenderable);
 		}
+		ecs->addComponent(wallLeft, wallRigidbody);
 		ecs->addComponent(wallLeft, wallCollidable);
 
 		if (i == 5) {
@@ -549,6 +572,7 @@ void scene(NtshEngn::Core& core) {
 		else if (i == 4) {
 			ecs->addComponent(wallRight, windowBrokenRenderable);
 		}
+		ecs->addComponent(wallRight, wallRigidbody);
 		ecs->addComponent(wallRight, wallCollidable);
 	}
 
@@ -563,6 +587,7 @@ void scene(NtshEngn::Core& core) {
 	wallCubeLeftBackTransform.scale[2] = 0.5f;
 
 	ecs->addComponent(wallCubeLeftBack, wallCubeRenderable);
+	ecs->addComponent(wallCubeLeftBack, cubeRigidbody);
 	ecs->addComponent(wallCubeLeftBack, cubeCollidable);
 
 	Entity wallCubeRightBack = ecs->createEntity();
@@ -576,6 +601,7 @@ void scene(NtshEngn::Core& core) {
 	wallCubeRightBackTransform.scale[2] = 0.5f;
 
 	ecs->addComponent(wallCubeRightBack, wallCubeRenderable);
+	ecs->addComponent(wallCubeRightBack, cubeRigidbody);
 	ecs->addComponent(wallCubeRightBack, cubeCollidable);
 
 	// Wall Back
@@ -682,6 +708,10 @@ void scene(NtshEngn::Core& core) {
 	doorClosedRenderable.mesh = &doorMesh;
 	doorClosedRenderable.material = &doorClosedMaterial;
 
+	NtshEngn::Rigidbody doorClosedRigidbody;
+	doorClosedRigidbody.restitution = 1.0f;
+	doorClosedRigidbody.isStatic = true;
+
 	NtshEngn::AABBCollidable doorClosedCollidable;
 	doorClosedCollidable.collider.min = { doorMeshAABB[0].x, doorMeshAABB[0].y, doorMeshAABB[0].z };
 	doorClosedCollidable.collider.max = { doorMeshAABB[1].x, doorMeshAABB[1].y, doorMeshAABB[1].z };
@@ -722,6 +752,7 @@ void scene(NtshEngn::Core& core) {
 	doorFarTransform.scale[2] = 0.5f;
 
 	ecs->addComponent(doorFar, doorClosedRenderable);
+	ecs->addComponent(doorFar, doorClosedRigidbody);
 	ecs->addComponent(doorFar, doorClosedCollidable);
 
 	// Interior walls
@@ -814,6 +845,7 @@ void scene(NtshEngn::Core& core) {
 		interiorWallTransform.scale[2] = 0.5f;
 
 		ecs->addComponent(interiorWall, interiorWallRenderable);
+		ecs->addComponent(interiorWall, wallRigidbody);
 		ecs->addComponent(interiorWall, wallCollidable);
 	}
 
@@ -1486,6 +1518,7 @@ void scene(NtshEngn::Core& core) {
 		congratulationsRoomWallTransform.scale[2] = 0.5f;
 
 		ecs->addComponent(congratulationsRoomWall, congratulationsRoomWallRenderable);
+		ecs->addComponent(congratulationsRoomWall, wallRigidbody);
 		ecs->addComponent(congratulationsRoomWall, wallCollidable);
 	}
 
@@ -1553,6 +1586,7 @@ void scene(NtshEngn::Core& core) {
 		theEndRoomWallTransform.scale[2] = 0.5f;
 
 		ecs->addComponent(theEndRoomWall, theEndRoomWallRenderable);
+		ecs->addComponent(theEndRoomWall, wallRigidbody);
 		ecs->addComponent(theEndRoomWall, wallCollidable);
 	}
 
@@ -1620,6 +1654,7 @@ void scene(NtshEngn::Core& core) {
 		questionMarkRoomWallTransform.scale[2] = 0.5f;
 
 		ecs->addComponent(questionMarkRoomWall, questionMarkRoomWallRenderable);
+		ecs->addComponent(questionMarkRoomWall, wallRigidbody);
 		ecs->addComponent(questionMarkRoomWall, wallCollidable);
 	}
 
@@ -1676,6 +1711,7 @@ void scene(NtshEngn::Core& core) {
 		p2EntryTransform.scale[1] = 0.5f;
 
 		ecs->addComponent(p2Entry, secretRoomRenderable);
+		ecs->addComponent(p2Entry, wallRigidbody);
 		ecs->addComponent(p2Entry, wallCollidable);
 	}
 
@@ -1866,6 +1902,7 @@ void scene(NtshEngn::Core& core) {
 			else {
 				ecs->addComponent(p2WallBack, p2WallWindowRenderable);
 			}
+			ecs->addComponent(p2WallBack, wallRigidbody);
 			ecs->addComponent(p2WallBack, wallCollidable);
 		}
 
@@ -1885,6 +1922,7 @@ void scene(NtshEngn::Core& core) {
 		else {
 			ecs->addComponent(p2WallFront, p2WallWindowRenderable);
 		}
+		ecs->addComponent(p2WallFront, wallRigidbody);
 		ecs->addComponent(p2WallFront, wallCollidable);
 
 		// Left walls
@@ -1904,6 +1942,7 @@ void scene(NtshEngn::Core& core) {
 		else {
 			ecs->addComponent(p2WallLeft, p2WallWindowRenderable);
 		}
+		ecs->addComponent(p2WallLeft, wallRigidbody);
 		ecs->addComponent(p2WallLeft, wallCollidable);
 
 		// Right walls
@@ -1923,6 +1962,7 @@ void scene(NtshEngn::Core& core) {
 		else {
 			ecs->addComponent(p2WallRight, p2WallWindowRenderable);
 		}
+		ecs->addComponent(p2WallRight, wallRigidbody);
 		ecs->addComponent(p2WallRight, wallCollidable);
 	}
 
@@ -1990,6 +2030,7 @@ void scene(NtshEngn::Core& core) {
 	p2WallCubeLeftBackTransform.scale[2] = 0.5f;
 
 	ecs->addComponent(p2WallCubeLeftBack, p2WallCubeRenderable);
+	ecs->addComponent(p2WallCubeLeftBack, cubeRigidbody);
 	ecs->addComponent(p2WallCubeLeftBack, cubeCollidable);
 
 	Entity p2WallCubeRightBack = ecs->createEntity();
@@ -2003,6 +2044,7 @@ void scene(NtshEngn::Core& core) {
 	p2WallCubeRightBackTransform.scale[2] = 0.5f;
 
 	ecs->addComponent(p2WallCubeRightBack, p2WallCubeRenderable);
+	ecs->addComponent(p2WallCubeRightBack, cubeRigidbody);
 	ecs->addComponent(p2WallCubeRightBack, cubeCollidable);
 
 	Image* p2InteriorWallTexture = assetManager->createImage();
@@ -2168,6 +2210,8 @@ int main() {
 
 	// Initialize
 	core.init();
+
+	core.getFrameLimiter()->setMaxFPS(60);
 
 	// Change window name
 	core.getWindowModule()->setTitle(NTSHENGN_MAIN_WINDOW, "The Girl Near The Window");

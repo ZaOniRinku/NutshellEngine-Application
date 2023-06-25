@@ -23,7 +23,7 @@ struct CameraScript : NtshEngn::Script {
 		NtshEngn::Transform& cameraTransform = ecs->getComponent<NtshEngn::Transform>(entityID);
 		if (cameraTransform.position[1] == 1999.5f) {
 			if (dt > ((1.0 / 60.0) * 1000.0)) {
-				dt = 0.0; // OOB fix
+				dt = ((1.0 / 60.0) * 1000.0); // OOB fix
 			}
 		}
 
@@ -70,81 +70,37 @@ struct CameraScript : NtshEngn::Script {
 			const float cameraSpeed = m_cameraSpeed * static_cast<float>(dt);
 
 			bool footstepSound = false;
-			nml::vec3 cameraPosition = nml::vec3(cameraTransform.position.data());
+
+			NtshEngn::Rigidbody& rigidbody = ecs->getComponent<NtshEngn::Rigidbody>(entityID);
 
 			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::W) == NtshEngn::InputState::Held) {
-				cameraPosition.x += (cameraRotation.x * cameraSpeed);
-				cameraPosition.z += (cameraRotation.z * cameraSpeed);
+				rigidbody.force[0] += (cameraRotation.x * cameraSpeed);
+				rigidbody.force[2] += (cameraRotation.z * cameraSpeed);
 				footstepSound = true;
 			}
 			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::S) == NtshEngn::InputState::Held) {
-				cameraPosition.x -= (cameraRotation.x * cameraSpeed);
-				cameraPosition.z -= (cameraRotation.z * cameraSpeed);
+				rigidbody.force[0] -= (cameraRotation.x * cameraSpeed);
+				rigidbody.force[2] -= (cameraRotation.z * cameraSpeed);
 				footstepSound = true;
 			}
 			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::A) == NtshEngn::InputState::Held) {
 				nml::vec3 t = nml::normalize(nml::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
-				cameraPosition.x -= (t.x * cameraSpeed);
-				cameraPosition.z -= (t.z * cameraSpeed);
+				rigidbody.force[0] -= (t.x * cameraSpeed);
+				rigidbody.force[2] -= (t.z * cameraSpeed);
 				footstepSound = true;
 			}
 			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::D) == NtshEngn::InputState::Held) {
 				nml::vec3 t = nml::normalize(nml::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
-				cameraPosition.x += (t.x * cameraSpeed);
-				cameraPosition.z += (t.z * cameraSpeed);
+				rigidbody.force[0] += (t.x * cameraSpeed);
+				rigidbody.force[2] += (t.z * cameraSpeed);
 				footstepSound = true;
 			}
 
-			bool collide = false;
-			if (physicsModule) {
-				if (ecs->hasComponent<NtshEngn::SphereCollidable>(entityID)) {
-					NtshEngn::ColliderSphere cameraCollider = ecs->getComponent<NtshEngn::SphereCollidable>(entityID).collider;
-					cameraCollider.center[0] += cameraPosition.x;
-					cameraCollider.center[1] += cameraPosition.y;
-					cameraCollider.center[2] += cameraPosition.z;
-					cameraCollider.radius *= std::max(cameraTransform.scale[0], std::max(cameraTransform.scale[1], cameraTransform.scale[2]));
-
-					for (const NtshEngn::Entity entity : physicsModule->m_entities) {
-						if (entity != entityID) {
-							if (ecs->hasComponent<NtshEngn::AABBCollidable>(entity)) {
-								const NtshEngn::Transform& otherTransform = ecs->getComponent<NtshEngn::Transform>(entity);
-								const nml::vec3 otherPosition = nml::vec3(otherTransform.position[0], otherTransform.position[1], otherTransform.position[2]);
-								const nml::vec3 otherRotation = nml::vec3(otherTransform.rotation[0], otherTransform.rotation[1], otherTransform.rotation[2]);
-								const nml::vec3 otherScale = nml::vec3(otherTransform.scale[0], otherTransform.scale[1], otherTransform.scale[2]);
-
-								NtshEngn::ColliderAABB otherCollider = ecs->getComponent<NtshEngn::AABBCollidable>(entity).collider;
-								const nml::vec3 otherAABBMin = nml::vec3(otherCollider.min[0], otherCollider.min[1], otherCollider.min[2]);
-								const nml::vec3 otherAABBMax = nml::vec3(otherCollider.max[0], otherCollider.max[1], otherCollider.max[2]);
-
-								nml::mat4 otherModelMatrix = nml::translate(otherPosition) *
-									nml::rotate(otherRotation.x, nml::vec3(1.0f, 0.0f, 0.0f)) *
-									nml::rotate(otherRotation.y, nml::vec3(0.0f, 1.0f, 0.0f)) *
-									nml::rotate(otherRotation.z, nml::vec3(0.0f, 0.0f, 1.0f)) *
-									nml::scale(otherScale);
-
-								std::array<nml::vec3, 2> otherAABBMinAndMax = transformAABB(otherAABBMin, otherAABBMax, otherModelMatrix);
-								otherCollider.min = { otherAABBMinAndMax[0].x, otherAABBMinAndMax[0].y, otherAABBMinAndMax[0].z };
-								otherCollider.max = { otherAABBMinAndMax[1].x, otherAABBMinAndMax[1].y, otherAABBMinAndMax[1].z };
-
-								collide = physicsModule->intersect(&cameraCollider, &otherCollider);
-
-								if (collide) {
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-
 			m_footstepSoundCooldown += dt;
-			if (!collide) {
-				cameraTransform.position = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
 
-				if (footstepSound && (m_footstepSoundCooldown > 650.0) && audioModule && !audioModule->isPlaying(m_footstepSound)) {
-					audioModule->play(m_footstepSound);
-					m_footstepSoundCooldown = 0;
-				}
+			if (footstepSound && (m_footstepSoundCooldown > 650.0) && audioModule && !audioModule->isPlaying(m_footstepSound)) {
+				audioModule->play(m_footstepSound);
+				m_footstepSoundCooldown = 0;
 			}
 
 			cameraTransform.rotation = { cameraRotation.x, cameraRotation.y, cameraRotation.z };
@@ -198,7 +154,7 @@ private:
 private:
 	const float toRad = 3.1415926535897932384626433832795f / 180.0f;
 	bool m_mouseMiddleMode = true;
-	const float m_cameraSpeed = 0.0015f;
+	const float m_cameraSpeed = 1.0f;
 	const float m_mouseSensitivity = 0.12f;
 	int m_prevMouseX = 0;
 	int m_prevMouseY = 0;
