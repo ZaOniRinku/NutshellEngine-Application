@@ -166,17 +166,23 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Transform& cubeTransform = ecs->getComponent<NtshEngn::Transform>(cube);
 	cubeTransform.position[1] = 10.0f;
-	cubeTransform.scale = { 1.0f, 1.0f, 1.0f };
+	cubeTransform.scale = { 3.0f, 3.0f, 3.0f };
+
+	NtshEngn::Model* sphereModel = assetManager->loadModel("sphere.obj");
 
 	NtshEngn::Renderable cubeRenderable;
-	cubeRenderable.mesh = &cubeMesh->primitives[0].mesh;
+	cubeRenderable.mesh = &sphereModel->primitives[0].mesh;
 	cubeRenderable.material = &cubeMesh->primitives[0].material;
 	ecs->addComponent(cube, cubeRenderable);
 
-	NtshEngn::AABBCollidable cubeCollidable;
+	NtshEngn::SphereCollidable cubeCollidable;
+	cubeCollidable.collider.center = { 0.0f, 0.0f, 0.0f };
+	cubeCollidable.collider.radius = 1.0f;
+	ecs->addComponent(cube, cubeCollidable);
+	/*NtshEngn::AABBCollidable cubeCollidable;
 	cubeCollidable.collider.min = { -1.0f, -1.0f, -1.0f };
 	cubeCollidable.collider.max = { 1.0f, 1.0f, 1.0f };
-	ecs->addComponent(cube, cubeCollidable);
+	ecs->addComponent(cube, cubeCollidable);*/
 
 	NtshEngn::Rigidbody cubeRigidbody;
 	cubeRigidbody.mass = 10.0f;
@@ -186,6 +192,33 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Scriptable cubeScriptable;
 	cubeScriptable.script = std::make_unique<CubeScript>();
 	ecs->addComponent(cube, cubeScriptable);
+
+	// Create a cube 2 Entity
+	NtshEngn::Entity cube2 = ecs->createEntity();
+
+	NtshEngn::Transform& cube2Transform = ecs->getComponent<NtshEngn::Transform>(cube2);
+	cube2Transform.position[0] = 5.0f;
+	cube2Transform.position[1] = 10.0f;
+	cube2Transform.scale = { 1.0f, 1.0f, 1.0f };
+
+	NtshEngn::Renderable cube2Renderable;
+	cube2Renderable.mesh = &sphereModel->primitives[0].mesh;
+	cube2Renderable.material = &cubeMesh->primitives[0].material;
+	ecs->addComponent(cube2, cube2Renderable);
+
+	/*NtshEngn::SphereCollidable cube2Collidable;
+	cube2Collidable.collider.center = { 0.0f, 0.0f, 0.0f };
+	cube2Collidable.collider.radius = 1.0f;
+	ecs->addComponent(cube2, cube2Collidable);*/
+	NtshEngn::AABBCollidable cube2Collidable;
+	cube2Collidable.collider.min = { -1.0f, -1.0f, -1.0f };
+	cube2Collidable.collider.max = { 1.0f, 1.0f, 1.0f };
+	ecs->addComponent(cube2, cube2Collidable);
+
+	NtshEngn::Rigidbody cube2Rigidbody;
+	cube2Rigidbody.mass = 10.0f;
+	cube2Rigidbody.restitution = 1.0f;
+	ecs->addComponent(cube2, cube2Rigidbody);
 
 	// Create a plane model
 	NtshEngn::Model* planeMesh = assetManager->createModel();
@@ -231,11 +264,11 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Entity light = ecs->createEntity();
 
 	NtshEngn::Transform& lightTransform = ecs->getComponent<NtshEngn::Transform>(light);
-	lightTransform.rotation = { 0.0f, -1.0f, 1.0f };
+	lightTransform.rotation = { 0.0f, -1.0f, 0.0f };
 
 	NtshEngn::Light lightLight;
 	lightLight.type = NtshEngn::LightType::Directional;
-	lightLight.color = { 0.0f, 0.0f, 1.0f };
+	lightLight.color = { 1.0f, 1.0f, 1.0f };
 	ecs->addComponent(light, lightLight);
 
 	// Point Light
