@@ -48,6 +48,8 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::ECS* ecs = core.getECS();
 	NtshEngn::AssetManager* assetManager = core.getAssetManager();
 
+	const float toRad = 3.1415926535897932384626433832795f / 180.0f;
+
 	// Create the camera
 	NtshEngn::Entity camera = ecs->createEntity();
 
@@ -58,7 +60,7 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Camera cameraCamera;
 	cameraCamera.fov = 45.0f;
 	cameraCamera.nearPlane = 0.03f;
-	cameraCamera.farPlane = 100.0f;
+	cameraCamera.farPlane = 1000.0f;
 	ecs->addComponent(camera, cameraCamera);
 
 	NtshEngn::Scriptable cameraScriptable;
@@ -166,7 +168,8 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Transform& cubeTransform = ecs->getComponent<NtshEngn::Transform>(cube);
 	cubeTransform.position[1] = 10.0f;
-	cubeTransform.scale = { 3.0f, 3.0f, 3.0f };
+	cubeTransform.rotation[0] = 0.0f * toRad;
+	cubeTransform.scale = { 1.0f, 1.0f, 1.0f };
 
 	NtshEngn::Model* sphereModel = assetManager->loadModel("sphere.obj");
 
@@ -175,17 +178,22 @@ void scene(NtshEngn::Core& core) {
 	cubeRenderable.material = &cubeMesh->primitives[0].material;
 	ecs->addComponent(cube, cubeRenderable);
 
-	NtshEngn::SphereCollidable cubeCollidable;
+	/*NtshEngn::SphereCollidable cubeCollidable;
 	cubeCollidable.collider.center = { 0.0f, 0.0f, 0.0f };
 	cubeCollidable.collider.radius = 1.0f;
-	ecs->addComponent(cube, cubeCollidable);
+	ecs->addComponent(cube, cubeCollidable);*/
 	/*NtshEngn::AABBCollidable cubeCollidable;
 	cubeCollidable.collider.min = { -1.0f, -1.0f, -1.0f };
 	cubeCollidable.collider.max = { 1.0f, 1.0f, 1.0f };
 	ecs->addComponent(cube, cubeCollidable);*/
+	NtshEngn::CapsuleCollidable cubeCollidable;
+	cubeCollidable.collider.radius = 1.0f;
+	cubeCollidable.collider.base = { 0.0f, 0.0f, 0.0f };
+	cubeCollidable.collider.tip = { 0.0f, 3.0f, 0.0f };
+	ecs->addComponent(cube, cubeCollidable);
 
 	NtshEngn::Rigidbody cubeRigidbody;
-	cubeRigidbody.mass = 10.0f;
+	cubeRigidbody.mass = 5.0f;
 	cubeRigidbody.restitution = 1.0f;
 	cubeRigidbody.staticFriction = 0.0f;
 	cubeRigidbody.dynamicFriction = 0.0f;
@@ -208,14 +216,19 @@ void scene(NtshEngn::Core& core) {
 	cube2Renderable.material = &cubeMesh->primitives[0].material;
 	ecs->addComponent(cube2, cube2Renderable);
 
-	NtshEngn::SphereCollidable cube2Collidable;
+	/*NtshEngn::SphereCollidable cube2Collidable;
 	cube2Collidable.collider.center = { 0.0f, 0.0f, 0.0f };
-	cube2Collidable.collider.radius = 1.0f;
-	ecs->addComponent(cube2, cube2Collidable);
+	cube2Collidable.collider.radius = 0.5f;
+	ecs->addComponent(cube2, cube2Collidable);*/
 	/*NtshEngn::AABBCollidable cube2Collidable;
 	cube2Collidable.collider.min = { -1.0f, -1.0f, -1.0f };
 	cube2Collidable.collider.max = { 1.0f, 1.0f, 1.0f };
 	ecs->addComponent(cube2, cube2Collidable);*/
+	NtshEngn::CapsuleCollidable cube2Collidable;
+	cube2Collidable.collider.radius = 0.75f;
+	cube2Collidable.collider.base = { 0.0f, 0.0f, 0.0f };
+	cube2Collidable.collider.tip = { 0.0f, 1.0f, 0.0f };
+	ecs->addComponent(cube2, cube2Collidable);
 
 	NtshEngn::Rigidbody cube2Rigidbody;
 	cube2Rigidbody.mass = 10.0f;
