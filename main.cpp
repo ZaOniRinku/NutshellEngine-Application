@@ -85,14 +85,20 @@ void scene(NtshEngn::Core& core) {
 	ecs->addComponent(camera, cameraScript);
 
 	Rigidbody cameraRigidbody;
-	cameraRigidbody.restitution = 1.0;
-	cameraRigidbody.isAffectedByConstants = false;
-	cameraRigidbody.staticFriction = 1.0;
-	cameraRigidbody.dynamicFriction = 1.0;
+	cameraRigidbody.mass = 20.0f;
+	cameraRigidbody.restitution = 0.0f;
+	cameraRigidbody.isAffectedByConstants = true;
+	cameraRigidbody.staticFriction = 1.0f;
+	cameraRigidbody.dynamicFriction = 1.0f;
 	ecs->addComponent(camera, cameraRigidbody);
 
-	SphereCollidable cameraCollidable;
+	/*SphereCollidable cameraCollidable;
 	cameraCollidable.collider.radius = 0.25f;
+	ecs->addComponent(camera, cameraCollidable);*/
+	CapsuleCollidable cameraCollidable;
+	cameraCollidable.collider.radius = 0.25f;
+	cameraCollidable.collider.base = { 0.0f, -0.25f, 0.0f };
+	cameraCollidable.collider.tip = { 0.0f, 0.25f, 0.0f };
 	ecs->addComponent(camera, cameraCollidable);
 
 	// Billboards
@@ -150,14 +156,6 @@ void scene(NtshEngn::Core& core) {
 	ecs->addComponent(tgntw, billboardScript);
 
 	// Floor
-	Entity floor = ecs->createEntity();
-
-	Transform& floorTransform = ecs->getComponent<Transform>(floor);
-	floorTransform.position[1] = -1.0f;
-	floorTransform.scale[0] = 7.0f;
-	floorTransform.scale[1] = 7.0f;
-	floorTransform.scale[2] = 7.0f;
-
 	Mesh floorMesh;
 	floorMesh.vertices = {
 		{ { -1.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f }, { 6.0f, 6.0f } },
@@ -168,6 +166,37 @@ void scene(NtshEngn::Core& core) {
 	floorMesh.indices = {
 		0, 1, 2, 0, 2, 3
 	};
+
+	std::pair<std::array<float, 3>, std::array<float, 3>> floorMeshAABB = assetManager->calculateAABB(floorMesh);
+
+	AABBCollidable floorCollidable;
+	floorCollidable.collider.min = { floorMeshAABB.first[0], floorMeshAABB.first[1], floorMeshAABB.first[2] };
+	floorCollidable.collider.max = { floorMeshAABB.second[0], floorMeshAABB.second[1], floorMeshAABB.second[2] };
+
+	Entity invisibleFloor = ecs->createEntity();
+
+	Transform& invisibleFloorTransform = ecs->getComponent<Transform>(invisibleFloor);
+	invisibleFloorTransform.position[1] = -1.0f;
+	invisibleFloorTransform.scale[0] = 100.0f;
+	invisibleFloorTransform.scale[1] = 100.0f;
+	invisibleFloorTransform.scale[2] = 100.0f;
+
+	Rigidbody invisibleFloorRigidbody;
+	invisibleFloorRigidbody.restitution = 0.0;
+	invisibleFloorRigidbody.isStatic = true;
+	invisibleFloorRigidbody.staticFriction = 1.0;
+	invisibleFloorRigidbody.dynamicFriction = 1.0;
+	ecs->addComponent(invisibleFloor, invisibleFloorRigidbody);
+
+	ecs->addComponent(invisibleFloor, floorCollidable);
+
+	Entity floor = ecs->createEntity();
+
+	Transform& floorTransform = ecs->getComponent<Transform>(floor);
+	floorTransform.position[1] = -1.0f;
+	floorTransform.scale[0] = 7.0f;
+	floorTransform.scale[1] = 7.0f;
+	floorTransform.scale[2] = 7.0f;
 
 	Image* floorTexture = assetManager->createImage();
 	floorTexture->width = 30;
@@ -183,20 +212,6 @@ void scene(NtshEngn::Core& core) {
 	floorRenderable.mesh = &floorMesh;
 	floorRenderable.material = &floorMaterial;
 	ecs->addComponent(floor, floorRenderable);
-
-	std::pair<std::array<float, 3>, std::array<float, 3>> floorMeshAABB = assetManager->calculateAABB(floorMesh);
-
-	Rigidbody floorRigidbody;
-	floorRigidbody.restitution = 1.0;
-	floorRigidbody.isStatic = true;
-	floorRigidbody.staticFriction = 1.0;
-	floorRigidbody.dynamicFriction = 1.0;
-	ecs->addComponent(floor, floorRigidbody);
-
-	AABBCollidable floorCollidable;
-	floorCollidable.collider.min = { floorMeshAABB.first[0], floorMeshAABB.first[1], floorMeshAABB.first[2]};
-	floorCollidable.collider.max = { floorMeshAABB.second[0], floorMeshAABB.second[1], floorMeshAABB.second[2]};
-	ecs->addComponent(floor, floorCollidable);
 
 	// Grass
 	Mesh grassMesh;
@@ -335,7 +350,7 @@ void scene(NtshEngn::Core& core) {
 	std::pair<std::array<float, 3>, std::array<float, 3>> wallMeshAABB = assetManager->calculateAABB(wallMesh);
 
 	Rigidbody wallRigidbody;
-	wallRigidbody.restitution = 1.0;
+	wallRigidbody.restitution = 0.0;
 	wallRigidbody.isStatic = true;
 	wallRigidbody.staticFriction = 1.0;
 	wallRigidbody.dynamicFriction = 1.0;
@@ -429,7 +444,7 @@ void scene(NtshEngn::Core& core) {
 	wallCubeRenderable.material = &wallCubeMaterial;
 
 	Rigidbody cubeRigidbody;
-	cubeRigidbody.restitution = 1.0;
+	cubeRigidbody.restitution = 0.0;
 	cubeRigidbody.isStatic = true;
 	cubeRigidbody.staticFriction = 1.0;
 	cubeRigidbody.dynamicFriction = 1.0;
@@ -687,7 +702,7 @@ void scene(NtshEngn::Core& core) {
 	doorClosedRenderable.material = &doorClosedMaterial;
 
 	NtshEngn::Rigidbody doorClosedRigidbody;
-	doorClosedRigidbody.restitution = 1.0f;
+	doorClosedRigidbody.restitution = 0.0f;
 	doorClosedRigidbody.isStatic = true;
 	doorClosedRigidbody.staticFriction = 1.0;
 	doorClosedRigidbody.dynamicFriction = 1.0;

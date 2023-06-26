@@ -34,7 +34,7 @@ struct GameControllerScript : NtshEngn::Script {
 		doorClosedCollidable.collider.max = { doorMeshAABB.second[0], doorMeshAABB.second[1], doorMeshAABB.second[2] };
 
 		NtshEngn::Rigidbody doorClosedRigidbody;
-		doorClosedRigidbody.restitution = 1.0;
+		doorClosedRigidbody.restitution = 0.0;
 		doorClosedRigidbody.isStatic = true;
 		doorClosedRigidbody.staticFriction = 1.0;
 		doorClosedRigidbody.dynamicFriction = 1.0;

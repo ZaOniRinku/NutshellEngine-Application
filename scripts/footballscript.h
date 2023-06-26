@@ -79,8 +79,8 @@ private:
 	}
 
 private:
-	const NtshEngn::Entity m_windowEntity = 57;
-	const NtshEngn::Entity m_windowBrokenEntity = 30;
+	const NtshEngn::Entity m_windowEntity = 58;
+	const NtshEngn::Entity m_windowBrokenEntity = 31;
 
 	bool moved = false;
 };
