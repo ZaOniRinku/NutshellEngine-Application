@@ -117,6 +117,8 @@ void scene(NtshEngn::Core& core) {
 	Rigidbody cameraRigidbody;
 	cameraRigidbody.restitution = 1.0;
 	cameraRigidbody.isAffectedByConstants = false;
+	cameraRigidbody.staticFriction = 1.0;
+	cameraRigidbody.dynamicFriction = 1.0;
 	ecs->addComponent(camera, cameraRigidbody);
 
 	SphereCollidable cameraCollidable;
@@ -217,6 +219,8 @@ void scene(NtshEngn::Core& core) {
 	Rigidbody floorRigidbody;
 	floorRigidbody.restitution = 1.0;
 	floorRigidbody.isStatic = true;
+	floorRigidbody.staticFriction = 1.0;
+	floorRigidbody.dynamicFriction = 1.0;
 	ecs->addComponent(floor, floorRigidbody);
 
 	AABBCollidable floorCollidable;
@@ -363,6 +367,8 @@ void scene(NtshEngn::Core& core) {
 	Rigidbody wallRigidbody;
 	wallRigidbody.restitution = 1.0;
 	wallRigidbody.isStatic = true;
+	wallRigidbody.staticFriction = 1.0;
+	wallRigidbody.dynamicFriction = 1.0;
 
 	AABBCollidable wallCollidable;
 	wallCollidable.collider.min = { wallMeshAABB[0].x, wallMeshAABB[0].y, wallMeshAABB[0].z };
@@ -455,6 +461,8 @@ void scene(NtshEngn::Core& core) {
 	Rigidbody cubeRigidbody;
 	cubeRigidbody.restitution = 1.0;
 	cubeRigidbody.isStatic = true;
+	cubeRigidbody.staticFriction = 1.0;
+	cubeRigidbody.dynamicFriction = 1.0;
 
 	AABBCollidable cubeCollidable;
 	cubeCollidable.collider.min = { -1.0f, -1.0f, -1.0f };
@@ -711,6 +719,8 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Rigidbody doorClosedRigidbody;
 	doorClosedRigidbody.restitution = 1.0f;
 	doorClosedRigidbody.isStatic = true;
+	doorClosedRigidbody.staticFriction = 1.0;
+	doorClosedRigidbody.dynamicFriction = 1.0;
 
 	NtshEngn::AABBCollidable doorClosedCollidable;
 	doorClosedCollidable.collider.min = { doorMeshAABB[0].x, doorMeshAABB[0].y, doorMeshAABB[0].z };

@@ -33,6 +33,12 @@ struct GameControllerScript : NtshEngn::Script {
 		doorClosedCollidable.collider.min = { doorMeshAABB[0].x, doorMeshAABB[0].y, doorMeshAABB[0].z };
 		doorClosedCollidable.collider.max = { doorMeshAABB[1].x, doorMeshAABB[1].y, doorMeshAABB[1].z };
 
+		NtshEngn::Rigidbody doorClosedRigidbody;
+		doorClosedRigidbody.restitution = 1.0;
+		doorClosedRigidbody.isStatic = true;
+		doorClosedRigidbody.staticFriction = 1.0;
+		doorClosedRigidbody.dynamicFriction = 1.0;
+
 		// Door open
 		NtshEngn::Image doorTexture;
 		doorTexture.width = 30;
@@ -126,6 +132,7 @@ struct GameControllerScript : NtshEngn::Script {
 
 		ecs->addComponent(m_firstDoor.doorClosedEntity, doorClosedRenderable);
 		ecs->addComponent(m_firstDoor.doorClosedEntity, doorClosedCollidable);
+		ecs->addComponent(m_firstDoor.doorClosedEntity, doorClosedRigidbody);
 
 		// P2 Door Closed
 		NtshEngn::Image p2DoorClosedTexture;
@@ -158,6 +165,7 @@ struct GameControllerScript : NtshEngn::Script {
 
 		ecs->addComponent(m_p2EntryDoor.doorClosedEntity, p2DoorClosedRenderable);
 		ecs->addComponent(m_p2EntryDoor.doorClosedEntity, doorClosedCollidable);
+		ecs->addComponent(m_p2EntryDoor.doorClosedEntity, doorClosedRigidbody);
 
 		// Door screen
 		NtshEngn::Image doorScreenTexture;
