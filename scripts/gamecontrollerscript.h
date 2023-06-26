@@ -27,11 +27,11 @@ struct GameControllerScript : NtshEngn::Script {
 			0, 1, 2, 0, 2, 3, 2, 1, 0, 2, 0, 3
 		};
 
-		std::array<nml::vec3, 2> doorMeshAABB = getMeshMinMax(doorMesh);
+		std::pair<std::array<float, 3>, std::array<float, 3>> doorMeshAABB = assetManager->calculateAABB(doorMesh);
 
 		NtshEngn::AABBCollidable doorClosedCollidable;
-		doorClosedCollidable.collider.min = { doorMeshAABB[0].x, doorMeshAABB[0].y, doorMeshAABB[0].z };
-		doorClosedCollidable.collider.max = { doorMeshAABB[1].x, doorMeshAABB[1].y, doorMeshAABB[1].z };
+		doorClosedCollidable.collider.min = { doorMeshAABB.first[0], doorMeshAABB.first[1], doorMeshAABB.first[2] };
+		doorClosedCollidable.collider.max = { doorMeshAABB.second[0], doorMeshAABB.second[1], doorMeshAABB.second[2] };
 
 		NtshEngn::Rigidbody doorClosedRigidbody;
 		doorClosedRigidbody.restitution = 1.0;
