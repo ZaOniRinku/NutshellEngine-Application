@@ -98,7 +98,7 @@ void scene(NtshEngn::Core& core) {
 	CapsuleCollidable cameraCollidable;
 	cameraCollidable.collider.radius = 0.25f;
 	cameraCollidable.collider.base = { 0.0f, -0.25f, 0.0f };
-	cameraCollidable.collider.tip = { 0.0f, 0.25f, 0.0f };
+	cameraCollidable.collider.tip = { 0.0f, 0.0f, 0.0f };
 	ecs->addComponent(camera, cameraCollidable);
 
 	// Billboards
@@ -170,7 +170,7 @@ void scene(NtshEngn::Core& core) {
 	std::pair<std::array<float, 3>, std::array<float, 3>> floorMeshAABB = assetManager->calculateAABB(floorMesh);
 
 	AABBCollidable floorCollidable;
-	floorCollidable.collider.min = { floorMeshAABB.first[0], floorMeshAABB.first[1], floorMeshAABB.first[2] };
+	floorCollidable.collider.min = { floorMeshAABB.first[0], floorMeshAABB.first[1] - 100.0f, floorMeshAABB.first[2] };
 	floorCollidable.collider.max = { floorMeshAABB.second[0], floorMeshAABB.second[1], floorMeshAABB.second[2] };
 
 	Entity invisibleFloor = ecs->createEntity();
