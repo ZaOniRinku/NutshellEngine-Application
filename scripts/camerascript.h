@@ -1,6 +1,7 @@
 #include "../external/Core/external/Common/resources/ntshengn_resources_scripting.h"
 #include "../external/nml/include/nml.h"
 #include <cmath>
+#include <random>
 
 struct CameraScript : NtshEngn::Script {
 	NTSHENGN_SCRIPT(CameraScript);
@@ -19,6 +20,17 @@ struct CameraScript : NtshEngn::Script {
 			m_yaw = std::atan2(cameraRotation.z, cameraRotation.x) * toDeg;
 			m_pitch = -std::asin(cameraRotation.y) * toDeg;
 		}
+
+		rigidbody.restitution = 1.1f;
+
+		sphereCollidable.collider.center = { 0.0f, 0.0f, 0.0f };
+		sphereCollidable.collider.radius = 1.0f;
+
+		aabbCollidable.collider.min = { -0.5f, -0.5f, -0.5f };
+		aabbCollidable.collider.max = { -0.5f, -0.5f, -0.5f };
+
+		capsuleCollidable.collider.base = { 0.0f, 0.0f, 0.0f };
+		capsuleCollidable.collider.tip = { 0.0f, 1.0f, 0.0f };
 	}
 
 	void update(double dt) {
@@ -110,6 +122,40 @@ struct CameraScript : NtshEngn::Script {
 				windowModule->setTitle(NTSHENGN_MAIN_WINDOW, std::to_string(frameCounter) + " - Max: " + std::to_string(frameLimiter->getMaxFPS()));
 				timeAcc = 0.0;
 				frameCounter = 0;
+				
+				NtshEngn::Entity newEntity = ecs->createEntity();
+				
+				NtshEngn::Transform& newEntityTransform = ecs->getComponent<NtshEngn::Transform>(newEntity);
+				newEntityTransform.position[1] = 10.0f;
+
+				ecs->addComponent(newEntity, rigidbody);
+
+				std::random_device rd;
+
+				std::mt19937 gen(rd());
+				std::uniform_int_distribution<> disInt(0, 2);
+				std::uniform_real_distribution<> disNorm(0.0, 1.0);
+				std::uniform_real_distribution<> dis(-1.0, 1.0);
+
+				int shape = disInt(gen);
+				if (shape == 0) {
+					sphereCollidable.collider.radius = static_cast<float>(disNorm(gen)) * 5.0f + 1.0f;
+					ecs->addComponent(newEntity, sphereCollidable);
+				}
+				else if (shape == 1) {
+					aabbCollidable.collider.min = { -(static_cast<float>(disNorm(gen)) * 2.0f + 0.25f), -(static_cast<float>(disNorm(gen)) * 2.0f + 0.25f), -(static_cast<float>(disNorm(gen)) * 2.0f + 0.25f) };
+					aabbCollidable.collider.max = { static_cast<float>(disNorm(gen)) * 2.0f + 0.25f, static_cast<float>(disNorm(gen)) * 2.0f + 0.25f, static_cast<float>(disNorm(gen)) * 2.0f + 0.25f };
+					ecs->addComponent(newEntity, aabbCollidable);
+				}
+				else if (shape == 2) {
+					capsuleCollidable.collider.tip = { 0.0f, static_cast<float>(disNorm(gen)) * 5.0f + 0.25f, 0.0f };
+					capsuleCollidable.collider.radius = static_cast<float>(disNorm(gen)) * 3.0f + 1.0f;
+					ecs->addComponent(newEntity, capsuleCollidable);
+				}
+				
+				NtshEngn::Rigidbody& newEntityRigidbody = ecs->getComponent<NtshEngn::Rigidbody>(newEntity);
+				newEntityRigidbody.mass = static_cast<float>(disNorm(gen)) * 1.0f + 0.05f;
+				newEntityRigidbody.force = { static_cast<float>(dis(gen)) * 150.0f, static_cast<float>(disNorm(gen)) * 150.0f, static_cast<float>(dis(gen)) * 150.0f };
 			}
 		}
 	}
@@ -134,4 +180,9 @@ private:
 
 	uint32_t frameCounter = 0;
 	double timeAcc = 0.0;
+
+	NtshEngn::Rigidbody rigidbody;
+	NtshEngn::SphereCollidable sphereCollidable;
+	NtshEngn::AABBCollidable aabbCollidable;
+	NtshEngn::CapsuleCollidable capsuleCollidable;
 };
