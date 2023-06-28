@@ -171,10 +171,8 @@ void scene(NtshEngn::Core& core) {
 	cubeTransform.rotation[0] = 0.0f * toRad;
 	cubeTransform.scale = { 1.0f, 1.0f, 1.0f };
 
-	NtshEngn::Model* sphereModel = assetManager->loadModel("sphere.obj");
-
 	NtshEngn::Renderable cubeRenderable;
-	cubeRenderable.mesh = &sphereModel->primitives[0].mesh;
+	cubeRenderable.mesh = &cubeMesh->primitives[0].mesh;
 	cubeRenderable.material = &cubeMesh->primitives[0].material;
 	ecs->addComponent(cube, cubeRenderable);
 
@@ -212,7 +210,7 @@ void scene(NtshEngn::Core& core) {
 	cube2Transform.scale = { 1.0f, 1.0f, 1.0f };
 
 	NtshEngn::Renderable cube2Renderable;
-	cube2Renderable.mesh = &sphereModel->primitives[0].mesh;
+	cube2Renderable.mesh = &cubeMesh->primitives[0].mesh;
 	cube2Renderable.material = &cubeMesh->primitives[0].material;
 	ecs->addComponent(cube2, cube2Renderable);
 
@@ -246,7 +244,7 @@ void scene(NtshEngn::Core& core) {
 	cube3Transform.scale = { 1.0f, 1.0f, 1.0f };
 
 	NtshEngn::Renderable cube3Renderable;
-	cube3Renderable.mesh = &sphereModel->primitives[0].mesh;
+	cube3Renderable.mesh = &cubeMesh->primitives[0].mesh;
 	cube3Renderable.material = &cubeMesh->primitives[0].material;
 	ecs->addComponent(cube3, cube3Renderable);
 
@@ -274,7 +272,7 @@ void scene(NtshEngn::Core& core) {
 	cube4Transform.scale = { 1.0f, 1.0f, 1.0f };
 
 	NtshEngn::Renderable cube4Renderable;
-	cube4Renderable.mesh = &sphereModel->primitives[0].mesh;
+	cube4Renderable.mesh = &cubeMesh->primitives[0].mesh;
 	cube4Renderable.material = &cubeMesh->primitives[0].material;
 	ecs->addComponent(cube4, cube4Renderable);
 
