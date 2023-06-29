@@ -119,7 +119,7 @@ struct CameraScript : NtshEngn::Script {
 
 			timeAcc += dt;
 			if (timeAcc > 1000.0) {
-				windowModule->setTitle(NTSHENGN_MAIN_WINDOW, std::to_string(frameCounter) + " - Max: " + std::to_string(frameLimiter->getMaxFPS()));
+				windowModule->setTitle(NTSHENGN_MAIN_WINDOW, std::to_string(frameCounter) + " - Max: " + std::to_string(frameLimiter->getMaxFPS()) + " - Entities: " + std::to_string(++entityCount));
 				timeAcc = 0.0;
 				frameCounter = 0;
 				
@@ -185,4 +185,6 @@ private:
 	NtshEngn::SphereCollidable sphereCollidable;
 	NtshEngn::AABBCollidable aabbCollidable;
 	NtshEngn::CapsuleCollidable capsuleCollidable;
+
+	uint32_t entityCount = 0;
 };
