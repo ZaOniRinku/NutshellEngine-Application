@@ -176,10 +176,10 @@ void scene(NtshEngn::Core& core) {
 	cubeRenderable.material = &cubeMesh->primitives[0].material;
 	ecs->addComponent(cube, cubeRenderable);
 
-	/*NtshEngn::SphereCollidable cubeCollidable;
+	NtshEngn::SphereCollidable cubeCollidable;
 	cubeCollidable.collider.center = { 0.0f, 0.0f, 0.0f };
 	cubeCollidable.collider.radius = 1.0f;
-	ecs->addComponent(cube, cubeCollidable);*/
+	ecs->addComponent(cube, cubeCollidable);
 	/*NtshEngn::AABBCollidable cubeCollidable;
 	cubeCollidable.collider.min = { -1.0f, -1.0f, -1.0f };
 	cubeCollidable.collider.max = { 1.0f, 1.0f, 1.0f };
@@ -191,7 +191,7 @@ void scene(NtshEngn::Core& core) {
 	ecs->addComponent(cube, cubeCollidable);*/
 
 	NtshEngn::Rigidbody cubeRigidbody;
-	cubeRigidbody.mass = 5.0f;
+	cubeRigidbody.mass = 1.0f;
 	cubeRigidbody.restitution = 1.0f;
 	cubeRigidbody.staticFriction = 0.0f;
 	cubeRigidbody.dynamicFriction = 0.0f;
@@ -214,10 +214,10 @@ void scene(NtshEngn::Core& core) {
 	cube2Renderable.material = &cubeMesh->primitives[0].material;
 	ecs->addComponent(cube2, cube2Renderable);
 
-	/*NtshEngn::SphereCollidable cube2Collidable;
+	NtshEngn::SphereCollidable cube2Collidable;
 	cube2Collidable.collider.center = { 0.0f, 0.0f, 0.0f };
 	cube2Collidable.collider.radius = 0.5f;
-	ecs->addComponent(cube2, cube2Collidable);*/
+	ecs->addComponent(cube2, cube2Collidable);
 	/*NtshEngn::AABBCollidable cube2Collidable;
 	cube2Collidable.collider.min = { -1.0f, -1.0f, -1.0f };
 	cube2Collidable.collider.max = { 1.0f, 1.0f, 1.0f };
@@ -252,10 +252,10 @@ void scene(NtshEngn::Core& core) {
 	cube3Collidable.collider.center = { 0.0f, 0.0f, 0.0f };
 	cube3Collidable.collider.radius = 2.5f;
 	ecs->addComponent(cube3, cube3Collidable);*/
-	/*NtshEngn::AABBCollidable cube3Collidable;
+	NtshEngn::AABBCollidable cube3Collidable;
 	cube3Collidable.collider.min = { -1.0f, -1.0f, -1.0f };
 	cube3Collidable.collider.max = { 1.0f, 1.0f, 1.0f };
-	ecs->addComponent(cube3, cube3Collidable);*/
+	ecs->addComponent(cube3, cube3Collidable);
 	/*NtshEngn::CapsuleCollidable cube3Collidable;
 	cube3Collidable.collider.radius = 1.0f;
 	cube3Collidable.collider.base = { 0.0f, 0.0f, 0.0f };
@@ -284,11 +284,11 @@ void scene(NtshEngn::Core& core) {
 	cube4Collidable.collider.min = { -1.0f, -1.0f, -1.0f };
 	cube4Collidable.collider.max = { 1.0f, 1.0f, 1.0f };
 	ecs->addComponent(cube4, cube4Collidable);*/
-	/*NtshEngn::CapsuleCollidable cube4Collidable;
+	NtshEngn::CapsuleCollidable cube4Collidable;
 	cube4Collidable.collider.radius = 1.0f;
 	cube4Collidable.collider.base = { 0.0f, 0.0f, 0.0f };
 	cube4Collidable.collider.tip = { 0.0f, 3.0f, 2.0f };
-	ecs->addComponent(cube4, cube4Collidable);*/
+	ecs->addComponent(cube4, cube4Collidable);
 
 	NtshEngn::Rigidbody cube4Rigidbody;
 	cube4Rigidbody.mass = 10.0f;
@@ -344,6 +344,62 @@ void scene(NtshEngn::Core& core) {
 	planeRigidbody.staticFriction = 0.5f;
 	planeRigidbody.dynamicFriction = 0.5f;
 	ecs->addComponent(plane, planeRigidbody);
+
+	// Create a plane2 Entity
+	NtshEngn::Entity plane2 = ecs->createEntity();
+
+	NtshEngn::Transform& plane2Transform = ecs->getComponent<NtshEngn::Transform>(plane2);
+	plane2Transform.position[0] = -200.0f;
+	plane2Transform.position[1] = 90.0f;
+	plane2Transform.scale = { 100.0f, 100.0f, 100.0f };
+
+	ecs->addComponent(plane2, planeRenderable);
+
+	ecs->addComponent(plane2, planeCollidable);
+
+	ecs->addComponent(plane2, planeRigidbody);
+
+	// Create a plane3 Entity
+	NtshEngn::Entity plane3 = ecs->createEntity();
+
+	NtshEngn::Transform& plane3Transform = ecs->getComponent<NtshEngn::Transform>(plane3);
+	plane3Transform.position[0] = 200.0f;
+	plane3Transform.position[1] = 90.0f;
+	plane3Transform.scale = { 100.0f, 100.0f, 100.0f };
+
+	ecs->addComponent(plane3, planeRenderable);
+
+	ecs->addComponent(plane3, planeCollidable);
+
+	ecs->addComponent(plane3, planeRigidbody);
+
+	// Create a plane4 Entity
+	NtshEngn::Entity plane4 = ecs->createEntity();
+
+	NtshEngn::Transform& plane4Transform = ecs->getComponent<NtshEngn::Transform>(plane4);
+	plane4Transform.position[2] = -200.0f;
+	plane4Transform.position[1] = 90.0f;
+	plane4Transform.scale = { 100.0f, 100.0f, 100.0f };
+
+	ecs->addComponent(plane4, planeRenderable);
+
+	ecs->addComponent(plane4, planeCollidable);
+
+	ecs->addComponent(plane4, planeRigidbody);
+
+	// Create a plane5 Entity
+	NtshEngn::Entity plane5 = ecs->createEntity();
+
+	NtshEngn::Transform& plane5Transform = ecs->getComponent<NtshEngn::Transform>(plane5);
+	plane5Transform.position[2] = 200.0f;
+	plane5Transform.position[1] = 90.0f;
+	plane5Transform.scale = { 100.0f, 100.0f, 100.0f };
+
+	ecs->addComponent(plane5, planeRenderable);
+
+	ecs->addComponent(plane5, planeCollidable);
+
+	ecs->addComponent(plane5, planeRigidbody);
 
 	// Create lights
 	// Directional Light
