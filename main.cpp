@@ -162,29 +162,136 @@ void scene(NtshEngn::Core& core) {
 	cubeCollidable.collider.min = { cubeMeshAABB[0].x, cubeMeshAABB[0].y, cubeMeshAABB[0].z };
 	cubeCollidable.collider.max = { cubeMeshAABB[1].x, cubeMeshAABB[1].y, cubeMeshAABB[1].z };
 
+	// top cube light
+	NtshEngn::Entity topCube = ecs->createEntity();
+
+	NtshEngn::Transform& topCubeTransform = ecs->getComponent<NtshEngn::Transform>(topCube);
+	topCubeTransform.position[0] = 0.0f;
+	topCubeTransform.position[1] = 2.0f;
+	topCubeTransform.position[2] = 0.0f;
+	topCubeTransform.scale = { 0.5f, 0.10f, 0.5f };
+
+	NtshEngn::Image* topCubeImage = assetManager->createImage();
+	topCubeImage->width = 1;
+	topCubeImage->height = 1;
+	topCubeImage->format = NtshEngn::ImageFormat::R8G8B8A8;
+	topCubeImage->colorSpace = NtshEngn::ImageColorSpace::SRGB;
+	topCubeImage->data = { 0, 0, 0, 255 };
+
+	NtshEngn::Image* topCubeORM = assetManager->createImage();
+	topCubeORM->width = 1;
+	topCubeORM->height = 1;
+	topCubeORM->format = NtshEngn::ImageFormat::R8G8B8A8;
+	topCubeORM->colorSpace = NtshEngn::ImageColorSpace::Linear;
+	topCubeORM->data = { 255, 255, 255, 255 };
+
+	NtshEngn::Image* topCubeEmissive = assetManager->createImage();
+	topCubeEmissive->width = 1;
+	topCubeEmissive->height = 1;
+	topCubeEmissive->format = NtshEngn::ImageFormat::R8G8B8A8;
+	topCubeEmissive->colorSpace = NtshEngn::ImageColorSpace::Linear;
+	topCubeEmissive->data = { 255, 255, 255, 255 };
+
+	NtshEngn::Material topCubeMaterial;
+	topCubeMaterial.diffuseTexture.image = topCubeImage;
+	topCubeMaterial.diffuseTexture.imageSampler.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.diffuseTexture.imageSampler.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.diffuseTexture.imageSampler.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.diffuseTexture.imageSampler.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.diffuseTexture.imageSampler.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.diffuseTexture.imageSampler.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.diffuseTexture.imageSampler.anisotropyLevel = 0.0f;
+	topCubeMaterial.occlusionTexture.image = topCubeORM;
+	topCubeMaterial.occlusionTexture.imageSampler.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.occlusionTexture.imageSampler.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.occlusionTexture.imageSampler.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.occlusionTexture.imageSampler.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.occlusionTexture.imageSampler.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.occlusionTexture.imageSampler.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.occlusionTexture.imageSampler.anisotropyLevel = 0.0f;
+	topCubeMaterial.roughnessTexture.image = topCubeORM;
+	topCubeMaterial.roughnessTexture.imageSampler.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.roughnessTexture.imageSampler.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.roughnessTexture.imageSampler.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.roughnessTexture.imageSampler.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.roughnessTexture.imageSampler.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.roughnessTexture.imageSampler.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.roughnessTexture.imageSampler.anisotropyLevel = 0.0f;
+	topCubeMaterial.metalnessTexture.image = topCubeORM;
+	topCubeMaterial.metalnessTexture.imageSampler.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.metalnessTexture.imageSampler.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.metalnessTexture.imageSampler.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.metalnessTexture.imageSampler.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.metalnessTexture.imageSampler.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.metalnessTexture.imageSampler.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.metalnessTexture.imageSampler.anisotropyLevel = 0.0f;
+	topCubeMaterial.emissiveTexture.image = topCubeEmissive;
+	topCubeMaterial.emissiveTexture.imageSampler.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.emissiveTexture.imageSampler.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.emissiveTexture.imageSampler.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	topCubeMaterial.emissiveTexture.imageSampler.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.emissiveTexture.imageSampler.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.emissiveTexture.imageSampler.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	topCubeMaterial.emissiveTexture.imageSampler.anisotropyLevel = 0.0f;
+
+	NtshEngn::Renderable topCubeRenderable;
+	topCubeRenderable.mesh = &cubeMesh->primitives[0].mesh;
+	topCubeRenderable.material = &topCubeMaterial;
+	ecs->addComponent(topCube, topCubeRenderable);
+
+	ecs->addComponent(topCube, cubeCollidable);
+
 	// left cube
 	NtshEngn::Entity leftCube = ecs->createEntity();
 
 	NtshEngn::Transform& leftCubeTransform = ecs->getComponent<NtshEngn::Transform>(leftCube);
 	leftCubeTransform.position[0] = -0.75f;
-	leftCubeTransform.position[1] = -1.0f;
+	leftCubeTransform.position[1] = -1.25f;
 	leftCubeTransform.position[2] = -0.5f;
 	leftCubeTransform.rotation[1] = -45.0f * toRad;
-	leftCubeTransform.scale = { 0.5f, 1.0f, 0.5f };
+	leftCubeTransform.scale = { 0.5f, 0.75f, 0.5f };
 
 	NtshEngn::Image* leftCubeImage = assetManager->createImage();
 	leftCubeImage->width = 1;
 	leftCubeImage->height = 1;
 	leftCubeImage->format = NtshEngn::ImageFormat::R8G8B8A8;
 	leftCubeImage->colorSpace = NtshEngn::ImageColorSpace::SRGB;
-	leftCubeImage->data = { 0, 0, 255, 255 };
+	leftCubeImage->data = { 0, 0, 0, 255 };
 
 	NtshEngn::Image* leftCubeORM = assetManager->createImage();
-	leftCubeORM->width = 1;
-	leftCubeORM->height = 1;
+	leftCubeORM->width = 3;
+	leftCubeORM->height = 3;
 	leftCubeORM->format = NtshEngn::ImageFormat::R8G8B8A8;
 	leftCubeORM->colorSpace = NtshEngn::ImageColorSpace::Linear;
-	leftCubeORM->data = { 255, 1, 255, 255 };
+	leftCubeORM->data = { 
+		255, 255, 255, 255,
+		255, 255, 255, 255,
+		255, 255, 255, 255,
+		255, 128, 255, 255,
+		255, 128, 0, 255,
+		255, 255, 0, 255,
+		255, 0, 0, 255,
+		255, 255, 0, 255,
+		255, 128, 128, 255,
+	};
+
+	NtshEngn::Image* leftCubeEmissive = assetManager->createImage();
+	leftCubeEmissive->width = 3;
+	leftCubeEmissive->height = 3;
+	leftCubeEmissive->format = NtshEngn::ImageFormat::R8G8B8A8;
+	leftCubeEmissive->colorSpace = NtshEngn::ImageColorSpace::Linear;
+	leftCubeEmissive->data = { 255, 0, 0, 255,
+		0, 255, 0, 255,
+		0, 0, 255, 255,
+		0, 255, 0, 255,
+		0, 255, 255, 255,
+		255, 128, 0, 255,
+		255, 0, 255, 255,
+		255, 0, 128, 255,
+		128, 255, 0, 255
+	};
+
+	core.getWindowModule()->setIcon(core.getWindowModule()->getMainWindowID(), *leftCubeEmissive);
 
 	NtshEngn::Material leftCubeMaterial;
 	leftCubeMaterial.diffuseTexture.image = leftCubeImage;
@@ -219,11 +326,23 @@ void scene(NtshEngn::Core& core) {
 	leftCubeMaterial.metalnessTexture.imageSampler.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
 	leftCubeMaterial.metalnessTexture.imageSampler.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
 	leftCubeMaterial.metalnessTexture.imageSampler.anisotropyLevel = 0.0f;
+	leftCubeMaterial.emissiveTexture.image = leftCubeEmissive;
+	leftCubeMaterial.emissiveTexture.imageSampler.magFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.emissiveTexture.imageSampler.minFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.emissiveTexture.imageSampler.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
+	leftCubeMaterial.emissiveTexture.imageSampler.addressModeU = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.emissiveTexture.imageSampler.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.emissiveTexture.imageSampler.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
+	leftCubeMaterial.emissiveTexture.imageSampler.anisotropyLevel = 0.0f;
 
 	NtshEngn::Renderable leftCubeRenderable;
 	leftCubeRenderable.mesh = &cubeMesh->primitives[0].mesh;
 	leftCubeRenderable.material = &leftCubeMaterial;
 	ecs->addComponent(leftCube, leftCubeRenderable);
+
+	NtshEngn::Scriptable leftCubeScriptable;
+	leftCubeScriptable.script = std::make_unique<CubeScript>();
+	ecs->addComponent(leftCube, leftCubeScriptable);
 
 	ecs->addComponent(leftCube, cubeCollidable);
 
@@ -281,14 +400,14 @@ void scene(NtshEngn::Core& core) {
 	botPlaneImage->height = 1;
 	botPlaneImage->format = NtshEngn::ImageFormat::R8G8B8A8;
 	botPlaneImage->colorSpace = NtshEngn::ImageColorSpace::SRGB;
-	botPlaneImage->data = { 55, 55, 55, 255 };
+	botPlaneImage->data = { 128, 128, 128, 255 };
 
 	NtshEngn::Image* botPlaneORM = assetManager->createImage();
 	botPlaneORM->width = 1;
 	botPlaneORM->height = 1;
 	botPlaneORM->format = NtshEngn::ImageFormat::R8G8B8A8;
 	botPlaneORM->colorSpace = NtshEngn::ImageColorSpace::Linear;
-	botPlaneORM->data = { 255, 0, 0, 255 };
+	botPlaneORM->data = { 255, 128, 0, 255 };
 
 	NtshEngn::Material botPlaneMaterial;
 	botPlaneMaterial.diffuseTexture.image = botPlaneImage;
@@ -474,7 +593,7 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Entity light = ecs->createEntity();
 
 	NtshEngn::Light lightLight;
-	lightLight.color = { 1.0f, 1.0f, 1.0f };
+	lightLight.color = { 0.05f, 0.05f, 0.05f };
 	lightLight.type = NtshEngn::LightType::Point;
 	ecs->addComponent(light, lightLight);
 }
