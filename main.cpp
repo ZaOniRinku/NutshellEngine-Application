@@ -28,7 +28,18 @@ void scene(NtshEngn::Core& core) {
 	cameraScriptable.script = std::make_unique<CameraScript>();
 	ecs->addComponent(camera, cameraScriptable);
 
-	if (core.getWindowModule()) {
+	// Create a light
+	Entity light = ecs->createEntity();
+
+	Transform& lightTransform = ecs->getComponent<Transform>(light);
+	lightTransform.rotation = { 1.0f, -1.0f, 0.0f };
+
+	Light lightLight;
+	lightLight.type = LightType::Directional;
+	lightLight.color = { 1.0f, 1.0f, 1.0f };
+	ecs->addComponent(light, lightLight);
+
+	if (core.getGraphicsModule()) {
 		// Client
 		Entity client = ecs->createEntity();
 
