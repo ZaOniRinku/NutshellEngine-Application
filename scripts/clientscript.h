@@ -122,7 +122,7 @@ struct ClientScript : NtshEngn::Script {
 					buffer.read(reinterpret_cast<std::byte*>(&clientID), sizeof(NtshEngn::ConnectedClientID));
 
 					m_id = clientID;
-					NTSHENGN_CORE_INFO("i am " + std::to_string(m_id));
+					NTSHENGN_CORE_INFO("I am number " + std::to_string(m_id));
 				}
 				else {
 					NTSHENGN_CORE_WARNING("Unknown header: " + std::to_string(messageType));
