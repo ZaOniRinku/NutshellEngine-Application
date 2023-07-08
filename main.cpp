@@ -291,7 +291,9 @@ void scene(NtshEngn::Core& core) {
 		128, 255, 0, 255
 	};
 
-	core.getWindowModule()->setIcon(core.getWindowModule()->getMainWindowID(), *leftCubeEmissive);
+	if (core.getWindowModule()) {
+		core.getWindowModule()->setIcon(core.getWindowModule()->getMainWindowID(), *leftCubeEmissive);
+	}
 
 	NtshEngn::Material leftCubeMaterial;
 	leftCubeMaterial.diffuseTexture.image = leftCubeImage;
