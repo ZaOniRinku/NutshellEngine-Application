@@ -6,6 +6,7 @@ struct CubeScript : NtshEngn::Script {
 	NTSHENGN_SCRIPT(CubeScript);
 
 	void init() {
+		m_camera = ecs->findEntityByName("camera");
 	}
 
 	void update(double dt) {
@@ -45,5 +46,5 @@ struct CubeScript : NtshEngn::Script {
 private:
 	const float m_cubeSpeed = 0.005f;
 
-	NtshEngn::Entity m_camera = 0;
+	NtshEngn::Entity m_camera;
 };

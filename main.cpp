@@ -39,7 +39,7 @@ void scene(NtshEngn::Core& core) {
 	const float toRad = 3.1415926535897932384626433832795f / 180.0f;
 
 	// Create the camera
-	NtshEngn::Entity camera = ecs->createEntity();
+	NtshEngn::Entity camera = ecs->createEntity("camera");
 
 	NtshEngn::Transform& cameraTransform = ecs->getComponent<NtshEngn::Transform>(camera);
 	cameraTransform.position = { 0.0f, 0.0f, 7.0f };
