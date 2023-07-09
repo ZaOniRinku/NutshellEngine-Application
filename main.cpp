@@ -2,36 +2,6 @@
 #include "scripts/camerascript.h"
 #include "scripts/cubescript.h"
 
-std::array<nml::vec3, 2> getMeshMinMax(const NtshEngn::Mesh& mesh) {
-	nml::vec3 min = nml::vec3(std::numeric_limits<float>::max());
-	nml::vec3 max = nml::vec3(std::numeric_limits<float>::lowest());
-	for (const NtshEngn::Vertex& vertex : mesh.vertices) {
-		if (vertex.position[0] < min.x) {
-			min.x = vertex.position[0];
-		}
-		if (vertex.position[0] > max.x) {
-			max.x = vertex.position[0];
-		}
-
-		if (vertex.position[1] < min.y) {
-			min.y = vertex.position[1];
-		}
-		if (vertex.position[1] > max.y) {
-			max.y = vertex.position[1];
-		}
-
-		if (vertex.position[2] < min.z) {
-			min.z = vertex.position[2];
-		}
-		if (vertex.position[2] > max.z) {
-			max.z = vertex.position[2];
-		}
-	}
-
-
-	return { min, max };
-}
-
 void scene(NtshEngn::Core& core) {
 	NtshEngn::ECS* ecs = core.getECS();
 	NtshEngn::AssetManager* assetManager = core.getAssetManager();
@@ -157,10 +127,10 @@ void scene(NtshEngn::Core& core) {
 	cubeMesh->primitives[0].material.metalnessTexture.imageSampler.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	cubeMesh->primitives[0].material.metalnessTexture.imageSampler.anisotropyLevel = 0.0f;
 
-	std::array<nml::vec3, 2> cubeMeshAABB = getMeshMinMax(cubeMesh->primitives[0].mesh);
+	std::pair<std::array<float, 3>, std::array<float, 3>> cubeMeshAABB = NtshEngn::AssetManager::calculateAABB(cubeMesh->primitives[0].mesh);
 	NtshEngn::AABBCollidable cubeCollidable;
-	cubeCollidable.collider.min = { cubeMeshAABB[0].x, cubeMeshAABB[0].y, cubeMeshAABB[0].z };
-	cubeCollidable.collider.max = { cubeMeshAABB[1].x, cubeMeshAABB[1].y, cubeMeshAABB[1].z };
+	cubeCollidable.collider.min = { cubeMeshAABB.first[0], cubeMeshAABB.first[1], cubeMeshAABB.first[2] };
+	cubeCollidable.collider.max = { cubeMeshAABB.second[0], cubeMeshAABB.second[1], cubeMeshAABB.second[2] };
 
 	// top cube light
 	NtshEngn::Entity topCube = ecs->createEntity();
@@ -384,10 +354,10 @@ void scene(NtshEngn::Core& core) {
 	};
 	assetManager->calculateTangents(planeMesh->primitives[0].mesh);
 
-	std::array<nml::vec3, 2> planeMeshAABB = getMeshMinMax(planeMesh->primitives[0].mesh);
+	std::pair<std::array<float, 3>, std::array<float, 3>> planeMeshAABB = NtshEngn::AssetManager::calculateAABB(planeMesh->primitives[0].mesh);
 	NtshEngn::AABBCollidable planeCollidable;
-	planeCollidable.collider.min = { planeMeshAABB[0].x, planeMeshAABB[0].y, planeMeshAABB[0].z };
-	planeCollidable.collider.max = { planeMeshAABB[1].x, planeMeshAABB[1].y, planeMeshAABB[1].z };
+	planeCollidable.collider.min = { planeMeshAABB.first[0], planeMeshAABB.first[1], planeMeshAABB.first[2] };
+	planeCollidable.collider.max = { planeMeshAABB.second[0], planeMeshAABB.second[1], planeMeshAABB.second[2] };
 
 	// Create a plane Entity
 	// bot
