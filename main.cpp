@@ -127,10 +127,10 @@ void scene(NtshEngn::Core& core) {
 	cubeMesh->primitives[0].material.metalnessTexture.imageSampler.mipmapFilter = NtshEngn::ImageSamplerFilter::Nearest;
 	cubeMesh->primitives[0].material.metalnessTexture.imageSampler.anisotropyLevel = 0.0f;
 
-	std::pair<std::array<float, 3>, std::array<float, 3>> cubeMeshAABB = NtshEngn::AssetManager::calculateAABB(cubeMesh->primitives[0].mesh);
+	std::array<std::array<float, 3>, 2> cubeMeshAABB = assetManager->calculateAABB(cubeMesh->primitives[0].mesh);
 	NtshEngn::AABBCollidable cubeCollidable;
-	cubeCollidable.collider.min = { cubeMeshAABB.first[0], cubeMeshAABB.first[1], cubeMeshAABB.first[2] };
-	cubeCollidable.collider.max = { cubeMeshAABB.second[0], cubeMeshAABB.second[1], cubeMeshAABB.second[2] };
+	cubeCollidable.collider.min = cubeMeshAABB[0];
+	cubeCollidable.collider.max = cubeMeshAABB[1];
 
 	// top cube light
 	NtshEngn::Entity topCube = ecs->createEntity();
@@ -354,10 +354,10 @@ void scene(NtshEngn::Core& core) {
 	};
 	assetManager->calculateTangents(planeMesh->primitives[0].mesh);
 
-	std::pair<std::array<float, 3>, std::array<float, 3>> planeMeshAABB = NtshEngn::AssetManager::calculateAABB(planeMesh->primitives[0].mesh);
+	std::array<std::array<float, 3>, 2> planeMeshAABB = assetManager->calculateAABB(planeMesh->primitives[0].mesh);
 	NtshEngn::AABBCollidable planeCollidable;
-	planeCollidable.collider.min = { planeMeshAABB.first[0], planeMeshAABB.first[1], planeMeshAABB.first[2] };
-	planeCollidable.collider.max = { planeMeshAABB.second[0], planeMeshAABB.second[1], planeMeshAABB.second[2] };
+	planeCollidable.collider.min = planeMeshAABB[0];
+	planeCollidable.collider.max = planeMeshAABB[1];
 
 	// Create a plane Entity
 	// bot
