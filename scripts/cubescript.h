@@ -16,6 +16,7 @@ struct CubeScript : NtshEngn::Script {
 			const float cubeSpeed = m_cubeSpeed * static_cast<float>(dt);
 
 			nml::vec3 position = nml::vec3(transform.position.data());
+			nml::vec3 scale = nml::vec3(transform.scale.data());
 			nml::vec3 cameraRotation = nml::vec3(cameraTransform.rotation.data());
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::Up) == NtshEngn::InputState::Held) {
 				position.x += (cameraRotation.x * cubeSpeed);
@@ -35,8 +36,21 @@ struct CubeScript : NtshEngn::Script {
 				position.x += (t.x * cubeSpeed);
 				position.z += (t.z * cubeSpeed);
 			}
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::P) == NtshEngn::InputState::Held) {
+				position.y += cubeSpeed;
+			}
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::M) == NtshEngn::InputState::Held) {
+				position.y -= cubeSpeed;
+			}
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::NumPlus) == NtshEngn::InputState::Held) {
+				scale += cubeSpeed / 2.0f;
+			}
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::NumMinus) == NtshEngn::InputState::Held) {
+				scale -= cubeSpeed / 2.0f;
+			}
 
 			transform.position = { position.x, position.y, position.z };
+			transform.scale = { scale.x, scale.y, scale.z };
 		}
 	}
 
