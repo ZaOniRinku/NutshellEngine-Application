@@ -139,7 +139,7 @@ void scene(NtshEngn::Core& core) {
 	topCubeTransform.position[0] = 0.0f;
 	topCubeTransform.position[1] = 2.0f;
 	topCubeTransform.position[2] = 0.0f;
-	topCubeTransform.scale = { 0.5f, 0.10f, 0.5f };
+	topCubeTransform.scale = { 0.75f, 0.10f, 0.75f };
 
 	NtshEngn::Image* topCubeImage = assetManager->createImage();
 	topCubeImage->width = 1;
@@ -203,6 +203,8 @@ void scene(NtshEngn::Core& core) {
 	topCubeMaterial.emissiveTexture.imageSampler.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
 	topCubeMaterial.emissiveTexture.imageSampler.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
 	topCubeMaterial.emissiveTexture.imageSampler.anisotropyLevel = 0.0f;
+	//topCubeMaterial.emissiveFactor = 1.0f;
+	topCubeMaterial.emissiveFactor = 1.0f;
 
 	NtshEngn::Renderable topCubeRenderable;
 	topCubeRenderable.mesh = &cubeMesh->primitives[0].mesh;
@@ -306,6 +308,7 @@ void scene(NtshEngn::Core& core) {
 	leftCubeMaterial.emissiveTexture.imageSampler.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
 	leftCubeMaterial.emissiveTexture.imageSampler.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
 	leftCubeMaterial.emissiveTexture.imageSampler.anisotropyLevel = 0.0f;
+	leftCubeMaterial.emissiveFactor = 0.0f;
 
 	NtshEngn::Renderable leftCubeRenderable;
 	leftCubeRenderable.mesh = &cubeMesh->primitives[0].mesh;
@@ -379,7 +382,7 @@ void scene(NtshEngn::Core& core) {
 	botPlaneORM->height = 1;
 	botPlaneORM->format = NtshEngn::ImageFormat::R8G8B8A8;
 	botPlaneORM->colorSpace = NtshEngn::ImageColorSpace::Linear;
-	botPlaneORM->data = { 255, 128, 0, 255 };
+	botPlaneORM->data = { 255, 128, 255, 255 };
 
 	NtshEngn::Material botPlaneMaterial;
 	botPlaneMaterial.diffuseTexture.image = botPlaneImage;
@@ -466,7 +469,7 @@ void scene(NtshEngn::Core& core) {
 	leftPlaneORM->height = 1;
 	leftPlaneORM->format = NtshEngn::ImageFormat::R8G8B8A8;
 	leftPlaneORM->colorSpace = NtshEngn::ImageColorSpace::Linear;
-	leftPlaneORM->data = { 255, 255, 0, 255 };
+	leftPlaneORM->data = { 255, 25, 255, 255 };
 
 	NtshEngn::Material leftPlaneMaterial;
 	leftPlaneMaterial.diffuseTexture.image = leftPlaneImage;
@@ -562,12 +565,27 @@ void scene(NtshEngn::Core& core) {
 	ecs->addComponent(rightPlane, planeCollidable);
 
 	// Light
-	NtshEngn::Entity light = ecs->createEntity();
+	NtshEngn::Entity light0 = ecs->createEntity();
 
-	NtshEngn::Light lightLight;
-	lightLight.color = { 0.05f, 0.05f, 0.05f };
-	lightLight.type = NtshEngn::LightType::Point;
-	ecs->addComponent(light, lightLight);
+	NtshEngn::Transform& light0Transform = ecs->getComponent<NtshEngn::Transform>(light0);
+	light0Transform.position[1] = 1.0f;
+	light0Transform.rotation = { 1.0f, -1.0f, -1.0f };
+
+	NtshEngn::Light light0Light;
+	light0Light.color = { 1.0f, 1.0f, 1.0f };
+	light0Light.type = NtshEngn::LightType::Directional;
+	ecs->addComponent(light0, light0Light);
+
+	NtshEngn::Entity light1 = ecs->createEntity();
+
+	NtshEngn::Transform& light1Transform = ecs->getComponent<NtshEngn::Transform>(light1);
+	light1Transform.position[1] = 1.0f;
+	light1Transform.rotation = { -1.0f, -1.0f, -1.0f };
+
+	NtshEngn::Light light1Light;
+	light1Light.color = { 1.0f, 1.0f, 1.0f };
+	light1Light.type = NtshEngn::LightType::Directional;
+	ecs->addComponent(light1, light1Light);
 }
 
 int main() {
