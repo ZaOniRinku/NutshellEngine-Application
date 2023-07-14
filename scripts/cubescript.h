@@ -1,8 +1,9 @@
-#include "../external/Core/external/Common/resources/ntshengn_resources_scripting.h"
+#pragma once
+#include "../Core/Common/resources/ntshengn_resources_scripting.h"
 #include "../external/nml/include/nml.h"
 #include <cmath>
 
-struct CubeScript : NtshEngn::Script {
+struct CubeScript : public NtshEngn::Script {
 	NTSHENGN_SCRIPT(CubeScript);
 
 	void init() {

@@ -1,9 +1,10 @@
-#include "../external/Core/external/Common/resources/ntshengn_resources_scripting.h"
+#pragma once
+#include "../Core/Common/resources/ntshengn_resources_scripting.h"
 #include "../external/nml/include/nml.h"
 #include <cmath>
 #include <random>
 
-struct CameraScript : NtshEngn::Script {
+struct CameraScript : public NtshEngn::Script {
 	NTSHENGN_SCRIPT(CameraScript);
 
 	void init() {
