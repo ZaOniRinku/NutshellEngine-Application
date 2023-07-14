@@ -38,10 +38,10 @@ struct CubeScript : NtshEngn::Script {
 				position.x += (t.x * cubeSpeed);
 				position.z += (t.z * cubeSpeed);
 			}
-			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::P) == NtshEngn::InputState::Held) {
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::NumPlus) == NtshEngn::InputState::Held) {
 				position.y += cubeSpeed;
 			}
-			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::M) == NtshEngn::InputState::Held) {
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::NumMinus) == NtshEngn::InputState::Held) {
 				position.y -= cubeSpeed;
 			}
 
@@ -60,12 +60,7 @@ struct CubeScript : NtshEngn::Script {
 				rotationMouseStart = rotationMouseEnd;
 			}
 
-			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::NumPlus) == NtshEngn::InputState::Held) {
-				scale += cubeSpeed / 2.0f;
-			}
-			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::NumMinus) == NtshEngn::InputState::Held) {
-				scale -= cubeSpeed / 2.0f;
-			}
+			scale += windowModule->getMouseScrollOffsetY(windowModule->getMainWindowID()) * cubeSpeed;
 
 			transform.position = { position.x, position.y, position.z };
 			transform.rotation = { rotation.x, rotation.y, rotation.z };
