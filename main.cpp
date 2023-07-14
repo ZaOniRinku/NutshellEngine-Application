@@ -213,15 +213,11 @@ void scene(NtshEngn::Core& core) {
 
 	ecs->addComponent(topCube, cubeCollidable);
 
-	NtshEngn::Model* gltfModel = assetManager->loadModel("models/2.0/ReciprocatingSaw/glTF/ReciprocatingSaw.gltf");
+	NtshEngn::Model* gltfModel = assetManager->loadModel("models/2.0/ABeautifulGame/glTF/ABeautifulGame.gltf");
 
 	for (size_t i = 0; i < gltfModel->primitives.size(); i++) {
 		NtshEngn::Entity gltfEntity = ecs->createEntity();
 
-		NtshEngn::Transform& gltfEntityTransform = ecs->getComponent<NtshEngn::Transform>(gltfEntity);
-		gltfEntityTransform.position[2] = 4.0f;
-		gltfEntityTransform.rotation[1] = 45.0f * toRad;
-		gltfEntityTransform.scale = { 1.0f, 1.0f, 1.0f };
 
 		NtshEngn::Renderable gltfEntityRenderable;
 		gltfEntityRenderable.mesh = &gltfModel->primitives[i].mesh;
@@ -360,7 +356,7 @@ void scene(NtshEngn::Core& core) {
 	leftPlaneORM->height = 1;
 	leftPlaneORM->format = NtshEngn::ImageFormat::R8G8B8A8;
 	leftPlaneORM->colorSpace = NtshEngn::ImageColorSpace::Linear;
-	leftPlaneORM->data = { 255, 25, 255, 255 };
+	leftPlaneORM->data = { 255, 25, 0, 255 };
 
 	NtshEngn::Material leftPlaneMaterial;
 	leftPlaneMaterial.diffuseTexture.image = leftPlaneImage;
