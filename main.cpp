@@ -213,16 +213,26 @@ void scene(NtshEngn::Core& core) {
 
 	ecs->addComponent(topCube, cubeCollidable);
 
-	NtshEngn::Model* gltfModel = assetManager->loadModel("models/2.0/ABeautifulGame/glTF/ABeautifulGame.gltf");
+	NtshEngn::Model* gltfModel = assetManager->loadModel("models/2.0/BrainStem/glTF/BrainStem.gltf");
 
 	for (size_t i = 0; i < gltfModel->primitives.size(); i++) {
 		NtshEngn::Entity gltfEntity = ecs->createEntity();
-
 
 		NtshEngn::Renderable gltfEntityRenderable;
 		gltfEntityRenderable.mesh = &gltfModel->primitives[i].mesh;
 		gltfEntityRenderable.material = &gltfModel->primitives[i].material;
 		ecs->addComponent(gltfEntity, gltfEntityRenderable);
+
+		NtshEngn::Rigidbody gltfRigidbody;
+		gltfRigidbody.isAffectedByConstants = false;
+		ecs->addComponent(gltfEntity, gltfRigidbody);
+
+		std::array<std::array<float, 3>, 2> gltfAABB = assetManager->calculateAABB(gltfModel->primitives[i].mesh);
+
+		NtshEngn::AABBCollidable gltfCollidable;
+		gltfCollidable.collider.min = gltfAABB[0];
+		gltfCollidable.collider.max = gltfAABB[1];
+		ecs->addComponent(gltfEntity, gltfCollidable);
 
 		NtshEngn::Scriptable gltfScriptable;
 		gltfScriptable.script = std::make_unique<CubeScript>();
@@ -248,6 +258,9 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::AABBCollidable planeCollidable;
 	planeCollidable.collider.min = planeMeshAABB[0];
 	planeCollidable.collider.max = planeMeshAABB[1];
+
+	NtshEngn::Rigidbody planeRigidbody;
+	planeRigidbody.isStatic = true;
 
 	// Create a plane Entity
 	// bot
@@ -307,6 +320,8 @@ void scene(NtshEngn::Core& core) {
 	botPlaneRenderable.material = &botPlaneMaterial;
 	ecs->addComponent(botPlane, botPlaneRenderable);
 
+	ecs->addComponent(botPlane, planeRigidbody);
+
 	ecs->addComponent(botPlane, planeCollidable);
 
 	// top
@@ -318,6 +333,8 @@ void scene(NtshEngn::Core& core) {
 	topPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
 
 	ecs->addComponent(topPlane, botPlaneRenderable);
+
+	ecs->addComponent(topPlane, planeRigidbody);
 
 	ecs->addComponent(topPlane, planeCollidable);
 	
@@ -332,10 +349,12 @@ void scene(NtshEngn::Core& core) {
 
 	ecs->addComponent(backPlane, botPlaneRenderable);
 
+	ecs->addComponent(backPlane, planeRigidbody);
+
 	ecs->addComponent(backPlane, planeCollidable);
 
 	// Left
-	NtshEngn::Entity leftPlane = ecs->createEntity();
+	NtshEngn::Entity leftPlane = ecs->createEntity("leftplane");
 
 	NtshEngn::Transform& leftPlaneTransform = ecs->getComponent<NtshEngn::Transform>(leftPlane);
 	leftPlaneTransform.position[0] = -2.0f;
@@ -394,6 +413,8 @@ void scene(NtshEngn::Core& core) {
 	leftPlaneRenderable.material = &leftPlaneMaterial;
 	ecs->addComponent(leftPlane, leftPlaneRenderable);
 
+	ecs->addComponent(leftPlane, planeRigidbody);
+
 	ecs->addComponent(leftPlane, planeCollidable);
 
 	// Right
@@ -448,6 +469,8 @@ void scene(NtshEngn::Core& core) {
 	rightPlaneRenderable.mesh = &planeMesh->primitives[0].mesh;
 	rightPlaneRenderable.material = &rightPlaneMaterial;
 	ecs->addComponent(rightPlane, rightPlaneRenderable);
+
+	ecs->addComponent(rightPlane, planeRigidbody);
 
 	ecs->addComponent(rightPlane, planeCollidable);
 

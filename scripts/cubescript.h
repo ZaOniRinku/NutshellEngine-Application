@@ -2,6 +2,7 @@
 #include "../external/nml/include/nml.h"
 #include <cmath>
 #include <algorithm>
+#include <random>
 
 struct CubeScript : NtshEngn::Script {
 	NTSHENGN_SCRIPT(CubeScript);
@@ -65,6 +66,19 @@ struct CubeScript : NtshEngn::Script {
 			transform.position = { position.x, position.y, position.z };
 			transform.rotation = { rotation.x, rotation.y, rotation.z };
 			transform.scale = { scale.x, scale.y, scale.z };
+
+			NtshEngn::Rigidbody& rigidbody = ecs->getComponent<NtshEngn::Rigidbody>(entityID);
+
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::G) == NtshEngn::InputState::Pressed) {
+				rigidbody.isAffectedByConstants = !rigidbody.isAffectedByConstants;
+			}
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::F) == NtshEngn::InputState::Pressed) {
+				rigidbody.isAffectedByConstants = true;
+				std::random_device rd;
+				std::mt19937 gen(rd());
+				std::uniform_real_distribution<float> dis(-1.0f, 1.0f);
+				rigidbody.force = { dis(gen) * 100.0f, dis(gen) * 100.0f, dis(gen) * 100.0f };
+			}
 		}
 	}
 
