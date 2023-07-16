@@ -77,7 +77,7 @@ struct CubeScript : NtshEngn::Script {
 				std::random_device rd;
 				std::mt19937 gen(rd());
 				std::uniform_real_distribution<float> dis(-1.0f, 1.0f);
-				rigidbody.force = { dis(gen) * 100.0f, dis(gen) * 100.0f, dis(gen) * 100.0f };
+				rigidbody.force = { dis(gen) * 500.0f, dis(gen) * 500.0f, dis(gen) * 500.0f };
 			}
 		}
 	}

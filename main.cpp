@@ -225,6 +225,9 @@ void scene(NtshEngn::Core& core) {
 
 		NtshEngn::Rigidbody gltfRigidbody;
 		gltfRigidbody.isAffectedByConstants = false;
+		gltfRigidbody.staticFriction = 0.5f;
+		gltfRigidbody.dynamicFriction = 0.5f;
+		gltfRigidbody.restitution = 1.1f;
 		ecs->addComponent(gltfEntity, gltfRigidbody);
 
 		std::array<std::array<float, 3>, 2> gltfAABB = assetManager->calculateAABB(gltfModel->primitives[i].mesh);
@@ -249,8 +252,8 @@ void scene(NtshEngn::Core& core) {
 		{ {1.0f, 0.0f, -1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} }
 	};
 	planeMesh->primitives[0].mesh.indices = {
-	0, 1, 2,
-	0, 2, 3
+		0, 1, 2,
+		0, 2, 3
 	};
 	assetManager->calculateTangents(planeMesh->primitives[0].mesh);
 
@@ -261,6 +264,7 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Rigidbody planeRigidbody;
 	planeRigidbody.isStatic = true;
+	planeRigidbody.restitution = 1.1f;
 
 	// Create a plane Entity
 	// bot
