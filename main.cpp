@@ -224,7 +224,7 @@ void scene(NtshEngn::Core& core) {
 		ecs->addComponent(gltfEntity, gltfEntityRenderable);
 
 		NtshEngn::Rigidbody gltfRigidbody;
-		gltfRigidbody.isAffectedByConstants = false;
+		gltfRigidbody.isStatic = true;
 		gltfRigidbody.staticFriction = 0.5f;
 		gltfRigidbody.dynamicFriction = 0.5f;
 		gltfRigidbody.restitution = 1.1f;

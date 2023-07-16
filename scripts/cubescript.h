@@ -70,10 +70,10 @@ struct CubeScript : NtshEngn::Script {
 			NtshEngn::Rigidbody& rigidbody = ecs->getComponent<NtshEngn::Rigidbody>(entityID);
 
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::G) == NtshEngn::InputState::Pressed) {
-				rigidbody.isAffectedByConstants = !rigidbody.isAffectedByConstants;
+				rigidbody.isStatic = !rigidbody.isStatic;
 			}
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::F) == NtshEngn::InputState::Pressed) {
-				rigidbody.isAffectedByConstants = true;
+				rigidbody.isStatic = false;
 				std::random_device rd;
 				std::mt19937 gen(rd());
 				std::uniform_real_distribution<float> dis(-1.0f, 1.0f);
