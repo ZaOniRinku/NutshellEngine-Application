@@ -160,7 +160,7 @@ void scene(NtshEngn::Core& core) {
 	topCubeEmissive->height = 1;
 	topCubeEmissive->format = NtshEngn::ImageFormat::R8G8B8A8;
 	topCubeEmissive->colorSpace = NtshEngn::ImageColorSpace::Linear;
-	topCubeEmissive->data = { 255, 255, 255, 255 };
+	topCubeEmissive->data = { 0, 128, 255, 255 };
 
 	NtshEngn::Material topCubeMaterial;
 	topCubeMaterial.diffuseTexture.image = topCubeImage;
@@ -213,7 +213,7 @@ void scene(NtshEngn::Core& core) {
 
 	ecs->addComponent(topCube, cubeCollidable);
 
-	NtshEngn::Model* gltfModel = assetManager->loadModel("models/2.0/BrainStem/glTF/BrainStem.gltf");
+	NtshEngn::Model* gltfModel = assetManager->loadModel("models/2.0/NormalTangentMirrorTest/glTF/NormalTangentMirrorTest.gltf");
 
 	for (size_t i = 0; i < gltfModel->primitives.size(); i++) {
 		NtshEngn::Entity gltfEntity = ecs->createEntity();

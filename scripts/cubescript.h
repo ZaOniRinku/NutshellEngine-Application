@@ -18,6 +18,10 @@ struct CubeScript : NtshEngn::Script {
 			const float cubeSpeed = m_cubeSpeed * static_cast<float>(dt);
 
 			nml::vec3 position = nml::vec3(transform.position.data());
+			if (position.y < -10.0f) {
+				ecs->destroyEntity(entityID);
+				return;
+			}
 			nml::vec3 rotation = nml::vec3(transform.rotation.data());
 			nml::vec3 scale = nml::vec3(transform.scale.data());
 			nml::vec3 cameraRotation = nml::vec3(cameraTransform.rotation.data());
