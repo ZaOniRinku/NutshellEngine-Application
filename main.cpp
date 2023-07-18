@@ -6,26 +6,18 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::ECS* ecs = core.getECS();
 	NtshEngn::AssetManager* assetManager = core.getAssetManager();
 
-	const float toRad = 3.1415926535897932384626433832795f / 180.0f;
-
 	// Create the camera
 	NtshEngn::Entity camera = ecs->createEntity("camera");
 
 	NtshEngn::Transform& cameraTransform = ecs->getComponent<NtshEngn::Transform>(camera);
 	cameraTransform.position = { 0.0f, 0.0f, 7.0f };
 	cameraTransform.rotation = { 0.0f, 0.0f, -1.0f };
-	cameraTransform.scale = { 5.0f * toRad, 10.0f * toRad, 0.0f };
 
 	NtshEngn::Camera cameraCamera;
 	cameraCamera.fov = 45.0f;
 	cameraCamera.nearPlane = 0.03f;
 	cameraCamera.farPlane = 100.0f;
 	ecs->addComponent(camera, cameraCamera);
-
-	NtshEngn::Light cameraLight;
-	cameraLight.color = { 1.0f, 1.0f, 1.0f };
-	cameraLight.type = NtshEngn::LightType::Spot;
-	//ecs->addComponent(camera, cameraLight);
 
 	NtshEngn::Scriptable cameraScriptable;
 	cameraScriptable.script = std::make_unique<CameraScript>();
@@ -61,18 +53,18 @@ void scene(NtshEngn::Core& core) {
 		{ {1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f} }
 	};
 	cubeMesh->primitives[0].mesh.indices = {
-	0, 1, 2,
-	0, 2, 3,
-	4, 5, 6,
-	4, 6, 7,
-	8, 9, 10,
-	8, 10, 11,
-	12, 13, 14,
-	12, 14, 15,
-	16, 17, 18,
-	16, 18, 19,
-	20, 21, 22,
-	20, 22, 23
+		0, 1, 2,
+		0, 2, 3,
+		4, 5, 6,
+		4, 6, 7,
+		8, 9, 10,
+		8, 10, 11,
+		12, 13, 14,
+		12, 14, 15,
+		16, 17, 18,
+		16, 18, 19,
+		20, 21, 22,
+		20, 22, 23
 	};
 	assetManager->calculateTangents(cubeMesh->primitives[0].mesh);
 
@@ -203,7 +195,6 @@ void scene(NtshEngn::Core& core) {
 	topCubeMaterial.emissiveTexture.imageSampler.addressModeV = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
 	topCubeMaterial.emissiveTexture.imageSampler.addressModeW = NtshEngn::ImageSamplerAddressMode::ClampToEdge;
 	topCubeMaterial.emissiveTexture.imageSampler.anisotropyLevel = 0.0f;
-	//topCubeMaterial.emissiveFactor = 1.0f;
 	topCubeMaterial.emissiveFactor = 1.0f;
 
 	NtshEngn::Renderable topCubeRenderable;
@@ -333,7 +324,7 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Transform& topPlaneTransform = ecs->getComponent<NtshEngn::Transform>(topPlane);
 	topPlaneTransform.position[1] = 2.0f;
-	topPlaneTransform.rotation[0] = 180.0f * toRad;
+	topPlaneTransform.rotation[0] = NtshEngn::Math::toRad(180.0f);
 	topPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
 
 	ecs->addComponent(topPlane, botPlaneRenderable);
@@ -348,7 +339,7 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Transform& backPlaneTransform = ecs->getComponent<NtshEngn::Transform>(backPlane);
 	backPlaneTransform.position[1] = 0.0f;
 	backPlaneTransform.position[2] = -2.0f;
-	backPlaneTransform.rotation[0] = 90.0f * toRad;
+	backPlaneTransform.rotation[0] = NtshEngn::Math::toRad(90.0f);
 	backPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
 
 	ecs->addComponent(backPlane, botPlaneRenderable);
@@ -363,8 +354,8 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Transform& leftPlaneTransform = ecs->getComponent<NtshEngn::Transform>(leftPlane);
 	leftPlaneTransform.position[0] = -2.0f;
 	leftPlaneTransform.position[1] = 0.0f;
-	leftPlaneTransform.rotation[0] = 90.0f * toRad;
-	leftPlaneTransform.rotation[2] = 270.0f * toRad;
+	leftPlaneTransform.rotation[0] = NtshEngn::Math::toRad(90.0f);
+	leftPlaneTransform.rotation[2] = NtshEngn::Math::toRad(270.0f);
 	leftPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
 
 	NtshEngn::Image* leftPlaneImage = assetManager->createImage();
@@ -427,8 +418,8 @@ void scene(NtshEngn::Core& core) {
 	NtshEngn::Transform& rightPlaneTransform = ecs->getComponent<NtshEngn::Transform>(rightPlane);
 	rightPlaneTransform.position[0] = 2.0f;
 	rightPlaneTransform.position[1] = 0.0f;
-	rightPlaneTransform.rotation[0] = 90.0f * toRad;
-	rightPlaneTransform.rotation[2] = 90.0f * toRad;
+	rightPlaneTransform.rotation[0] = NtshEngn::Math::toRad(90.0f);
+	rightPlaneTransform.rotation[2] = NtshEngn::Math::toRad(90.0f);
 	rightPlaneTransform.scale = { 2.0f, 2.0f, 2.0f };
 
 	NtshEngn::Image* rightPlaneImage = assetManager->createImage();

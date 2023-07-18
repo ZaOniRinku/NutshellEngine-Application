@@ -1,5 +1,5 @@
 #include "../Core/Common/resources/ntshengn_resources_scripting.h"
-#include "../external/nml/include/nml.h"
+#include "../Core/Common/utils/ntshengn_utils_math.h"
 #include <cmath>
 #include <algorithm>
 #include <random>
@@ -17,14 +17,14 @@ struct CubeScript : NtshEngn::Script {
 			NtshEngn::Transform& cameraTransform = ecs->getComponent<NtshEngn::Transform>(m_camera);
 			const float cubeSpeed = m_cubeSpeed * static_cast<float>(dt);
 
-			nml::vec3 position = nml::vec3(transform.position.data());
-			if (position.y < -10.0f) {
+			NtshEngn::Math::vec3 position = NtshEngn::Math::vec3(transform.position.data());
+			if (position.y < -100.0f) {
 				ecs->destroyEntity(entityID);
 				return;
 			}
-			nml::vec3 rotation = nml::vec3(transform.rotation.data());
-			nml::vec3 scale = nml::vec3(transform.scale.data());
-			nml::vec3 cameraRotation = nml::vec3(cameraTransform.rotation.data());
+			NtshEngn::Math::vec3 rotation = NtshEngn::Math::vec3(transform.rotation.data());
+			NtshEngn::Math::vec3 scale = NtshEngn::Math::vec3(transform.scale.data());
+			NtshEngn::Math::vec3 cameraRotation = NtshEngn::Math::vec3(cameraTransform.rotation.data());
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::Up) == NtshEngn::InputState::Held) {
 				position.x += (cameraRotation.x * cubeSpeed);
 				position.z += (cameraRotation.z * cubeSpeed);
@@ -34,12 +34,12 @@ struct CubeScript : NtshEngn::Script {
 				position.z -= (cameraRotation.z * cubeSpeed);
 			}
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::Left) == NtshEngn::InputState::Held) {
-				nml::vec3 t = nml::normalize(nml::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
+				NtshEngn::Math::vec3 t = NtshEngn::Math::normalize(NtshEngn::Math::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
 				position.x -= (t.x * cubeSpeed);
 				position.z -= (t.z * cubeSpeed);
 			}
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::Right) == NtshEngn::InputState::Held) {
-				nml::vec3 t = nml::normalize(nml::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
+				NtshEngn::Math::vec3 t = NtshEngn::Math::normalize(NtshEngn::Math::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
 				position.x += (t.x * cubeSpeed);
 				position.z += (t.z * cubeSpeed);
 			}
@@ -51,13 +51,13 @@ struct CubeScript : NtshEngn::Script {
 			}
 
 			if (windowModule->getMouseButtonState(windowModule->getMainWindowID(), NtshEngn::InputMouseButton::One) == NtshEngn::InputState::Pressed) {
-				rotationMouseStart = nml::vec2(static_cast<float>(windowModule->getCursorPositionX(windowModule->getMainWindowID())), static_cast<float>(windowModule->getCursorPositionY(windowModule->getMainWindowID())));
+				rotationMouseStart = NtshEngn::Math::vec2(static_cast<float>(windowModule->getCursorPositionX(windowModule->getMainWindowID())), static_cast<float>(windowModule->getCursorPositionY(windowModule->getMainWindowID())));
 			}
 			else if (windowModule->getMouseButtonState(windowModule->getMainWindowID(), NtshEngn::InputMouseButton::One) == NtshEngn::InputState::Held) {
-				const nml::vec2 rotationMouseEnd = nml::vec2(static_cast<float>(windowModule->getCursorPositionX(windowModule->getMainWindowID())), static_cast<float>(windowModule->getCursorPositionY(windowModule->getMainWindowID())));
-				const nml::vec2 rotationMouse = (rotationMouseEnd - rotationMouseStart);
-				const nml::vec2 windowSize = nml::vec2(static_cast<float>(windowModule->getWidth(windowModule->getMainWindowID())), static_cast<float>(windowModule->getHeight(windowModule->getMainWindowID())));
-				const nml::vec2 rotationMouseNormalized = nml::vec2(rotationMouse.x / windowSize.x, rotationMouse.y / windowSize.y);
+				const NtshEngn::Math::vec2 rotationMouseEnd = NtshEngn::Math::vec2(static_cast<float>(windowModule->getCursorPositionX(windowModule->getMainWindowID())), static_cast<float>(windowModule->getCursorPositionY(windowModule->getMainWindowID())));
+				const NtshEngn::Math::vec2 rotationMouse = (rotationMouseEnd - rotationMouseStart);
+				const NtshEngn::Math::vec2 windowSize = NtshEngn::Math::vec2(static_cast<float>(windowModule->getWidth(windowModule->getMainWindowID())), static_cast<float>(windowModule->getHeight(windowModule->getMainWindowID())));
+				const NtshEngn::Math::vec2 rotationMouseNormalized = NtshEngn::Math::vec2(rotationMouse.x / windowSize.x, rotationMouse.y / windowSize.y);
 
 				rotation.x += rotationMouseNormalized.y * static_cast<float>(dt);
 				rotation.y += rotationMouseNormalized.x * static_cast<float>(dt);
@@ -94,5 +94,5 @@ private:
 
 	NtshEngn::Entity m_camera;
 
-	nml::vec2 rotationMouseStart;
+	NtshEngn::Math::vec2 rotationMouseStart;
 };
