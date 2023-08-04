@@ -1,11 +1,12 @@
 #include "../Core/Common/resources/ntshengn_resources_scripting.h"
+#include "../Core/Common/module_interfaces/ntshengn_window_module_interface.h"
 #include "../Core/Common/utils/ntshengn_utils_math.h"
 #include <cmath>
 #include <algorithm>
 #include <random>
 
-struct CubeScript : NtshEngn::Script {
-	NTSHENGN_SCRIPT(CubeScript);
+struct ObjectScript : public NtshEngn::Script {
+	NTSHENGN_SCRIPT(ObjectScript);
 
 	void init() {
 		m_camera = ecs->findEntityByName("camera");

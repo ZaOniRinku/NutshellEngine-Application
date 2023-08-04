@@ -32,7 +32,10 @@ else()
 	FetchContent_MakeAvailable(Core)
 endif()
 
-set(SCRIPTS_DIRECTORY "scripts/")
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_scriptable_factory.py ${CMAKE_CURRENT_SOURCE_DIR})
+
+set(SCRIPTS_DIRECTORY "scripts")
 file(GLOB_RECURSE SCRIPTS "${SCRIPTS_DIRECTORY}/*.h")
 message(STATUS ${SCRIPTS})
 
@@ -56,3 +59,7 @@ target_compile_definitions(${PROJECT_NAME}
 		$<$<CONFIG:MinSizeRel>:NTSHENGN_RELEASE>
 		$<$<CONFIG:Release>:NTSHENGN_RELEASE>
 		$<$<CONFIG:RelWithDebInfo>:NTSHENGN_DEBUG>)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/assets ${PROJECT_BINARY_DIR}/assets
+	COMMENT "Copy assets to project build folder ${PROJECT_BINARY_DIR}.")
