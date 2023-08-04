@@ -1,0 +1,6 @@
+{
+	"windowTitle": "Cornell Example",
+	"windowIconImagePath": "assets/images/cube_diffuse.ntim",
+	"maxFPS": 60,
+	"firstScenePath": "assets/scenes/scene.ntsn"
+}
