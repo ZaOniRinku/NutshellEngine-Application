@@ -1,0 +1,244 @@
+{
+	"entities": [
+		{
+			"name": "Camera",
+			"transform": {
+				"position": [
+					0.0,
+					0.0,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					0.0,
+					-1.0
+				]
+			},
+			"camera": {
+				"fov": 45.0,
+				"nearPlane": 0.03,
+				"farPlane:": 100.0
+			},
+			"scriptable": {
+				"scriptName": "CameraScript"
+			}
+		},
+		{
+			"name": "Top Cube",
+			"transform": {
+				"position": [
+					0.0,
+					2.0,
+					0.0
+				],
+				"scale": [
+					0.75,
+					0.1,
+					0.75
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/top_cube.ntmd"
+			}
+		},
+		{
+			"name": "Object",
+			"renderable": {
+				"modelPath": "assets/models/cube.ntmd"
+			},
+			"rigidbody": {
+				"isStatic": true,
+				"staticFriction": 0.5,
+				"dynamicFriction": 0.5,
+				"restitution": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			},
+			"scriptable": {
+				"scriptName": "ObjectScript"
+			}
+		},
+		{
+			"name": "Bot Plane",
+			"transform": {
+				"position": [
+					0.0,
+					-2.0,
+					0.0
+				],
+				"scale": [
+					2.0,
+					2.0,
+					2.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/bot_plane.ntmd"
+			},
+			"rigidbody": {
+				"isStatic": true,
+				"restitution": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Top Plane",
+			"transform": {
+				"position": [
+					0.0,
+					2.0,
+					0.0
+				],
+				"rotation": [
+					3.14159265359,
+					0.0,
+					0.0
+				],
+				"scale": [
+					2.0,
+					2.0,
+					2.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/top_plane.ntmd"
+			},
+			"rigidbody": {
+				"isStatic": true,
+				"restitution": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Back Plane",
+			"transform": {
+				"position": [
+					0.0,
+					0.0,
+					-2.0
+				],
+				"rotation": [
+					1.57079632679,
+					0.0,
+					0.0
+				],
+				"scale": [
+					2.0,
+					2.0,
+					2.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/back_plane.ntmd"
+			},
+			"rigidbody": {
+				"isStatic": true,
+				"restitution": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Left Plane",
+			"transform": {
+				"position": [
+					-2.0,
+					0.0,
+					0.0
+				],
+				"rotation": [
+					1.57079632679,
+					0.0,
+					-1.57079632679
+				],
+				"scale": [
+					2.0,
+					2.0,
+					2.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/left_plane.ntmd"
+			},
+			"rigidbody": {
+				"isStatic": true,
+				"restitution": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Right Plane",
+			"transform": {
+				"position": [
+					2.0,
+					0.0,
+					0.0
+				],
+				"rotation": [
+					1.57079632679,
+					0.0,
+					1.57079632679
+				],
+				"scale": [
+					2.0,
+					2.0,
+					2.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/right_plane.ntmd"
+			},
+			"rigidbody": {
+				"isStatic": true,
+				"restitution": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Light0",
+			"transform": {
+				"rotation": [
+					1.0,
+					-1.0,
+					-1.0
+				]
+			},
+			"light": {
+				"type": "Directional",
+				"color": [
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		},
+		{
+			"name": "Light1",
+			"transform": {
+				"rotation": [
+					-1.0,
+					-1.0,
+					-1.0
+				]
+			},
+			"light": {
+				"type": "Directional",
+				"color": [
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	]
+}

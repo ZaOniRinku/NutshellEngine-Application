@@ -9,7 +9,7 @@ struct ObjectScript : public NtshEngn::Script {
 	NTSHENGN_SCRIPT(ObjectScript);
 
 	void init() {
-		m_camera = ecs->findEntityByName("camera");
+		m_camera = ecs->findEntityByName("Camera");
 	}
 
 	void update(double dt) {
