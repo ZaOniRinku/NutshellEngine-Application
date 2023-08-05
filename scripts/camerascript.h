@@ -4,7 +4,7 @@
 #include "../Core/Common/utils/ntshengn_utils_math.h"
 #include <cmath>
 
-struct CameraScript : NtshEngn::Script {
+struct CameraScript : public NtshEngn::Script {
 	NTSHENGN_SCRIPT(CameraScript);
 
 	void init() {
