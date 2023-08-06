@@ -15,40 +15,37 @@ struct ObjectScript : public NtshEngn::Script {
 	void update(double dt) {
 		if (windowModule && windowModule->isOpen(windowModule->getMainWindowID())) {
 			NtshEngn::Transform& transform = ecs->getComponent<NtshEngn::Transform>(entityID);
-			NtshEngn::Transform& cameraTransform = ecs->getComponent<NtshEngn::Transform>(m_camera);
+			const NtshEngn::Transform& cameraTransform = ecs->getComponent<NtshEngn::Transform>(m_camera);
 			const float objectSpeed = m_objectSpeed * static_cast<float>(dt);
 
-			NtshEngn::Math::vec3 position = NtshEngn::Math::vec3(transform.position.data());
-			if (position.y < -100.0f) {
+			if (transform.position.y < -100.0f) {
 				ecs->destroyEntity(entityID);
 				return;
 			}
-			NtshEngn::Math::vec3 rotation = NtshEngn::Math::vec3(transform.rotation.data());
-			NtshEngn::Math::vec3 scale = NtshEngn::Math::vec3(transform.scale.data());
-			NtshEngn::Math::vec3 cameraRotation = NtshEngn::Math::vec3(cameraTransform.rotation.data());
+
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::Up) == NtshEngn::InputState::Held) {
-				position.x += (cameraRotation.x * objectSpeed);
-				position.z += (cameraRotation.z * objectSpeed);
+				transform.position.x += (cameraTransform.rotation.x * objectSpeed);
+				transform.position.z += (cameraTransform.rotation.z * objectSpeed);
 			}
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::Down) == NtshEngn::InputState::Held) {
-				position.x -= (cameraRotation.x * objectSpeed);
-				position.z -= (cameraRotation.z * objectSpeed);
+				transform.position.x -= (cameraTransform.rotation.x * objectSpeed);
+				transform.position.z -= (cameraTransform.rotation.z * objectSpeed);
 			}
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::Left) == NtshEngn::InputState::Held) {
-				NtshEngn::Math::vec3 t = NtshEngn::Math::normalize(NtshEngn::Math::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
-				position.x -= (t.x * objectSpeed);
-				position.z -= (t.z * objectSpeed);
+				NtshEngn::Math::vec3 t = NtshEngn::Math::normalize(NtshEngn::Math::vec3(-cameraTransform.rotation.z, 0.0, cameraTransform.rotation.x));
+				transform.position.x -= (t.x * objectSpeed);
+				transform.position.z -= (t.z * objectSpeed);
 			}
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::Right) == NtshEngn::InputState::Held) {
-				NtshEngn::Math::vec3 t = NtshEngn::Math::normalize(NtshEngn::Math::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
-				position.x += (t.x * objectSpeed);
-				position.z += (t.z * objectSpeed);
+				NtshEngn::Math::vec3 t = NtshEngn::Math::normalize(NtshEngn::Math::vec3(-cameraTransform.rotation.z, 0.0, cameraTransform.rotation.x));
+				transform.position.x += (t.x * objectSpeed);
+				transform.position.z += (t.z * objectSpeed);
 			}
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::NumPlus) == NtshEngn::InputState::Held) {
-				position.y += objectSpeed;
+				transform.position.y += objectSpeed;
 			}
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::NumMinus) == NtshEngn::InputState::Held) {
-				position.y -= objectSpeed;
+				transform.position.y -= objectSpeed;
 			}
 
 			if (windowModule->getMouseButtonState(windowModule->getMainWindowID(), NtshEngn::InputMouseButton::Two) == NtshEngn::InputState::Pressed) {
@@ -60,17 +57,13 @@ struct ObjectScript : public NtshEngn::Script {
 				const NtshEngn::Math::vec2 windowSize = NtshEngn::Math::vec2(static_cast<float>(windowModule->getWidth(windowModule->getMainWindowID())), static_cast<float>(windowModule->getHeight(windowModule->getMainWindowID())));
 				const NtshEngn::Math::vec2 rotationMouseNormalized = NtshEngn::Math::vec2(rotationMouse.x / windowSize.x, rotationMouse.y / windowSize.y);
 
-				rotation.x += rotationMouseNormalized.y * static_cast<float>(dt);
-				rotation.y += rotationMouseNormalized.x * static_cast<float>(dt);
+				transform.rotation.x += rotationMouseNormalized.y * static_cast<float>(dt);
+				transform.rotation.y += rotationMouseNormalized.x * static_cast<float>(dt);
 
 				rotationMouseStart = rotationMouseEnd;
 			}
 
-			scale += windowModule->getMouseScrollOffsetY(windowModule->getMainWindowID()) * objectSpeed;
-
-			transform.position = { position.x, position.y, position.z };
-			transform.rotation = { rotation.x, rotation.y, rotation.z };
-			transform.scale = { scale.x, scale.y, scale.z };
+			transform.scale += windowModule->getMouseScrollOffsetY(windowModule->getMainWindowID()) * objectSpeed;
 
 			NtshEngn::Rigidbody& rigidbody = ecs->getComponent<NtshEngn::Rigidbody>(entityID);
 
@@ -82,7 +75,7 @@ struct ObjectScript : public NtshEngn::Script {
 				/*std::random_device rd;
 				std::mt19937 gen(rd());
 				std::uniform_real_distribution<float> dis(-1.0f, 1.0f);*/
-				rigidbody.force = { cameraRotation.x * 10.0f, cameraRotation.y * 10.0f, cameraRotation.z * 10.0f };
+				rigidbody.force = cameraTransform.rotation * 10.0f;
 			}
 		}
 	}
