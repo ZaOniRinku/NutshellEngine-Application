@@ -20,8 +20,6 @@ struct CameraScript : public NtshEngn::Script {
 
 			m_yaw = std::atan2(cameraRotation.z, cameraRotation.x) * toDeg;
 			m_pitch = -std::asin(cameraRotation.y) * toDeg;
-
-			frameLimiter->setMaxFPS(60);
 		}
 	}
 
