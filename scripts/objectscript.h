@@ -65,18 +65,19 @@ struct ObjectScript : public NtshEngn::Script {
 			}
 
 			transform.scale += windowModule->getMouseScrollOffsetY(windowModule->getMainWindowID()) * objectSpeed;
+			transform.scale.x = std::max(0.1f, transform.scale.x);
+			transform.scale.y = std::max(0.1f, transform.scale.y);
+			transform.scale.z = std::max(0.1f, transform.scale.z);
 
 			NtshEngn::Rigidbody& rigidbody = ecs->getComponent<NtshEngn::Rigidbody>(entityID);
+			rigidbody.mass = transform.scale.x;
 
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::G) == NtshEngn::InputState::Pressed) {
 				rigidbody.isStatic = !rigidbody.isStatic;
 			}
 			if (windowModule->getMouseButtonState(windowModule->getMainWindowID(), NtshEngn::InputMouseButton::One) == NtshEngn::InputState::Pressed) {
 				rigidbody.isStatic = false;
-				/*std::random_device rd;
-				std::mt19937 gen(rd());
-				std::uniform_real_distribution<float> dis(-1.0f, 1.0f);*/
-				rigidbody.force = cameraTransform.rotation * 10.0f;
+				rigidbody.force = cameraTransform.rotation * 100.0f * objectSpeed;
 			}
 		}
 	}
