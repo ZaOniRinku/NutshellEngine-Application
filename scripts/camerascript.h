@@ -1,3 +1,4 @@
+#pragma once
 #include "../Core/Common/resources/ntshengn_resources_scripting.h"
 #include "../Core/Common/module_interfaces/ntshengn_window_module_interface.h"
 #include "../Core/frame_limiter/ntshengn_frame_limiter.h"
