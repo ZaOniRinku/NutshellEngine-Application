@@ -1,21 +1,30 @@
 #pragma once
-#include "../external/Core/external/Common/resources/ntshengn_resources_scripting.h"
-#include "../external/nml/include/nml.h"
+#include "../Core/Common/resources/ntshengn_resources_scripting.h"
+#include "../Core/Common/module_interfaces/ntshengn_window_module_interface.h"
+#include "../Core/Common/module_interfaces/ntshengn_audio_module_interface.h"
+#include "../Core/Common/asset_manager/ntshengn_asset_manager.h"
+#include "../Core/Common/utils/ntshengn_utils_math.h"
 #include <cmath>
 #include <array>
 
-struct CameraScript : NtshEngn::Script {
+struct CameraScript : public NtshEngn::Script {
 	NTSHENGN_SCRIPT(CameraScript);
 
 	void init() {
-		if (windowModule && windowModule->isOpen(NTSHENGN_MAIN_WINDOW)) {
-			windowModule->setCursorVisibility(NTSHENGN_MAIN_WINDOW, !m_mouseMiddleMode);
+		if (windowModule && windowModule->isOpen(windowModule->getMainWindowID())) {
+			windowModule->setCursorVisibility(windowModule->getMainWindowID(), !m_mouseMiddleMode);
 
-			m_prevMouseX = windowModule->getWidth(NTSHENGN_MAIN_WINDOW) / 2;
-			m_prevMouseY = windowModule->getHeight(NTSHENGN_MAIN_WINDOW) / 2;
-			windowModule->setCursorPosition(NTSHENGN_MAIN_WINDOW, m_prevMouseX, m_prevMouseY);
+			m_prevMouseX = windowModule->getWidth(windowModule->getMainWindowID()) / 2;
+			m_prevMouseY = windowModule->getHeight(windowModule->getMainWindowID()) / 2;
+			windowModule->setCursorPosition(windowModule->getMainWindowID(), m_prevMouseX, m_prevMouseY);
 
 			m_yaw = -90.0f;
+		}
+
+		if (audioModule) {
+			NtshEngn::Sound* footstep = assetManager->loadSound("assets/sounds/footstep.ntsd");
+			m_footstepSound = audioModule->load(*footstep);
+			audioModule->setGain(m_footstepSound, 0.8f);
 		}
 	}
 
@@ -27,27 +36,27 @@ struct CameraScript : NtshEngn::Script {
 			}
 		}
 
-		if (windowModule && windowModule->isOpen(NTSHENGN_MAIN_WINDOW)) {
-			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::Escape) == NtshEngn::InputState::Pressed ||
-				windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::R) == NtshEngn::InputState::Pressed) {
+		if (windowModule && windowModule->isOpen(windowModule->getMainWindowID())) {
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::Escape) == NtshEngn::InputState::Pressed ||
+				windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::R) == NtshEngn::InputState::Pressed) {
 				m_mouseMiddleMode = !m_mouseMiddleMode;
-				windowModule->setCursorVisibility(NTSHENGN_MAIN_WINDOW, !m_mouseMiddleMode);
+				windowModule->setCursorVisibility(windowModule->getMainWindowID(), !m_mouseMiddleMode);
 				if (m_mouseMiddleMode) {
-					m_prevMouseX = windowModule->getWidth(NTSHENGN_MAIN_WINDOW) / 2;
-					m_prevMouseY = windowModule->getHeight(NTSHENGN_MAIN_WINDOW) / 2;
-					windowModule->setCursorPosition(NTSHENGN_MAIN_WINDOW, m_prevMouseX, m_prevMouseY);
+					m_prevMouseX = windowModule->getWidth(windowModule->getMainWindowID()) / 2;
+					m_prevMouseY = windowModule->getHeight(windowModule->getMainWindowID()) / 2;
+					windowModule->setCursorPosition(windowModule->getMainWindowID(), m_prevMouseX, m_prevMouseY);
 				}
 			}
 
-			nml::vec3 cameraRotation = nml::vec3(cameraTransform.rotation.data());
+			NtshEngn::Math::vec3 cameraRotation = NtshEngn::Math::vec3(cameraTransform.rotation.data());
 
 			if (m_mouseMiddleMode) {
-				const int mouseX = windowModule->getCursorPositionX(NTSHENGN_MAIN_WINDOW);
-				const int mouseY = windowModule->getCursorPositionY(NTSHENGN_MAIN_WINDOW);
+				const int mouseX = windowModule->getCursorPositionX(windowModule->getMainWindowID());
+				const int mouseY = windowModule->getCursorPositionY(windowModule->getMainWindowID());
 
-				m_prevMouseX = windowModule->getWidth(NTSHENGN_MAIN_WINDOW) / 2;
-				m_prevMouseY = windowModule->getHeight(NTSHENGN_MAIN_WINDOW) / 2;
-				windowModule->setCursorPosition(NTSHENGN_MAIN_WINDOW, m_prevMouseX, m_prevMouseY);
+				m_prevMouseX = windowModule->getWidth(windowModule->getMainWindowID()) / 2;
+				m_prevMouseY = windowModule->getHeight(windowModule->getMainWindowID()) / 2;
+				windowModule->setCursorPosition(windowModule->getMainWindowID(), m_prevMouseX, m_prevMouseY);
 
 				const float xOffset = (mouseX - m_prevMouseX) * m_mouseSensitivity;
 				const float yOffset = (mouseY - m_prevMouseY) * m_mouseSensitivity;
@@ -64,7 +73,7 @@ struct CameraScript : NtshEngn::Script {
 				cameraRotation.x = std::cos(pitchRad) * std::cos(yawRad);
 				cameraRotation.y = -std::sin(pitchRad);
 				cameraRotation.z = std::cos(pitchRad) * std::sin(yawRad);
-				cameraRotation = nml::normalize(cameraRotation);
+				cameraRotation = NtshEngn::Math::normalize(cameraRotation);
 			}
 
 			const float cameraSpeed = m_cameraSpeed * static_cast<float>(dt);
@@ -73,24 +82,24 @@ struct CameraScript : NtshEngn::Script {
 
 			NtshEngn::Rigidbody& rigidbody = ecs->getComponent<NtshEngn::Rigidbody>(entityID);
 
-			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::W) == NtshEngn::InputState::Held) {
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::W) == NtshEngn::InputState::Held) {
 				rigidbody.force[0] += (cameraRotation.x * cameraSpeed);
 				rigidbody.force[2] += (cameraRotation.z * cameraSpeed);
 				footstepSound = true;
 			}
-			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::S) == NtshEngn::InputState::Held) {
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::S) == NtshEngn::InputState::Held) {
 				rigidbody.force[0] -= (cameraRotation.x * cameraSpeed);
 				rigidbody.force[2] -= (cameraRotation.z * cameraSpeed);
 				footstepSound = true;
 			}
-			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::A) == NtshEngn::InputState::Held) {
-				nml::vec3 t = nml::normalize(nml::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::A) == NtshEngn::InputState::Held) {
+				NtshEngn::Math::vec3 t = NtshEngn::Math::normalize(NtshEngn::Math::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
 				rigidbody.force[0] -= (t.x * cameraSpeed);
 				rigidbody.force[2] -= (t.z * cameraSpeed);
 				footstepSound = true;
 			}
-			if (windowModule->getKeyState(NTSHENGN_MAIN_WINDOW, NtshEngn::InputKeyboardKey::D) == NtshEngn::InputState::Held) {
-				nml::vec3 t = nml::normalize(nml::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::D) == NtshEngn::InputState::Held) {
+				NtshEngn::Math::vec3 t = NtshEngn::Math::normalize(NtshEngn::Math::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
 				rigidbody.force[0] += (t.x * cameraSpeed);
 				rigidbody.force[2] += (t.z * cameraSpeed);
 				footstepSound = true;
@@ -111,21 +120,21 @@ struct CameraScript : NtshEngn::Script {
 	}
 
 private:
-	std::array<nml::vec3, 2> transformAABB(const nml::vec3& aabbMin, const nml::vec3 aabbMax, const nml::mat4& transform) {
-		std::array<nml::vec4, 8> corners = {
-						transform * nml::vec4(aabbMin.x, aabbMin.y, aabbMin.z, 1.0f),
-						transform * nml::vec4(aabbMax.x, aabbMin.y, aabbMin.z, 1.0f),
-						transform * nml::vec4(aabbMin.x, aabbMax.y, aabbMin.z, 1.0f),
-						transform * nml::vec4(aabbMax.x, aabbMax.y, aabbMin.z, 1.0f),
-						transform * nml::vec4(aabbMin.x, aabbMin.y, aabbMax.z, 1.0f),
-						transform * nml::vec4(aabbMax.x, aabbMin.y, aabbMax.z, 1.0f),
-						transform * nml::vec4(aabbMin.x, aabbMax.y, aabbMax.z, 1.0f),
-						transform * nml::vec4(aabbMax.x, aabbMax.y, aabbMax.z, 1.0f)
+	std::array<NtshEngn::Math::vec3, 2> transformAABB(const NtshEngn::Math::vec3& aabbMin, const NtshEngn::Math::vec3 aabbMax, const NtshEngn::Math::mat4& transform) {
+		std::array<NtshEngn::Math::vec4, 8> corners = {
+						transform * NtshEngn::Math::vec4(aabbMin.x, aabbMin.y, aabbMin.z, 1.0f),
+						transform * NtshEngn::Math::vec4(aabbMax.x, aabbMin.y, aabbMin.z, 1.0f),
+						transform * NtshEngn::Math::vec4(aabbMin.x, aabbMax.y, aabbMin.z, 1.0f),
+						transform * NtshEngn::Math::vec4(aabbMax.x, aabbMax.y, aabbMin.z, 1.0f),
+						transform * NtshEngn::Math::vec4(aabbMin.x, aabbMin.y, aabbMax.z, 1.0f),
+						transform * NtshEngn::Math::vec4(aabbMax.x, aabbMin.y, aabbMax.z, 1.0f),
+						transform * NtshEngn::Math::vec4(aabbMin.x, aabbMax.y, aabbMax.z, 1.0f),
+						transform * NtshEngn::Math::vec4(aabbMax.x, aabbMax.y, aabbMax.z, 1.0f)
 		};
 
-		nml::vec3 min = nml::vec3(std::numeric_limits<float>::max());
-		nml::vec3 max = nml::vec3(std::numeric_limits<float>::lowest());
-		for (const nml::vec4& corner : corners) {
+		NtshEngn::Math::vec3 min = NtshEngn::Math::vec3(std::numeric_limits<float>::max());
+		NtshEngn::Math::vec3 max = NtshEngn::Math::vec3(std::numeric_limits<float>::lowest());
+		for (const NtshEngn::Math::vec4& corner : corners) {
 			if (corner.x < min.x) {
 				min.x = corner.x;
 			}
@@ -161,6 +170,6 @@ private:
 	float m_yaw = 0.0f;
 	float m_pitch = 0.0f;
 
-	NtshEngn::SoundId m_footstepSound = 0;
+	NtshEngn::SoundID m_footstepSound;
 	double m_footstepSoundCooldown = 0.0;
 };

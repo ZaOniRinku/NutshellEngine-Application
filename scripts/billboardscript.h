@@ -1,6 +1,7 @@
 #pragma once
-#include "../external/Core/external/Common/resources/ntshengn_resources_scripting.h"
-#include "../external/nml/include/nml.h"
+#include "../Core/Common/resources/ntshengn_resources_scripting.h"
+#include "../Core/Common/utils/ntshengn_utils_math.h"
+#include "../Core/Common/utils/ntshengn_defines.h"
 #include <cmath>
 
 struct BillboardScript : NtshEngn::Script {
@@ -13,10 +14,10 @@ struct BillboardScript : NtshEngn::Script {
 	void update(double dt) {
 		NTSHENGN_UNUSED(dt);
 
-		nml::vec3 cameraPosition = nml::vec3(ecs->getComponent<NtshEngn::Transform>(0).position.data());
+		NtshEngn::Math::vec3 cameraPosition = NtshEngn::Math::vec3(ecs->getComponent<NtshEngn::Transform>(0).position.data());
 
 		NtshEngn::Transform& transform = ecs->getComponent<NtshEngn::Transform>(entityID);
-		nml::vec3 newRotation = cameraPosition - nml::vec3(transform.position.data());
+		NtshEngn::Math::vec3 newRotation = cameraPosition - NtshEngn::Math::vec3(transform.position.data());
 		transform.rotation[1] = std::atan2(newRotation.x, newRotation.z);
 	}
 

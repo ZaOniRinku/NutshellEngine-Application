@@ -1,6 +1,8 @@
 #pragma once
-#include "../external/Core/external/Common/resources/ntshengn_resources_scripting.h"
-#include "../external/nml/include/nml.h"
+#include "../Core/Common/resources/ntshengn_resources_scripting.h"
+#include "../Core/Common/asset_manager/ntshengn_asset_manager.h"
+#include "../Core/Common/module_interfaces/ntshengn_window_module_interface.h"
+#include "../Core/Common/utils/ntshengn_utils_math.h"
 #include <array>
 #include <algorithm>
 
@@ -27,11 +29,11 @@ struct GameControllerScript : NtshEngn::Script {
 			0, 1, 2, 0, 2, 3, 2, 1, 0, 2, 0, 3
 		};
 
-		std::pair<std::array<float, 3>, std::array<float, 3>> doorMeshAABB = assetManager->calculateAABB(doorMesh);
+		std::array<NtshEngn::Math::vec3, 2> doorMeshAABB = assetManager->calculateAABB(doorMesh);
 
 		NtshEngn::AABBCollidable doorClosedCollidable;
-		doorClosedCollidable.collider.min = { doorMeshAABB.first[0], doorMeshAABB.first[1], doorMeshAABB.first[2] };
-		doorClosedCollidable.collider.max = { doorMeshAABB.second[0], doorMeshAABB.second[1], doorMeshAABB.second[2] };
+		doorClosedCollidable.collider.min = doorMeshAABB[0];
+		doorClosedCollidable.collider.max = doorMeshAABB[1];
 
 		NtshEngn::Rigidbody doorClosedRigidbody;
 		doorClosedRigidbody.restitution = 0.0;
@@ -325,43 +327,43 @@ struct GameControllerScript : NtshEngn::Script {
 		// Completion
 		if (!m_secretRoom && m_step < static_cast<uint8_t>(m_tgntwPositions.size())) {
 			const NtshEngn::Transform cameraTransform = ecs->getComponent<NtshEngn::Transform>(m_cameraEntity);
-			const float distance = (nml::vec3(cameraTransform.position[0], 0.0f, cameraTransform.position[2]) - nml::vec3(m_tgntwPositions[m_step].x, 0.0f, m_tgntwPositions[m_step].y)).length();
+			const float distance = (NtshEngn::Math::vec3(cameraTransform.position[0], 0.0f, cameraTransform.position[2]) - NtshEngn::Math::vec3(m_tgntwPositions[m_step].x, 0.0f, m_tgntwPositions[m_step].y)).length();
 
 			if (distance < 0.3f) {
 				m_step++;
 
 				if (!m_titleChangedTwo && m_step == 1) {
-					windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "The Girl In The Hall");
+					windowModule->setTitle(windowModule->getMainWindowID(), "The Girl In The Hall");
 
 					m_titleChangedOne = true;
 				}
 				if (!m_titleChangedTwo && m_step == 2) {
-					windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "The Girl Training");
+					windowModule->setTitle(windowModule->getMainWindowID(), "The Girl Training");
 
 					m_titleChangedTwo = true;
 				}
 				if (!m_titleChangedThree && m_step == 3) {
-					windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "The Girl Convocated");
+					windowModule->setTitle(windowModule->getMainWindowID(), "The Girl Convocated");
 
 					m_titleChangedThree = true;
 				}
 				if (!m_titleChangedFour && m_step == 4) {
-					windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "The Girl Among The People");
+					windowModule->setTitle(windowModule->getMainWindowID(), "The Girl Among The People");
 
 					m_titleChangedFour = true;
 				}
 				if (!m_titleChangedFive && m_step == 5) {
-					windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "The Girl Reading The Book");
+					windowModule->setTitle(windowModule->getMainWindowID(), "The Girl Reading The Book");
 
 					m_titleChangedFive = true;
 				}
 				if (!m_titleChangedSix && m_step == 6) {
-					windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "The Girl Using The Window As A Key");
+					windowModule->setTitle(windowModule->getMainWindowID(), "The Girl Using The Window As A Key");
 
 					m_titleChangedSix = true;
 				}
 				else if (!m_titleChangedSeven && m_step == 7) {
-					windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "The Girl Holding The Window");
+					windowModule->setTitle(windowModule->getMainWindowID(), "The Girl Holding The Window");
 
 					m_titleChangedSeven = true;
 				}
@@ -390,7 +392,7 @@ struct GameControllerScript : NtshEngn::Script {
 					newCameraTransform.position[1] = -1000.0f;
 					newCameraTransform.position[2] = 0.0f;
 
-					windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "Congrats!");
+					windowModule->setTitle(windowModule->getMainWindowID(), "Congrats!");
 
 					m_theEnd = true;
 				}
@@ -399,10 +401,10 @@ struct GameControllerScript : NtshEngn::Script {
 		else if (m_secretRoom) {
 			const NtshEngn::Transform cameraTransform = ecs->getComponent<NtshEngn::Transform>(m_cameraEntity);
 			const NtshEngn::Transform tgntwTransform = ecs->getComponent<NtshEngn::Transform>(m_tgntwEntity);
-			const float distance = (nml::vec3(cameraTransform.position[0], 0.0f, cameraTransform.position[2]) - nml::vec3(tgntwTransform.position[0], 0.0f, tgntwTransform.position[2])).length();
+			const float distance = (NtshEngn::Math::vec3(cameraTransform.position[0], 0.0f, cameraTransform.position[2]) - NtshEngn::Math::vec3(tgntwTransform.position[0], 0.0f, tgntwTransform.position[2])).length();
 
 			if (distance < 0.3f) {
-				windowModule->close(NTSHENGN_MAIN_WINDOW);
+				windowModule->close(windowModule->getMainWindowID());
 			}
 		}
 
@@ -414,32 +416,32 @@ struct GameControllerScript : NtshEngn::Script {
 				cameraTransform.position[0] > -2.0f &&
 				cameraTransform.position[2] < 2.0f &&
 				cameraTransform.position[2] > -2.0f) {
-				windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "Congrats!");
+				windowModule->setTitle(windowModule->getMainWindowID(), "Congrats!");
 			}
 			else if (cameraTransform.position[0] < 4.0f &&
 				cameraTransform.position[0] > -4.0f &&
 				cameraTransform.position[2] < 4.0f &&
 				cameraTransform.position[2] > -4.0f) {
-				windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "The End");
+				windowModule->setTitle(windowModule->getMainWindowID(), "The End");
 			}
 			else if (cameraTransform.position[0] < 6.0f &&
 				cameraTransform.position[0] > -6.0f &&
 				cameraTransform.position[2] < 6.0f &&
 				cameraTransform.position[2] > -6.0f) {
-				windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "?");
+				windowModule->setTitle(windowModule->getMainWindowID(), "?");
 			}
 			else if (cameraTransform.position[0] < -6.0f ||
 				cameraTransform.position[0] > 6.0f ||
 				cameraTransform.position[2] < -6.0f ||
 				cameraTransform.position[2] > 6.0f) {
-				windowModule->close(NTSHENGN_MAIN_WINDOW);
+				windowModule->close(windowModule->getMainWindowID());
 			}
 		}
 
 		// Door closed
 		if (windowModule) {
-			int windowWidth = windowModule->getWidth(NTSHENGN_MAIN_WINDOW);
-			int windowHeight = windowModule->getHeight(NTSHENGN_MAIN_WINDOW);
+			int windowWidth = windowModule->getWidth(windowModule->getMainWindowID());
+			int windowHeight = windowModule->getHeight(windowModule->getMainWindowID());
 
 			if (!m_secretRoom) {
 				NtshEngn::Transform& doorScreenTransform = ecs->getComponent<NtshEngn::Transform>(m_firstDoor.doorScreenEntity);
@@ -474,8 +476,8 @@ struct GameControllerScript : NtshEngn::Script {
 				float screenWindowWidth = std::min(static_cast<float>(windowWidth), 1920.0f);
 				float screenWindowHeight = std::min(static_cast<float>(windowHeight), 1080.0f);
 
-				int windowX = (windowModule->getPositionX(NTSHENGN_MAIN_WINDOW) + (windowWidth / 2)) - 960;
-				int windowY = (windowModule->getPositionY(NTSHENGN_MAIN_WINDOW) + (windowHeight / 2)) - 540;
+				int windowX = (windowModule->getPositionX(windowModule->getMainWindowID()) + (windowWidth / 2)) - 960;
+				int windowY = (windowModule->getPositionY(windowModule->getMainWindowID()) + (windowHeight / 2)) - 540;
 
 				float screenWindowX = std::max(-960.0f, std::min(static_cast<float>(windowX), 1920.0f));
 				float screenWindowY = std::max(-540.0f, std::min(static_cast<float>(windowY), 1080.0f));
@@ -508,12 +510,12 @@ struct GameControllerScript : NtshEngn::Script {
 		// Secret room
 		if (!m_secretRoom) {
 			NtshEngn::Transform& cameraTransform = ecs->getComponent<NtshEngn::Transform>(m_cameraEntity);
-			const nml::vec3 cameraPosition = nml::vec3(cameraTransform.position.data());
+			const NtshEngn::Math::vec3 cameraPosition = NtshEngn::Math::vec3(cameraTransform.position.data());
 
 			if (cameraPosition.y == -0.5f) {
 				if ((cameraPosition.x > -7.0f && cameraPosition.x < -4.0f) &&
 					(cameraPosition.z > 0.0f && cameraPosition.z < 1.5f)) {
-					windowModule->setTitle(NTSHENGN_MAIN_WINDOW, "The Girl In The Sky");
+					windowModule->setTitle(windowModule->getMainWindowID(), "The Girl In The Sky");
 
 					cameraTransform.position[0] = 0.0f;
 					cameraTransform.position[1] = 1999.5f;
@@ -535,9 +537,9 @@ struct GameControllerScript : NtshEngn::Script {
 	}
 
 private:
-	std::array<nml::vec3, 2> getMeshMinMax(const NtshEngn::Mesh& mesh) {
-		nml::vec3 min = nml::vec3(std::numeric_limits<float>::max());
-		nml::vec3 max = nml::vec3(std::numeric_limits<float>::lowest());
+	std::array<NtshEngn::Math::vec3, 2> getMeshMinMax(const NtshEngn::Mesh& mesh) {
+		NtshEngn::Math::vec3 min = NtshEngn::Math::vec3(std::numeric_limits<float>::max());
+		NtshEngn::Math::vec3 max = NtshEngn::Math::vec3(std::numeric_limits<float>::lowest());
 		for (const NtshEngn::Vertex& vertex : mesh.vertices) {
 			if (vertex.position[0] < min.x) {
 				min.x = vertex.position[0];
@@ -568,15 +570,15 @@ private:
 	const float toRad = 3.1415926535897932384626433832795f / 180.0f;
 
 	uint8_t m_step = 0;
-	const std::vector<nml::vec2> m_tgntwPositions = {
-		nml::vec2(0.2f, -6.45f),
-		nml::vec2(-1.75f, 2.0f),
-		nml::vec2(3.0f, 6.0f),
-		nml::vec2(-4.5f, -3.75f),
-		nml::vec2(2.5f, 0.6f),
-		nml::vec2(5.5f, -3.05f),
-		nml::vec2(-3.3f, -5.5f),
-		nml::vec2(1.0f, -12.8f),
+	const std::vector<NtshEngn::Math::vec2> m_tgntwPositions = {
+		NtshEngn::Math::vec2(0.2f, -6.45f),
+		NtshEngn::Math::vec2(-1.75f, 2.0f),
+		NtshEngn::Math::vec2(3.0f, 6.0f),
+		NtshEngn::Math::vec2(-4.5f, -3.75f),
+		NtshEngn::Math::vec2(2.5f, 0.6f),
+		NtshEngn::Math::vec2(5.5f, -3.05f),
+		NtshEngn::Math::vec2(-3.3f, -5.5f),
+		NtshEngn::Math::vec2(1.0f, -12.8f),
 	};
 	bool m_titleChangedOne = false;
 	bool m_titleChangedTwo = false;
@@ -587,7 +589,7 @@ private:
 	bool m_titleChangedSeven = false;
 	bool m_theEnd = false;
 
-	NtshEngn::SoundId m_foundSound = 1;
+	NtshEngn::SoundID m_foundSound = 1;
 
 	const NtshEngn::Entity m_cameraEntity = 0;
 	const NtshEngn::Entity m_tgntwEntity = 1;

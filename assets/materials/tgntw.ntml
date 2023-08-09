@@ -1,0 +1,7 @@
+{
+	"diffuseTexture": {
+		"imagePath": "assets/images/tgntw.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	},
+	"alphaCutoff": 0.5
+}

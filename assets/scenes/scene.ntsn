@@ -1,0 +1,1826 @@
+{
+	"entities": [
+		{
+			"name": "Camera",
+			"transform": {
+				"position": [
+					0.0,
+					-0.5,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					0.0,
+					-1.0
+				]
+			},
+			"camera": {
+				"fov": 45.0,
+				"nearPlane": 0.3,
+				"farPlane": 500.0
+			},
+			"scriptable": {
+				"scriptName": "CameraScript"
+			},
+			"rigidbody": {
+				"mass": 20.0,
+				"restitution": 0.0,
+				"isAffectedByConstants": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "Capsule",
+				"radius": 0.25,
+				"base": [
+					0.0,
+					-0.25,
+					0.0
+				],
+				"tip": [
+					0.0,
+					0.0,
+					0.0
+				]
+			}
+		},
+		{
+			"name": "TGNTW",
+			"transform": {
+				"position": [
+					0.2,
+					-0.75,
+					-6.45
+				],
+				"scale": [
+					0.35,
+					0.35,
+					0.35
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tgntw.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Invisible Floor",
+			"transform": {
+				"position": [
+					0.0,
+					-1.0,
+					0.0
+				],
+				"scale": [
+					100.0,
+					100.0,
+					100.0
+				]
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB",
+				"min": [
+					-1.0,
+					-100.0,
+					-1.0
+				],
+				"max": [
+					1.0,
+					0.0,
+					1.0
+				]
+			}
+		},
+		{
+			"name": "Floor",
+			"transform": {
+				"position": [
+					0.0,
+					-1.0,
+					0.0
+				],
+				"scale": [
+					7.0,
+					7.0,
+					7.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/floor.ntmd"
+			}
+		},
+		{
+			"name": "Grass",
+			"transform": {
+				"position": [
+					0.0,
+					-1.02,
+					0.0
+				],
+				"scale": [
+					20.0,
+					20.0,
+					20.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/grass.ntmd"
+			}
+		},
+		{
+			"name": "Tree0",
+			"transform": {
+				"position": [
+					8.0,
+					0.0,
+					9.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree1",
+			"transform": {
+				"position": [
+					3.0,
+					0.0,
+					11.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree2",
+			"transform": {
+				"position": [
+					-4.8,
+					0.0,
+					9.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree3",
+			"transform": {
+				"position": [
+					-11.1,
+					0.0,
+					7.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree4",
+			"transform": {
+				"position": [
+					-10.0,
+					0.0,
+					1.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree5",
+			"transform": {
+				"position": [
+					-12.5,
+					0.0,
+					-3.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree6",
+			"transform": {
+				"position": [
+					-10.0,
+					0.0,
+					-6.7
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree7",
+			"transform": {
+				"position": [
+					-5.6,
+					0.0,
+					-10.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree8",
+			"transform": {
+				"position": [
+					1.4,
+					0.0,
+					-8.8
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree9",
+			"transform": {
+				"position": [
+					7.7,
+					0.0,
+					-10.4
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree10",
+			"transform": {
+				"position": [
+					12.6,
+					0.0,
+					-5.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree11",
+			"transform": {
+				"position": [
+					10.8,
+					0.0,
+					0.32
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree12",
+			"transform": {
+				"position": [
+					11.4,
+					0.0,
+					5.8
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree13",
+			"transform": {
+				"position": [
+					12.8,
+					0.0,
+					11.9
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree14",
+			"transform": {
+				"position": [
+					4.9,
+					0.0,
+					15.6
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree15",
+			"transform": {
+				"position": [
+					-3.1,
+					0.0,
+					15.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree16",
+			"transform": {
+				"position": [
+					-9.8,
+					0.0,
+					14.1
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree17",
+			"transform": {
+				"position": [
+					-14.9,
+					0.0,
+					9.9
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree18",
+			"transform": {
+				"position": [
+					-15.8,
+					0.0,
+					2.11
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree19",
+			"transform": {
+				"position": [
+					-16.0,
+					0.0,
+					-3.7
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree20",
+			"transform": {
+				"position": [
+					-15.4,
+					0.0,
+					-8.7
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree21",
+			"transform": {
+				"position": [
+					-9.7,
+					0.0,
+					-14.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree22",
+			"transform": {
+				"position": [
+					14.4,
+					0.0,
+					-11.7
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Tree23",
+			"transform": {
+				"position": [
+					14.2,
+					0.0,
+					4.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tree.ntmd"
+			},
+			"scriptable": {
+				"scriptName": "BillboardScript"
+			}
+		},
+		{
+			"name": "Ceiling",
+			"transform": {
+				"rotation": [
+					3.1415,
+					0.0,
+					0.0
+				],
+				"scale": [
+					7.0,
+					7.0,
+					7.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/ceiling.ntmd"
+			}
+		},
+		{
+			"name": "Broken Window",
+			"transform": {
+				"position": [
+					7.0,
+					1000.0,
+					2.25
+				],
+				"rotation": [
+					0.0,
+					4.7124,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window_broken.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Back Wall0",
+			"transform": {
+				"position": [
+					-6.75,
+					-0.5,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					3.1415,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Back Wall1",
+			"transform": {
+				"position": [
+					-5.25,
+					-0.5,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					3.1415,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Back Wall2",
+			"transform": {
+				"position": [
+					-3.75,
+					-0.5,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					3.1415,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Back Wall3",
+			"transform": {
+				"position": [
+					-2.25,
+					-0.5,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					3.1415,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Back Wall4",
+			"transform": {
+				"position": [
+					-0.75,
+					-0.5,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					3.1415,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Back Wall5",
+			"transform": {
+				"position": [
+					0.75,
+					-0.5,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					3.1415,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Back Wall6",
+			"transform": {
+				"position": [
+					2.25,
+					-0.5,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					3.1415,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Back Wall7",
+			"transform": {
+				"position": [
+					3.75,
+					-0.5,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					3.1415,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Back Wall8",
+			"transform": {
+				"position": [
+					5.25,
+					-0.5,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					3.1415,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Back Wall9",
+			"transform": {
+				"position": [
+					6.75,
+					-0.5,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					3.1415,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Front Wall0",
+			"transform": {
+				"position": [
+					-6.75,
+					-0.5,
+					-7.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Front Wall1",
+			"transform": {
+				"position": [
+					-5.25,
+					-0.5,
+					-7.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Front Wall2",
+			"transform": {
+				"position": [
+					-3.75,
+					-0.5,
+					-7.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Front Wall3",
+			"transform": {
+				"position": [
+					-2.25,
+					-0.5,
+					-7.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Front Wall4",
+			"transform": {
+				"position": [
+					-0.75,
+					-0.5,
+					-7.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Front Wall5",
+			"transform": {
+				"position": [
+					0.75,
+					-0.5,
+					-7.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Front Wall6",
+			"transform": {
+				"position": [
+					2.25,
+					-0.5,
+					-7.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Front Wall7",
+			"transform": {
+				"position": [
+					3.75,
+					-0.5,
+					-7.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Front Wall8",
+			"transform": {
+				"position": [
+					5.25,
+					-0.5,
+					-7.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Front Wall9",
+			"transform": {
+				"position": [
+					6.75,
+					-0.5,
+					-7.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Left Wall0",
+			"transform": {
+				"position": [
+					-7.0,
+					-0.5,
+					-6.75
+				],
+				"rotation": [
+					0.0,
+					1.5708,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Left Wall1",
+			"transform": {
+				"position": [
+					-7.0,
+					-0.5,
+					-5.25
+				],
+				"rotation": [
+					0.0,
+					1.5708,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Left Wall2",
+			"transform": {
+				"position": [
+					-7.0,
+					-0.5,
+					-3.75
+				],
+				"rotation": [
+					0.0,
+					1.5708,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Left Wall3",
+			"transform": {
+				"position": [
+					-7.0,
+					-0.5,
+					-2.25
+				],
+				"rotation": [
+					0.0,
+					1.5708,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Left Wall4",
+			"transform": {
+				"position": [
+					-7.0,
+					-0.5,
+					-0.75
+				],
+				"rotation": [
+					0.0,
+					1.5708,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Left Wall5",
+			"transform": {
+				"position": [
+					-7.0,
+					-0.5,
+					0.75
+				],
+				"rotation": [
+					0.0,
+					1.5708,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Reversed Left Wall5",
+			"transform": {
+				"position": [
+					-7.0,
+					-0.5,
+					0.75
+				],
+				"rotation": [
+					0.0,
+					4.7124,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			}
+		},
+		{
+			"name": "Left Wall6",
+			"transform": {
+				"position": [
+					-7.0,
+					-0.5,
+					2.25
+				],
+				"rotation": [
+					0.0,
+					1.5708,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Left Wall7",
+			"transform": {
+				"position": [
+					-7.0,
+					-0.5,
+					3.75
+				],
+				"rotation": [
+					0.0,
+					1.5708,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Left Wall8",
+			"transform": {
+				"position": [
+					-7.0,
+					-0.5,
+					5.25
+				],
+				"rotation": [
+					0.0,
+					1.5708,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Left Wall9",
+			"transform": {
+				"position": [
+					-7.0,
+					-0.5,
+					6.75
+				],
+				"rotation": [
+					0.0,
+					1.5708,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Right Wall0",
+			"transform": {
+				"position": [
+					7.0,
+					-0.5,
+					-6.75
+				],
+				"rotation": [
+					0.0,
+					4.7124,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Right Wall1",
+			"transform": {
+				"position": [
+					7.0,
+					-0.5,
+					-5.25
+				],
+				"rotation": [
+					0.0,
+					4.7124,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Right Wall2",
+			"transform": {
+				"position": [
+					7.0,
+					-0.5,
+					-3.75
+				],
+				"rotation": [
+					0.0,
+					4.7124,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Right Wall3",
+			"transform": {
+				"position": [
+					7.0,
+					-0.5,
+					-2.25
+				],
+				"rotation": [
+					0.0,
+					4.7124,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Right Wall4",
+			"transform": {
+				"position": [
+					7.0,
+					-0.5,
+					-0.75
+				],
+				"rotation": [
+					0.0,
+					4.7124,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window_broken.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Right Wall5",
+			"transform": {
+				"position": [
+					7.0,
+					-0.5,
+					0.75
+				],
+				"rotation": [
+					0.0,
+					4.7124,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Right Wall6",
+			"transform": {
+				"position": [
+					7.0,
+					-0.5,
+					2.25
+				],
+				"rotation": [
+					0.0,
+					4.7124,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Right Wall7",
+			"transform": {
+				"position": [
+					7.0,
+					-0.5,
+					3.75
+				],
+				"rotation": [
+					0.0,
+					4.7124,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Right Wall8",
+			"transform": {
+				"position": [
+					7.0,
+					-0.5,
+					5.25
+				],
+				"rotation": [
+					0.0,
+					4.7124,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/window.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		},
+		{
+			"name": "Right Wall9",
+			"transform": {
+				"position": [
+					7.0,
+					-0.5,
+					6.75
+				],
+				"rotation": [
+					0.0,
+					4.7124,
+					0.0
+				],
+				"scale": [
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/wall.ntmd"
+			},
+			"rigidbody": {
+				"restitution": 0.0,
+				"isStatic": true,
+				"staticFriction": 1.0,
+				"dynamicFriction": 1.0
+			},
+			"collidable": {
+				"type": "AABB"
+			}
+		}
+	]
+}

@@ -1,0 +1,6 @@
+{
+	"diffuseTexture": {
+		"imagePath": "assets/images/ceiling.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	}
+}
