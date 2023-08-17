@@ -75,7 +75,7 @@ struct ObjectScript : public NtshEngn::Script {
 			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::G) == NtshEngn::InputState::Pressed) {
 				rigidbody.isStatic = !rigidbody.isStatic;
 			}
-			if (windowModule->getMouseButtonState(windowModule->getMainWindowID(), NtshEngn::InputMouseButton::One) == NtshEngn::InputState::Pressed) {
+			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::F) == NtshEngn::InputState::Pressed) {
 				rigidbody.isStatic = false;
 				rigidbody.force = cameraTransform.rotation * 100.0f * objectSpeed;
 			}
