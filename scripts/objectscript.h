@@ -1,9 +1,9 @@
 #pragma once
-#include "../Core/scripting/ntshengn_scripting_api.h"
+#include "../Core/scripting/ntshengn_script.h"
 #include <random>
 
 using namespace NtshEngn;
-struct ObjectScript : public ScriptingAPI {
+struct ObjectScript : public Script {
 	NTSHENGN_SCRIPT(ObjectScript);
 
 	void init() {
