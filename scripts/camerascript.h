@@ -97,63 +97,64 @@ struct CameraScript : public Script {
 				m_hitEntity = raycastInformation.entity;
 
 				const Renderable& renderable = getEntityComponent<Renderable>(m_hitEntity);
+				const ModelPrimitive& modelPrimitive = renderable.model->primitives[renderable.modelPrimitiveIndex];
 
-				if (renderable.material->diffuseTexture.image) {
-					m_entityDiffuse = getImageID(*renderable.material->diffuseTexture.image);
-					m_entityDiffuseFilter = renderable.material->diffuseTexture.imageSampler.magFilter;
-					m_entityDiffuseSize = std::max(static_cast<float>(renderable.material->diffuseTexture.image->width), static_cast<float>(renderable.material->diffuseTexture.image->height));
+				if (modelPrimitive.material.diffuseTexture.image) {
+					m_entityDiffuse = getImageID(*modelPrimitive.material.diffuseTexture.image);
+					m_entityDiffuseFilter = modelPrimitive.material.diffuseTexture.imageSampler.magFilter;
+					m_entityDiffuseSize = std::max(static_cast<float>(modelPrimitive.material.diffuseTexture.image->width), static_cast<float>(modelPrimitive.material.diffuseTexture.image->height));
 				}
 				else {
 					m_entityDiffuse = std::numeric_limits<ImageID>::max();
 				}
 
-				if (renderable.material->normalTexture.image) {
-					m_entityNormal = getImageID(*renderable.material->normalTexture.image);
-					m_entityNormalFilter = renderable.material->normalTexture.imageSampler.magFilter;
-					m_entityNormalSize = std::max(static_cast<float>(renderable.material->normalTexture.image->width), static_cast<float>(renderable.material->normalTexture.image->height));
+				if (modelPrimitive.material.normalTexture.image) {
+					m_entityNormal = getImageID(*modelPrimitive.material.normalTexture.image);
+					m_entityNormalFilter = modelPrimitive.material.normalTexture.imageSampler.magFilter;
+					m_entityNormalSize = std::max(static_cast<float>(modelPrimitive.material.normalTexture.image->width), static_cast<float>(modelPrimitive.material.normalTexture.image->height));
 				}
 				else {
 					m_entityNormal = std::numeric_limits<ImageID>::max();
 				}
 
-				if (renderable.material->metalnessTexture.image) {
-					m_entityMetalness = getImageID(*renderable.material->metalnessTexture.image);
-					m_entityMetalnessFilter = renderable.material->metalnessTexture.imageSampler.magFilter;
-					m_entityMetalnessSize = std::max(static_cast<float>(renderable.material->metalnessTexture.image->width), static_cast<float>(renderable.material->metalnessTexture.image->height));
+				if (modelPrimitive.material.metalnessTexture.image) {
+					m_entityMetalness = getImageID(*modelPrimitive.material.metalnessTexture.image);
+					m_entityMetalnessFilter = modelPrimitive.material.metalnessTexture.imageSampler.magFilter;
+					m_entityMetalnessSize = std::max(static_cast<float>(modelPrimitive.material.metalnessTexture.image->width), static_cast<float>(modelPrimitive.material.metalnessTexture.image->height));
 				}
 				else {
 					m_entityMetalness = std::numeric_limits<ImageID>::max();
 				}
 
-				if (renderable.material->roughnessTexture.image) {
-					m_entityRoughness = getImageID(*renderable.material->roughnessTexture.image);
-					m_entityRoughnessFilter = renderable.material->roughnessTexture.imageSampler.magFilter;
-					m_entityRoughnessSize = std::max(static_cast<float>(renderable.material->roughnessTexture.image->width), static_cast<float>(renderable.material->roughnessTexture.image->height));
+				if (modelPrimitive.material.roughnessTexture.image) {
+					m_entityRoughness = getImageID(*modelPrimitive.material.roughnessTexture.image);
+					m_entityRoughnessFilter = modelPrimitive.material.roughnessTexture.imageSampler.magFilter;
+					m_entityRoughnessSize = std::max(static_cast<float>(modelPrimitive.material.roughnessTexture.image->width), static_cast<float>(modelPrimitive.material.roughnessTexture.image->height));
 				}
 				else {
 					m_entityRoughness = std::numeric_limits<ImageID>::max();
 				}
 
-				if (renderable.material->emissiveTexture.image) {
-					m_entityEmissive = getImageID(*renderable.material->emissiveTexture.image);
-					m_entityEmissiveFilter = renderable.material->emissiveTexture.imageSampler.magFilter;
-					m_entityEmissiveSize = std::max(static_cast<float>(renderable.material->emissiveTexture.image->width), static_cast<float>(renderable.material->emissiveTexture.image->height));
+				if (modelPrimitive.material.emissiveTexture.image) {
+					m_entityEmissive = getImageID(*modelPrimitive.material.emissiveTexture.image);
+					m_entityEmissiveFilter = modelPrimitive.material.emissiveTexture.imageSampler.magFilter;
+					m_entityEmissiveSize = std::max(static_cast<float>(modelPrimitive.material.emissiveTexture.image->width), static_cast<float>(modelPrimitive.material.emissiveTexture.image->height));
 				}
 				else {
 					m_entityEmissive = std::numeric_limits<ImageID>::max();
 				}
 
-				if (renderable.material->occlusionTexture.image) {
-					m_entityOcclusion = getImageID(*renderable.material->occlusionTexture.image);
-					m_entityOcclusionFilter = renderable.material->occlusionTexture.imageSampler.magFilter;
-					m_entityOcclusionSize = std::max(static_cast<float>(renderable.material->occlusionTexture.image->width), static_cast<float>(renderable.material->occlusionTexture.image->height));
+				if (modelPrimitive.material.occlusionTexture.image) {
+					m_entityOcclusion = getImageID(*modelPrimitive.material.occlusionTexture.image);
+					m_entityOcclusionFilter = modelPrimitive.material.occlusionTexture.imageSampler.magFilter;
+					m_entityOcclusionSize = std::max(static_cast<float>(modelPrimitive.material.occlusionTexture.image->width), static_cast<float>(modelPrimitive.material.occlusionTexture.image->height));
 				}
 				else {
 					m_entityOcclusion = std::numeric_limits<ImageID>::max();
 				}
 
-				m_entityEmissiveFactor = renderable.material->emissiveFactor;
-				m_entityIOR = renderable.material->indexOfRefraction;
+				m_entityEmissiveFactor = modelPrimitive.material.emissiveFactor;
+				m_entityIOR = modelPrimitive.material.indexOfRefraction;
 			}
 			else {
 				m_hitEntity = std::numeric_limits<Entity>::max();

@@ -60,10 +60,14 @@ struct ObjectScript : public Script {
 			rotationMouseStart = rotationMouseEnd;
 		}
 
+		if (getKeyState(InputKeyboardKey::P) == InputState::Pressed) {
+			graphicsModule->playAnimation(entityID, 0);
+		}
+
 		transform.scale += getMouseScrollOffsetY() * objectSpeed;
-		transform.scale.x = std::max(0.1f, transform.scale.x);
+		/*transform.scale.x = std::max(0.1f, transform.scale.x);
 		transform.scale.y = std::max(0.1f, transform.scale.y);
-		transform.scale.z = std::max(0.1f, transform.scale.z);
+		transform.scale.z = std::max(0.1f, transform.scale.z);*/
 
 		Rigidbody& rigidbody = getEntityComponent<Rigidbody>(entityID);
 		rigidbody.mass = transform.scale.x;
