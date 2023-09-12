@@ -60,8 +60,45 @@ struct ObjectScript : public Script {
 			rotationMouseStart = rotationMouseEnd;
 		}
 
-		if (getKeyState(InputKeyboardKey::P) == InputState::Pressed) {
-			graphicsModule->playAnimation(entityID, 0);
+		if (getKeyState(InputKeyboardKey::Num0) == InputState::Pressed) {
+			if (!isAnimationPlaying(entityID, 0)) {
+				playAnimation(entityID, 0);
+			}
+			else {
+				pauseAnimation(entityID);
+			}
+		}
+		if (getKeyState(InputKeyboardKey::Num1) == InputState::Pressed) {
+			if (!isAnimationPlaying(entityID, 1)) {
+				playAnimation(entityID, 1);
+			}
+			else {
+				pauseAnimation(entityID);
+			}
+		}
+		if (getKeyState(InputKeyboardKey::Num2) == InputState::Pressed) {
+			if (!isAnimationPlaying(entityID, 2)) {
+				playAnimation(entityID, 2);
+			}
+			else {
+				pauseAnimation(entityID);
+			}
+		}
+		if (getKeyState(InputKeyboardKey::Num3) == InputState::Pressed) {
+			if (!isAnimationPlaying(entityID, 3)) {
+				playAnimation(entityID, 3);
+			}
+			else {
+				pauseAnimation(entityID);
+			}
+		}
+		if (getKeyState(InputKeyboardKey::Num4) == InputState::Pressed) {
+			if (!isAnimationPlaying(entityID, 4)) {
+				playAnimation(entityID, 4);
+			}
+			else {
+				pauseAnimation(entityID);
+			}
 		}
 
 		transform.scale += getMouseScrollOffsetY() * objectSpeed;
