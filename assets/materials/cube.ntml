@@ -1,0 +1,22 @@
+{
+	"diffuseTexture": {
+		"imagePath": "assets/images/cube_diffuse.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	},
+	"normalTexture": {
+		"imagePath": "assets/images/cube_normal.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	},
+	"metalnessTexture": {
+		"imagePath": "assets/images/cube_orm.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	},
+	"roughnessTexture": {
+		"imagePath": "assets/images/cube_orm.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	},
+	"occlusionTexture": {
+		"imagePath": "assets/images/cube_orm.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	}
+}

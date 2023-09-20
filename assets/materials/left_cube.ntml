@@ -1,0 +1,11 @@
+{
+	"diffuseTexture": {
+		"imagePath": "assets/images/left_cube_diffuse.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	},
+	"emissiveTexture": {
+		"imagePath": "assets/images/left_cube_emissive.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	},
+	"emissiveFactor": 1.0
+}

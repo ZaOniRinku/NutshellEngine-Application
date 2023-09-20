@@ -1,98 +1,94 @@
-#include "../Core/Common/resources/ntshengn_resources_scripting.h"
-#include "../Core/Common/utils/ntshengn_utils_math.h"
+#include "../Core/scripting/ntshengn_script.h"
 #include <cmath>
 
-struct CameraScript : NtshEngn::Script {
+using namespace NtshEngn;
+struct CameraScript : Script {
 	NTSHENGN_SCRIPT(CameraScript);
 
 	void init() {
-		if (windowModule && windowModule->isOpen(windowModule->getMainWindowID())) {
-			windowModule->setCursorVisibility(windowModule->getMainWindowID(), !m_mouseMiddleMode);
+		setCursorVisibility(!m_mouseMiddleMode);
 
-			m_prevMouseX = windowModule->getWidth(windowModule->getMainWindowID()) / 2;
-			m_prevMouseY = windowModule->getHeight(windowModule->getMainWindowID()) / 2;
-			windowModule->setCursorPosition(windowModule->getMainWindowID(), m_prevMouseX, m_prevMouseY);
+		m_prevMouseX = getWindowWidth() / 2;
+		m_prevMouseY = getWindowHeight() / 2;
+		setCursorPosition(m_prevMouseX, m_prevMouseY);
 
-			const NtshEngn::Transform transform = ecs->getComponent<NtshEngn::Transform>(entityID);
-			NtshEngn::Math::vec3 cameraRotation = NtshEngn::Math::vec3(transform.rotation[0], transform.rotation[1], transform.rotation[2]);
+		const Transform transform = getEntityComponent<Transform>(entityID);
+		Math::vec3 cameraRotation = Math::vec3(transform.rotation[0], transform.rotation[1], transform.rotation[2]);
 
-			m_yaw = std::atan2(cameraRotation.z, cameraRotation.x) * toDeg;
-			m_pitch = -std::asin(cameraRotation.y) * toDeg;
+		m_yaw = std::atan2(cameraRotation.z, cameraRotation.x) * toDeg;
+		m_pitch = -std::asin(cameraRotation.y) * toDeg;
 
-			frameLimiter->setMaxFPS(60);
-		}
+		setMaxFPS(60);
 	}
 
 	void update(double dt) {
-		if (windowModule && windowModule->isOpen(windowModule->getMainWindowID())) {
-			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::R) == NtshEngn::InputState::Pressed) {
-				m_mouseMiddleMode = !m_mouseMiddleMode;
-				windowModule->setCursorVisibility(windowModule->getMainWindowID(), !m_mouseMiddleMode);
-				if (m_mouseMiddleMode) {
-					m_prevMouseX = windowModule->getWidth(windowModule->getMainWindowID()) / 2;
-					m_prevMouseY = windowModule->getHeight(windowModule->getMainWindowID()) / 2;
-					windowModule->setCursorPosition(windowModule->getMainWindowID(), m_prevMouseX, m_prevMouseY);
-				}
-			}
-
-			NtshEngn::Transform& transform = ecs->getComponent<NtshEngn::Transform>(entityID);
-			NtshEngn::Math::vec3 cameraRotation = NtshEngn::Math::vec3(transform.rotation[0], transform.rotation[1], transform.rotation[2]);
-
+		if (getKeyState(InputKeyboardKey::R) == InputState::Pressed) {
+			m_mouseMiddleMode = !m_mouseMiddleMode;
+			setCursorVisibility(!m_mouseMiddleMode);
 			if (m_mouseMiddleMode) {
-				const int mouseX = windowModule->getCursorPositionX(windowModule->getMainWindowID());
-				const int mouseY = windowModule->getCursorPositionY(windowModule->getMainWindowID());
-
-				m_prevMouseX = windowModule->getWidth(windowModule->getMainWindowID()) / 2;
-				m_prevMouseY = windowModule->getHeight(windowModule->getMainWindowID()) / 2;
-				windowModule->setCursorPosition(windowModule->getMainWindowID(), m_prevMouseX, m_prevMouseY);
-
-				const float xOffset = (mouseX - m_prevMouseX) * m_mouseSensitivity;
-				const float yOffset = (mouseY - m_prevMouseY) * m_mouseSensitivity;
-
-				m_prevMouseX = mouseX;
-				m_prevMouseY = mouseY;
-
-				m_yaw = std::fmod(m_yaw + xOffset, 360.0f);
-				m_pitch = std::max(-89.0f, std::min(89.0f, m_pitch + yOffset));
-
-				float yawRad = m_yaw * toRad;
-				float pitchRad = m_pitch * toRad;
-
-				cameraRotation.x = std::cos(pitchRad) * std::cos(yawRad);
-				cameraRotation.y = -std::sin(pitchRad);
-				cameraRotation.z = std::cos(pitchRad) * std::sin(yawRad);
-				cameraRotation = NtshEngn::Math::normalize(cameraRotation);
+				m_prevMouseX = getWindowWidth() / 2;
+				m_prevMouseY = getWindowHeight() / 2;
+				setCursorPosition(m_prevMouseX, m_prevMouseY);
 			}
-
-			const float cameraSpeed = m_cameraSpeed * static_cast<float>(dt);
-
-			NtshEngn::Math::vec3 cameraPosition = NtshEngn::Math::vec3(transform.position[0], transform.position[1], transform.position[2]);
-			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::W) == NtshEngn::InputState::Held) {
-				cameraPosition += (cameraRotation * cameraSpeed);
-			}
-			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::S) == NtshEngn::InputState::Held) {
-				cameraPosition -= (cameraRotation * cameraSpeed);
-			}
-			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::A) == NtshEngn::InputState::Held) {
-				NtshEngn::Math::vec3 t = NtshEngn::Math::normalize(NtshEngn::Math::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
-				cameraPosition.x -= (t.x * cameraSpeed);
-				cameraPosition.z -= (t.z * cameraSpeed);
-			}
-			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::D) == NtshEngn::InputState::Held) {
-				NtshEngn::Math::vec3 t = NtshEngn::Math::normalize(NtshEngn::Math::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
-				cameraPosition.x += (t.x * cameraSpeed);
-				cameraPosition.z += (t.z * cameraSpeed);
-			}
-			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::Space) == NtshEngn::InputState::Held) {
-				cameraPosition.y += cameraSpeed;
-			}
-			if (windowModule->getKeyState(windowModule->getMainWindowID(), NtshEngn::InputKeyboardKey::Shift) == NtshEngn::InputState::Held) {
-				cameraPosition.y -= cameraSpeed;
-			}
-
-			transform.position = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
-			transform.rotation = { cameraRotation.x, cameraRotation.y, cameraRotation.z };
 		}
+
+		Transform& transform = getEntityComponent<Transform>(entityID);
+		Math::vec3 cameraRotation = Math::vec3(transform.rotation[0], transform.rotation[1], transform.rotation[2]);
+
+		if (m_mouseMiddleMode) {
+			const int mouseX = getCursorPositionX();
+			const int mouseY = getCursorPositionY();
+
+			m_prevMouseX = getWindowWidth() / 2;
+			m_prevMouseY = getWindowHeight() / 2;
+			setCursorPosition(m_prevMouseX, m_prevMouseY);
+
+			const float xOffset = (mouseX - m_prevMouseX) * m_mouseSensitivity;
+			const float yOffset = (mouseY - m_prevMouseY) * m_mouseSensitivity;
+
+			m_prevMouseX = mouseX;
+			m_prevMouseY = mouseY;
+
+			m_yaw = std::fmod(m_yaw + xOffset, 360.0f);
+			m_pitch = std::max(-89.0f, std::min(89.0f, m_pitch + yOffset));
+
+			float yawRad = m_yaw * toRad;
+			float pitchRad = m_pitch * toRad;
+
+			cameraRotation.x = std::cos(pitchRad) * std::cos(yawRad);
+			cameraRotation.y = -std::sin(pitchRad);
+			cameraRotation.z = std::cos(pitchRad) * std::sin(yawRad);
+			cameraRotation = Math::normalize(cameraRotation);
+		}
+
+		const float cameraSpeed = m_cameraSpeed * static_cast<float>(dt);
+
+		Math::vec3 cameraPosition = Math::vec3(transform.position[0], transform.position[1], transform.position[2]);
+		if (getKeyState(InputKeyboardKey::W) == InputState::Held) {
+			cameraPosition += (cameraRotation * cameraSpeed);
+		}
+		if (getKeyState(InputKeyboardKey::S) == InputState::Held) {
+			cameraPosition -= (cameraRotation * cameraSpeed);
+		}
+		if (getKeyState(InputKeyboardKey::A) == InputState::Held) {
+			Math::vec3 t = Math::normalize(Math::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
+			cameraPosition.x -= (t.x * cameraSpeed);
+			cameraPosition.z -= (t.z * cameraSpeed);
+		}
+		if (getKeyState(InputKeyboardKey::D) == InputState::Held) {
+			Math::vec3 t = Math::normalize(Math::vec3(-cameraRotation.z, 0.0, cameraRotation.x));
+			cameraPosition.x += (t.x * cameraSpeed);
+			cameraPosition.z += (t.z * cameraSpeed);
+		}
+		if (getKeyState(InputKeyboardKey::Space) == InputState::Held) {
+			cameraPosition.y += cameraSpeed;
+		}
+		if (getKeyState(InputKeyboardKey::Shift) == InputState::Held) {
+			cameraPosition.y -= cameraSpeed;
+		}
+
+		transform.position = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
+		transform.rotation = { cameraRotation.x, cameraRotation.y, cameraRotation.z };
 	}
 
 	void destroy() {

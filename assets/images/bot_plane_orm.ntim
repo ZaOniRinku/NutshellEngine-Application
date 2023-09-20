@@ -1,0 +1,9 @@
+{
+	"width": 1,
+	"height": 1,
+	"format": "R8G8B8A8",
+	"colorSpace": "Linear",
+	"data" : [
+		255, 128, 255, 255
+	]
+}

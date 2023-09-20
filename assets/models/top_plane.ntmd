@@ -1,0 +1,8 @@
+{
+	"primitives": [
+		{
+			"meshPath": "assets/meshes/plane.ntmh",
+			"materialPath": "assets/materials/top_plane.ntml"
+		}
+	]
+}

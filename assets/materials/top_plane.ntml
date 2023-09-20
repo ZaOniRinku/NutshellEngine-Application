@@ -1,0 +1,18 @@
+{
+	"diffuseTexture": {
+		"imagePath": "assets/images/top_plane_diffuse.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	},
+	"metalnessTexture": {
+		"imagePath": "assets/images/top_plane_orm.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	},
+	"roughnessTexture": {
+		"imagePath": "assets/images/top_plane_orm.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	},
+	"occlusionTexture": {
+		"imagePath": "assets/images/top_plane_orm.ntim",
+		"imageSamplerPath": "assets/image_samplers/nearest.ntsp"
+	}
+}
