@@ -27,15 +27,15 @@ else()
 		GIT_REPOSITORY https://github.com/Team-Nutshell/NutshellEngine-Core
 		GIT_TAG main
 		SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Core"
-		CONFIGURE_COMMAND ""
 	)
 
 	FetchContent_MakeAvailable(Core)
 endif()
 
-add_subdirectory(external/nml)
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_scriptable_factory.py ${CMAKE_CURRENT_SOURCE_DIR})
 
-set(SCRIPTS_DIRECTORY "scripts/")
+set(SCRIPTS_DIRECTORY "scripts")
 file(GLOB_RECURSE SCRIPTS "${SCRIPTS_DIRECTORY}/*.h")
 message(STATUS ${SCRIPTS})
 
@@ -44,7 +44,6 @@ add_executable(${PROJECT_NAME} main.cpp ${SCRIPTS})
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 		NutshellEngine-Core
-		nml
 		${NTSHENGN_LIBRARIES})
 
 target_compile_options(${PROJECT_NAME}
@@ -60,3 +59,9 @@ target_compile_definitions(${PROJECT_NAME}
 		$<$<CONFIG:MinSizeRel>:NTSHENGN_RELEASE>
 		$<$<CONFIG:Release>:NTSHENGN_RELEASE>
 		$<$<CONFIG:RelWithDebInfo>:NTSHENGN_DEBUG>)
+
+add_custom_target(CopyAssets
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/assets ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/assets
+	COMMENT "Copy assets from ${CMAKE_SOURCE_DIR}/assets to project build folder ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/assets.")
+
+add_dependencies(${PROJECT_NAME} CopyAssets)

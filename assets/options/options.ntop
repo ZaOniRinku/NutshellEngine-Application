@@ -1,0 +1,4 @@
+{
+	"maxFPS": 60,
+	"firstScenePath": "assets/scenes/server.ntsn"
+}
