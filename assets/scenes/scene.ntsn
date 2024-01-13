@@ -53,7 +53,7 @@
 				"restitution": 1.0
 			},
 			"collidable": {
-				"type": "AABB"
+				"type": "Box"
 			},
 			"scriptable": {
 				"scriptName": "ObjectScript"
@@ -81,7 +81,7 @@
 				"restitution": 1.0
 			},
 			"collidable": {
-				"type": "AABB"
+				"type": "Box"
 			}
 		},
 		{
@@ -111,7 +111,7 @@
 				"restitution": 1.0
 			},
 			"collidable": {
-				"type": "AABB"
+				"type": "Box"
 			}
 		},
 		{
@@ -141,7 +141,7 @@
 				"restitution": 1.0
 			},
 			"collidable": {
-				"type": "AABB"
+				"type": "Box"
 			}
 		},
 		{
@@ -171,7 +171,7 @@
 				"restitution": 1.0
 			},
 			"collidable": {
-				"type": "AABB"
+				"type": "Box"
 			}
 		},
 		{
@@ -201,7 +201,7 @@
 				"restitution": 1.0
 			},
 			"collidable": {
-				"type": "AABB"
+				"type": "Box"
 			}
 		},
 		{
