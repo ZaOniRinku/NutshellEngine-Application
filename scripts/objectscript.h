@@ -13,7 +13,7 @@ struct ObjectScript : public Script {
 	void update(double dt) {
 		Transform& transform = getEntityComponent<Transform>(entityID);
 		const Transform& cameraTransform = getEntityComponent<Transform>(m_camera);
-		const float objectSpeed = m_objectSpeed * static_cast<float>(dt);
+		const float objectSpeed = m_objectSpeed;
 
 		if (transform.position.y < -100.0f) {
 			destroyEntity(entityID);
@@ -107,14 +107,14 @@ struct ObjectScript : public Script {
 		transform.scale.z = std::max(0.1f, transform.scale.z);*/
 
 		Rigidbody& rigidbody = getEntityComponent<Rigidbody>(entityID);
-		rigidbody.mass = transform.scale.x;
+		//rigidbody.mass = transform.scale.x;
 
 		if (getKeyState(InputKeyboardKey::G) == InputState::Pressed) {
 			rigidbody.isStatic = !rigidbody.isStatic;
 		}
-		if (getKeyState(InputKeyboardKey::F) == InputState::Pressed) {
+		if (getKeyState(InputKeyboardKey::F) == InputState::Held) {
 			rigidbody.isStatic = false;
-			rigidbody.force = cameraTransform.rotation * 100.0f * objectSpeed;
+			rigidbody.force = cameraTransform.rotation * objectSpeed;
 		}
 	}
 
@@ -122,7 +122,7 @@ struct ObjectScript : public Script {
 	}
 
 private:
-	const float m_objectSpeed = 0.005f;
+	const float m_objectSpeed = 2.0f;
 
 	Entity m_camera;
 
