@@ -13,7 +13,7 @@ struct ObjectScript : public Script {
 	void update(double dt) {
 		Transform& transform = getEntityComponent<Transform>(entityID);
 		const Transform& cameraTransform = getEntityComponent<Transform>(m_camera);
-		const float objectSpeed = m_objectSpeed;
+		const float objectSpeed = (m_objectSpeed / 200.0f) * static_cast<float>(dt);
 
 		if (transform.position.y < -100.0f) {
 			destroyEntity(entityID);
