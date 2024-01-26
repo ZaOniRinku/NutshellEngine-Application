@@ -24,22 +24,34 @@
 			}
 		},
 		{
-			"name": "Cube",
+			"name": "Ground",
+			"transform": {
+				"position": [
+					0.0,
+					-15.0,
+					0.0
+				],
+				"scale": [
+					10.0,
+					10.0,
+					10.0
+				]
+			},
 			"renderable": {
 				"modelPath": "assets/models/model.ntmd"
 			},
 			"collidable": {
-				"type": "AABB",
-				"min": [
-					-1.0,
-					-1.0,
-					-1.0
-				],
-				"max": [
-					1.0,
-					1.0,
-					1.0
-				]
+				"type": "Box"
+			},
+			"rigidbody": {
+				"isStatic": true,
+				"restitution": 1.0
+			}
+		},
+		{
+			"name": "GameController",
+			"scriptable": {
+				"scriptName": "GameControllerScript"
 			}
 		},
 		{
@@ -47,6 +59,24 @@
 			"transform": {
 				"rotation": [
 					1.0,
+					-1.0,
+					0.0
+				]
+			},
+			"light": {
+				"type": "Directional",
+				"color": [
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		},
+		{
+			"name": "Light2",
+			"transform": {
+				"rotation": [
+					-1.0,
 					-1.0,
 					0.0
 				]
