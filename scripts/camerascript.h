@@ -18,9 +18,13 @@ struct CameraScript : public Script {
 
 		m_yaw = Math::toDeg(std::atan2(cameraRotation.z, cameraRotation.x));
 		m_pitch = Math::toDeg(-std::asin(cameraRotation.y));
+
+		setSoundListenerEntity(entityID);
 	}
 
 	void update(double dt) {
+		NTSHENGN_UNUSED(dt);
+
 		if (getKeyState(InputKeyboardKey::R) == InputState::Pressed) {
 			m_mouseMiddleMode = !m_mouseMiddleMode;
 			setCursorVisibility(!m_mouseMiddleMode);
@@ -59,29 +63,31 @@ struct CameraScript : public Script {
 			transform.rotation = Math::normalize(transform.rotation);
 		}
 
-		const float cameraSpeed = m_cameraSpeed * static_cast<float>(dt);
+		Rigidbody& rigidbody = getEntityComponent<Rigidbody>(entityID);
 
 		if (getKeyState(InputKeyboardKey::W) == InputState::Held) {
-			transform.position += (transform.rotation * cameraSpeed);
+			rigidbody.force += (transform.rotation * m_cameraSpeed);
 		}
 		if (getKeyState(InputKeyboardKey::S) == InputState::Held) {
-			transform.position -= (transform.rotation * cameraSpeed);
+			rigidbody.force -= (transform.rotation * m_cameraSpeed);
 		}
 		if (getKeyState(InputKeyboardKey::A) == InputState::Held) {
 			Math::vec3 t = Math::normalize(Math::vec3(-transform.rotation.z, 0.0, transform.rotation.x));
-			transform.position.x -= (t.x * cameraSpeed);
-			transform.position.z -= (t.z * cameraSpeed);
+			rigidbody.force.x -= (t.x * m_cameraSpeed);
+			rigidbody.force.z -= (t.z * m_cameraSpeed);
 		}
 		if (getKeyState(InputKeyboardKey::D) == InputState::Held) {
 			Math::vec3 t = Math::normalize(Math::vec3(-transform.rotation.z, 0.0, transform.rotation.x));
-			transform.position.x += (t.x * cameraSpeed);
-			transform.position.z += (t.z * cameraSpeed);
+			rigidbody.force.x += (t.x * m_cameraSpeed);
+			rigidbody.force.z += (t.z * m_cameraSpeed);
 		}
+
+		Collidable& collidable = getEntityComponent<Collidable>(entityID);
+		ColliderSphere* collider = static_cast<ColliderSphere*>(collidable.collider.get());
 		if (getKeyState(InputKeyboardKey::Space) == InputState::Held) {
-			transform.position.y += cameraSpeed;
-		}
-		if (getKeyState(InputKeyboardKey::Shift) == InputState::Held) {
-			transform.position.y -= cameraSpeed;
+			if (!raycast(transform.position + Math::vec3(0.0f, -(collider->radius * transform.scale.x) + 0.001f, 0.0f), Math::vec3(0.0f, -1.0f, 0.0f), 0.0f, 0.001f).empty()) {
+					rigidbody.force.y += m_cameraSpeed * 100.0f;
+			}
 		}
 	}
 
@@ -89,9 +95,9 @@ struct CameraScript : public Script {
 	}
 
 private:
-	bool m_mouseMiddleMode = false;
+	bool m_mouseMiddleMode = true;
 
-	const float m_cameraSpeed = 0.0015f;
+	const float m_cameraSpeed = 500.0f;
 	const float m_mouseSensitivity = 0.12f;
 
 	int m_prevMouseX = 0;

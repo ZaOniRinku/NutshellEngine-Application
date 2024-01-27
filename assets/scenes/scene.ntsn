@@ -17,28 +17,28 @@
 			"camera": {
 				"fov": 45.0,
 				"nearPlane": 0.03,
-				"farPlane": 100.0
+				"farPlane": 1000.0
+			},
+			"rigidbody": {
+				"isStatic": false,
+				"lockRotation": true,
+				"restitution": 0.0,
+				"staticFriction": 0.75,
+				"dynamicFriction": 0.75,
+				"mass": 100.0
+			},
+			"collidable": {
+				"type": "Sphere",
+				"radius": 3.0
 			},
 			"scriptable": {
 				"scriptName": "CameraScript"
 			}
 		},
 		{
-			"name": "Ground",
-			"transform": {
-				"position": [
-					0.0,
-					-15.0,
-					0.0
-				],
-				"scale": [
-					100.0,
-					10.0,
-					100.0
-				]
-			},
+			"name": "Room",
 			"renderable": {
-				"modelPath": "assets/models/model.ntmd"
+				"modelPath": "assets/models/room.gltf"
 			},
 			"collidable": {
 				"type": "Box"
@@ -57,36 +57,27 @@
 		{
 			"name": "Light",
 			"transform": {
+				"position": [
+					0.0,
+					20.0,
+					0.0
+				],
 				"rotation": [
-					1.0,
+					0.0,
 					-1.0,
 					0.0
 				]
 			},
 			"light": {
-				"type": "Directional",
+				"type": "Spot",
 				"color": [
-					1.0,
-					1.0,
-					1.0
-				]
-			}
-		},
-		{
-			"name": "Light2",
-			"transform": {
-				"rotation": [
-					-1.0,
-					-1.0,
-					0.0
-				]
-			},
-			"light": {
-				"type": "Directional",
-				"color": [
-					1.0,
-					1.0,
-					1.0
+					0.5,
+					0.5,
+					0.5
+				],
+				"cutoffs": [
+					20.0,
+					50.0
 				]
 			}
 		}

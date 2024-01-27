@@ -27,10 +27,16 @@ struct ClownScript : public Script {
 			std::uniform_real_distribution<float> distM100To100(-100.0f, 100.0f);
 			std::uniform_real_distribution<float> dist0To2PI(0.0f, 2.0f * Math::PI);
 
-			playSoundAtPosition(boingSound, transform.position, 0.5f, 1.0f / transform.scale.x);
+			if (aerial) {
+				playSoundAtPosition(boingSound, transform.position, 0.5f, 1.0f / transform.scale.x);
+				aerial = false;
+			}
 
 			rigidbody.force += Math::vec3(distM100To100(rand), 0.0f, distM100To100(rand));
 			rigidbody.torque += Math::vec3(dist0To2PI(rand), dist0To2PI(rand), dist0To2PI(rand));
+		}
+		else {
+			aerial = true;
 		}
 	}
 
@@ -42,4 +48,5 @@ public:
 
 private:
 	std::default_random_engine rand;
+	bool aerial = false;
 };

@@ -1,5 +1,5 @@
 {
-	"windowTitle": "Camera First Person",
+	"windowTitle": "GGJ24",
 	"windowIconImagePath": "assets/images/image.ntim",
 	"maxFPS": 60,
 	"firstScenePath": "assets/scenes/scene.ntsn"
