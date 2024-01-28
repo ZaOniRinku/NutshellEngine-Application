@@ -1,0 +1,97 @@
+{
+	"entities": [
+		{
+			"name": "Camera",
+			"transform": {
+				"position": [
+					0.0,
+					30.0,
+					150.0
+				],
+				"rotation": [
+					0.0,
+					0.0,
+					-1.0
+				]
+			},
+			"camera": {
+				"fov": 45.0,
+				"nearPlane": 0.03,
+				"farPlane": 1000.0
+			}
+		},
+		{
+			"name": "Room",
+			"renderable": {
+				"modelPath": "assets/models/room.gltf"
+			}
+		},
+		{
+			"name": "TitleController",
+			"scriptable": {
+				"scriptName": "TitleControllerScript"
+			}
+		},
+		{
+			"transform": {
+				"position": [
+					0.0,
+					0.0,
+					50.0
+				],
+				"rotation": [
+					0.0,
+					0.78.0,
+					0.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/ringmaster.gltf"
+			}
+		},
+		{
+			"transform": {
+				"position": [
+					0.0,
+					0.0,
+					60.0
+				],
+				"rotation": [
+					0.0,
+					0.78.0,
+					0.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/adulte.gltf"
+			}
+		},
+		{
+			"name": "Light",
+			"transform": {
+				"position": [
+					0.0,
+					10.0,
+					150.0
+				],
+				"rotation": [
+					0.0,
+					0.0,
+					-1.0
+				]
+			},
+			"light": {
+				"type": "Spot",
+				"color": [
+					1.0,
+					1.0,
+					1.0
+				],
+				"cutoff": [
+					50.0,
+					120.0
+				]
+			}
+		}
+	]
+}

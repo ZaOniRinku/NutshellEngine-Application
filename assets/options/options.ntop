@@ -2,5 +2,5 @@
 	"windowTitle": "GGJ24",
 	"windowIconImagePath": "assets/images/image.ntim",
 	"maxFPS": 60,
-	"firstScenePath": "assets/scenes/scene.ntsn"
+	"firstScenePath": "assets/scenes/title.ntsn"
 }

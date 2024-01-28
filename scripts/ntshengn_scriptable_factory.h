@@ -7,6 +7,8 @@
 #include "camerascript.h"
 #include "clownscript.h"
 #include "gamecontrollerscript.h"
+#include "signscript.h"
+#include "titlecontrollerscript.h"
 
 namespace NtshEngn {
 
@@ -18,6 +20,8 @@ namespace NtshEngn {
 			if (scriptName == "CameraScript") { scriptable.script = std::make_unique<CameraScript>(); }
 			else if (scriptName == "ClownScript") { scriptable.script = std::make_unique<ClownScript>(); }
 			else if (scriptName == "GameControllerScript") { scriptable.script = std::make_unique<GameControllerScript>(); }
+			else if (scriptName == "SignScript") { scriptable.script = std::make_unique<SignScript>(); }
+			else if (scriptName == "TitleControllerScript") { scriptable.script = std::make_unique<TitleControllerScript>(); }
 
 			return scriptable;
 		}

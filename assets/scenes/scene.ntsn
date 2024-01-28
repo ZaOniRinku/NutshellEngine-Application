@@ -23,9 +23,9 @@
 				"isStatic": false,
 				"lockRotation": true,
 				"restitution": 0.0,
-				"staticFriction": 0.75,
+				"staticFriction": 0.5,
 				"dynamicFriction": 0.75,
-				"mass": 100.0
+				"mass": 1.0
 			},
 			"collidable": {
 				"type": "Sphere",
@@ -38,14 +38,195 @@
 		{
 			"name": "Room",
 			"renderable": {
-				"modelPath": "assets/models/room.gltf"
+				"modelPath": "assets/models/room_inside.gltf"
 			},
 			"collidable": {
 				"type": "Box"
 			},
 			"rigidbody": {
 				"isStatic": true,
-				"restitution": 1.0
+				"restitution": 1.0,
+				"staticFriction": 0.0,
+				"dynamicFriction": 0.0
+			}
+		},
+		{
+			"name": "Ringmaster",
+			"transform": {
+				"position": [
+					0.0,
+					1.0,
+					35.0
+				],
+				"rotation": [
+					0.0,
+					1.57079,
+					0.0
+				],
+				"scale": [
+					3.0,
+					3.0,
+					3.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/ringmaster.gltf"
+			}
+		},
+		{
+			"name": "BolLeft",
+			"transform": {
+				"position": [
+					-28.0,
+					-0.5,
+					-23.0
+				],
+				"scale": [
+					4.5,
+					4.5,
+					4.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/bol.gltf"
+			}
+		},
+		{
+			"name": "SignLeft",
+			"transform": {
+				"position": [
+					-28.0,
+					2.5,
+					-23.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/sign_robe.gltf"
+			},
+			"scriptable": {
+				"scriptName": "SignScript"
+			}
+		},
+		{
+			"name": "BolRight",
+			"transform": {
+				"position": [
+					22.0,
+					-0.5,
+					-23.0
+				],
+				"scale": [
+					4.5,
+					4.5,
+					4.5
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/bol.gltf"
+			}
+		},
+		{
+			"name": "SignRight",
+			"transform": {
+				"position": [
+					22.0,
+					2.5,
+					-23.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/sign_dot.gltf"
+			},
+			"scriptable": {
+				"scriptName": "SignScript"
+			}
+		},
+		{
+			"name": "Tube",
+			"transform": {
+				"position": [
+					0.0,
+					12.5,
+					-35.0
+				],
+				"rotation": [
+					0.3968878719,
+					0.0461799388,
+					-0.2029643387
+				],
+				"scale": [
+					1,
+					1,
+					1
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/tube.gltf"
+			}
+		},
+		{
+			"name": "ButtonRed",
+			"transform": {
+				"position": [
+					-28.0,
+					-0.5,
+					0.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/button_red.gltf"
+			}
+		},
+		{
+			"name": "ButtonBlue",
+			"transform": {
+				"position": [
+					-13.0,
+					-0.5,
+					10.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/button_blue.gltf"
+			}
+		},
+		{
+			"name": "ButtonGreen",
+			"transform": {
+				"position": [
+					2.0,
+					-0.5,
+					20.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/button_green.gltf"
+			}
+		},
+		{
+			"name": "ButtonYellow",
+			"transform": {
+				"position": [
+					17.0,
+					-0.5,
+					10.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/button_yellow.gltf"
+			}
+		},
+		{
+			"name": "ButtonPink",
+			"transform": {
+				"position": [
+					31.0,
+					-0.5,
+					0.0
+				]
+			},
+			"renderable": {
+				"modelPath": "assets/models/button_pink.gltf"
 			}
 		},
 		{
@@ -59,7 +240,7 @@
 			"transform": {
 				"position": [
 					0.0,
-					20.0,
+					37.0,
 					0.0
 				],
 				"rotation": [
@@ -71,13 +252,35 @@
 			"light": {
 				"type": "Spot",
 				"color": [
-					0.5,
-					0.5,
-					0.5
+					10.0,
+					10.0,
+					10.0
 				],
-				"cutoffs": [
+				"cutoff": [
 					20.0,
+					70.0
+				]
+			}
+		},
+		{
+			"name": "Light2",
+			"transform": {
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				]
+			},
+			"light": {
+				"type": "Point",
+				"color": [
+					50.0,
+					50.0,
 					50.0
+				],
+				"cutoff": [
+					5.0,
+					10.0
 				]
 			}
 		}

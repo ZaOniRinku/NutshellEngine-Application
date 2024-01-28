@@ -23,9 +23,9 @@ struct CameraScript : public Script {
 	}
 
 	void update(double dt) {
-		NTSHENGN_UNUSED(dt);
+		float deltaTime = static_cast<float>(dt / 1.0);
 
-		if (getKeyState(InputKeyboardKey::R) == InputState::Pressed) {
+		if (getKeyState(InputKeyboardKey::Escape) == InputState::Pressed) {
 			m_mouseMiddleMode = !m_mouseMiddleMode;
 			setCursorVisibility(!m_mouseMiddleMode);
 			if (m_mouseMiddleMode) {
@@ -65,28 +65,41 @@ struct CameraScript : public Script {
 
 		Rigidbody& rigidbody = getEntityComponent<Rigidbody>(entityID);
 
+		Math::vec3 direction = Math::vec3(0.0f, 0.0f, 0.0f);
 		if (getKeyState(InputKeyboardKey::W) == InputState::Held) {
-			rigidbody.force += (transform.rotation * m_cameraSpeed);
+			const Math::vec3 r = Math::normalize(Math::vec3(transform.rotation.x, 0.0f, transform.rotation.z));
+			direction.x += r.x;
+			direction.z += r.z;
 		}
 		if (getKeyState(InputKeyboardKey::S) == InputState::Held) {
-			rigidbody.force -= (transform.rotation * m_cameraSpeed);
+			const Math::vec3 r = Math::normalize(Math::vec3(transform.rotation.x, 0.0f, transform.rotation.z));
+			direction.x -= r.x;
+			direction.z -= r.z;
 		}
 		if (getKeyState(InputKeyboardKey::A) == InputState::Held) {
 			Math::vec3 t = Math::normalize(Math::vec3(-transform.rotation.z, 0.0, transform.rotation.x));
-			rigidbody.force.x -= (t.x * m_cameraSpeed);
-			rigidbody.force.z -= (t.z * m_cameraSpeed);
+			direction.x -= t.x;
+			direction.z -= t.z;
 		}
 		if (getKeyState(InputKeyboardKey::D) == InputState::Held) {
 			Math::vec3 t = Math::normalize(Math::vec3(-transform.rotation.z, 0.0, transform.rotation.x));
-			rigidbody.force.x += (t.x * m_cameraSpeed);
-			rigidbody.force.z += (t.z * m_cameraSpeed);
+			direction.x += t.x;
+			direction.z += t.z;
+		}
+		if (Math::dot(direction, direction) > 0.0f) {
+			direction = Math::normalize(direction) * (m_cameraSpeed * deltaTime);
+			rigidbody.linearVelocity.x = direction.x;
+			rigidbody.linearVelocity.z = direction.z;
+		}
+		if ((getKeyState(InputKeyboardKey::W) == InputState::None) && (getKeyState(InputKeyboardKey::A) == InputState::None) && (getKeyState(InputKeyboardKey::S) == InputState::None) && (getKeyState(InputKeyboardKey::D) == InputState::None)) {
+			rigidbody.linearVelocity = Math::vec3(0.0f, rigidbody.linearVelocity.y, 0.0f);
 		}
 
 		Collidable& collidable = getEntityComponent<Collidable>(entityID);
 		ColliderSphere* collider = static_cast<ColliderSphere*>(collidable.collider.get());
-		if (getKeyState(InputKeyboardKey::Space) == InputState::Held) {
+		if (getKeyState(InputKeyboardKey::Space) == InputState::Pressed) {
 			if (!raycast(transform.position + Math::vec3(0.0f, -(collider->radius * transform.scale.x) + 0.001f, 0.0f), Math::vec3(0.0f, -1.0f, 0.0f), 0.0f, 0.001f).empty()) {
-					rigidbody.force.y += m_cameraSpeed * 100.0f;
+					rigidbody.linearVelocity.y += m_jumpSpeed * deltaTime;
 			}
 		}
 	}
@@ -97,7 +110,8 @@ struct CameraScript : public Script {
 private:
 	bool m_mouseMiddleMode = true;
 
-	const float m_cameraSpeed = 500.0f;
+	const float m_cameraSpeed = 1.0f;
+	const float m_jumpSpeed = 0.5f;
 	const float m_mouseSensitivity = 0.12f;
 
 	int m_prevMouseX = 0;
