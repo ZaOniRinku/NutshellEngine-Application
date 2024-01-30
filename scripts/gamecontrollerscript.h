@@ -1,6 +1,7 @@
 #pragma once
 #include "../Core/scripting/ntshengn_script.h"
 #include "clownscript.h"
+#include "signscript.h"
 #include <array>
 #include <random>
 
@@ -31,8 +32,8 @@ struct GameControllerScript : public Script {
 		addEntityComponent(newClown, clownRigidbody);
 
 		Scriptable clownScriptable;
-		clownScriptable.script = std::make_unique<ClownScript>();
-		ClownScript* clownScript = static_cast<ClownScript*>(clownScriptable.script.get());
+		ClownScript* clownScript = createScript<ClownScript>();
+		clownScriptable.script = clownScript;
 		clownScript->boingSound = clownBoingSound;
 		clownScript->type = type;
 		clownScript->color = color;
@@ -41,6 +42,67 @@ struct GameControllerScript : public Script {
 		return newClown;
 	}
 
+	Entity createSign(int location, int color) {
+		Entity newSign = createEntity();
+
+		Transform& signTransform = getEntityComponent<Transform>(newSign);
+		if (location == 0) {
+			signTransform.position = signLeftPosition;
+		}
+		else if (location == 1) {
+			signTransform.position = signRightPosition;
+		}
+
+		Renderable signRenderable;
+		if (location == 0) {
+			if (color == -1) {
+				signRenderable.model = signRobeNormal;
+			}
+			else if (color == 0) {
+				signRenderable.model = signRobeRed;
+			}
+			else if (color == 1) {
+				signRenderable.model = signRobeBlue;
+			}
+			else if (color == 2) {
+				signRenderable.model = signRobeGreen;
+			}
+			else if (color == 3) {
+				signRenderable.model = signRobeYellow;
+			}
+			else if (color == 4) {
+				signRenderable.model = signRobePink;
+			}
+		}
+		else if (location == 1) {
+			if (color == -1) {
+				signRenderable.model = signDotNormal;
+			}
+			else if (color == 0) {
+				signRenderable.model = signDotRed;
+			}
+			else if (color == 1) {
+				signRenderable.model = signDotBlue;
+			}
+			else if (color == 2) {
+				signRenderable.model = signDotGreen;
+			}
+			else if (color == 3) {
+				signRenderable.model = signDotYellow;
+			}
+			else if (color == 4) {
+				signRenderable.model = signDotPink;
+			}
+		}
+		signRenderable.modelPrimitiveIndex = 0;
+		addEntityComponent(newSign, signRenderable);
+
+		Scriptable signScriptable;
+		signScriptable.script = createScript<SignScript>();
+		addEntityComponent(newSign, signScriptable);
+
+		return newSign;
+	}
 
 	void init() {
 		font = getFontID(*loadFont("assets/fonts/JetBrainsMono-Regular.ttf", 32));
@@ -54,14 +116,33 @@ struct GameControllerScript : public Script {
 		buttonYellow = findEntityByName("ButtonYellow");
 		buttonPink = findEntityByName("ButtonPink");
 
+		signLeft = findEntityByName("SignLeft");
+		signRight = findEntityByName("SignRight");
+
+		signRobeNormal = loadModel("assets/models/sign_robe.gltf");
+		signRobeRed = loadModel("assets/models/sign_robe_red.gltf");
+		signRobeBlue = loadModel("assets/models/sign_robe_blue.gltf");
+		signRobeGreen = loadModel("assets/models/sign_robe_green.gltf");
+		signRobeYellow = loadModel("assets/models/sign_robe_yellow.gltf");
+		signRobePink = loadModel("assets/models/sign_robe_pink.gltf");
+
+		signDotNormal = loadModel("assets/models/sign_dot.gltf");
+		signDotRed = loadModel("assets/models/sign_dot_red.gltf");
+		signDotBlue = loadModel("assets/models/sign_dot_blue.gltf");
+		signDotGreen = loadModel("assets/models/sign_dot_green.gltf");
+		signDotYellow = loadModel("assets/models/sign_dot_yellow.gltf");
+		signDotPink = loadModel("assets/models/sign_dot_pink.gltf");
+
 		buttonRedPosition = getEntityComponent<Transform>(buttonRed).position;
 		buttonBluePosition = getEntityComponent<Transform>(buttonBlue).position;
 		buttonGreenPosition = getEntityComponent<Transform>(buttonGreen).position;
 		buttonYellowPosition = getEntityComponent<Transform>(buttonYellow).position;
 		buttonPinkPosition = getEntityComponent<Transform>(buttonPink).position;
+		signLeftPosition = getEntityComponent<Transform>(signLeft).position;
+		signRightPosition = getEntityComponent<Transform>(signRight).position;
 		bolLeftPos = getEntityComponent<Transform>(findEntityByName("BolLeft")).position;
 		bolRightPos = getEntityComponent<Transform>(findEntityByName("BolRight")).position;
-		clownMixSpawn = getEntityComponent<Transform>(findEntityByName("Tube")).position;
+		clownMixSpawn = getEntityComponent<Transform>(findEntityByName("Tube")).position + Math::vec3(0.0f, 0.0f, 5.0f);
 
 		clownModels[0] = loadModel("assets/models/clown_red.gltf");
 		clownModels[1] = loadModel("assets/models/clown_blue.gltf");
@@ -85,12 +166,12 @@ struct GameControllerScript : public Script {
 		clownModels[16] = loadModel("assets/models/clown_greenpinkdot.gltf");
 
 		clownModels[17] = loadModel("assets/models/clown_yellowreddot.gltf");
-		clownModels[18] = loadModel("assets/models/clown_yellowgreendot.gltf");
+		clownModels[18] = loadModel("assets/models/clown_yellowbluedot.gltf");
 		clownModels[19] = loadModel("assets/models/clown_yellowgreendot.gltf");
 		clownModels[20] = loadModel("assets/models/clown_yellowpinkdot.gltf");
 
 		clownModels[21] = loadModel("assets/models/clown_pinkreddot.gltf");
-		clownModels[22] = loadModel("assets/models/clown_pinkgreendot.gltf");
+		clownModels[22] = loadModel("assets/models/clown_pinkbluedot.gltf");
 		clownModels[23] = loadModel("assets/models/clown_pinkgreendot.gltf");
 		clownModels[24] = loadModel("assets/models/clown_pinkyellowdot.gltf");
 
@@ -217,10 +298,15 @@ struct GameControllerScript : public Script {
 		}
 
 		for (auto it = clowns.begin(); it != clowns.end(); ) {
+			if (!entityExists(*it)) {
+				it = clowns.erase(it);
+				continue;
+			}
+
 			const Math::vec3 clownPosition = getEntityComponent<Transform>(*it).position;
 			if (clownPosition.z > 30.0f) {
 				Scriptable& clownScriptable = getEntityComponent<Scriptable>(*it);
-				ClownScript* clownScript = static_cast<ClownScript*>(clownScriptable.script.get());
+				ClownScript* clownScript = static_cast<ClownScript*>(clownScriptable.script);
 				if (clownScript->type == clownMixes[wantedClownColor * 1000 + wantedClownDot]) {
 					std::uniform_int_distribution<int> randomMixedClownColor(0, 4);
 					wantedClownColor = randomMixedClownColor(rand);
@@ -242,9 +328,10 @@ struct GameControllerScript : public Script {
 				const float clownToBolLeftSqDist = Math::dot(bolLeftPos - clownPosition, bolLeftPos - clownPosition);
 				if (clownToBolLeftSqDist < 18.0f) {
 					Scriptable& clownScriptable = getEntityComponent<Scriptable>(*it);
-					ClownScript* clownScript = static_cast<ClownScript*>(clownScriptable.script.get());
+					ClownScript* clownScript = static_cast<ClownScript*>(clownScriptable.script);
 					clownColorLeft = clownScript->color;
-					std::cout << "left: " << clownColorLeft << std::endl;
+					destroyEntity(signLeft);
+					signLeft = createSign(0, clownColorLeft);
 					destroyEntity(*it);
 					it = clowns.erase(it);
 					continue;
@@ -255,9 +342,10 @@ struct GameControllerScript : public Script {
 				const float clownToBolRightSqDist = Math::dot(bolRightPos - clownPosition, bolRightPos - clownPosition);
 				if (clownToBolRightSqDist < 18.0f) {
 					Scriptable& clownScriptable = getEntityComponent<Scriptable>(*it);
-					ClownScript* clownScript = static_cast<ClownScript*>(clownScriptable.script.get());
+					ClownScript* clownScript = static_cast<ClownScript*>(clownScriptable.script);
 					clownColorRight = clownScript->color;
-					std::cout << "right: " << clownColorRight << std::endl;
+					destroyEntity(signRight);
+					signRight = createSign(1, clownColorRight);
 					destroyEntity(*it);
 					it = clowns.erase(it);
 					continue;
@@ -275,6 +363,11 @@ struct GameControllerScript : public Script {
 			clowns.insert(createClown(clownMixes[clownColorLeft * 1000 + clownColorRight], clownColorLeft, clownMixSpawn, dist0P5To2P5(rand)));
 			clownColorLeft = -1;
 			clownColorRight = -1;
+			destroyEntity(signLeft);
+			destroyEntity(signRight);
+			signLeft = createSign(0, -1);
+			signRight = createSign(1, -1);
+
 		}
 
 		time += dt;
@@ -334,6 +427,26 @@ private:
 
 	Entity buttonPink;
 	Math::vec3 buttonPinkPosition;
+
+	Entity signLeft;
+	Math::vec3 signLeftPosition;
+
+	Entity signRight;
+	Math::vec3 signRightPosition;
+
+	Model* signRobeNormal;
+	Model* signRobeRed;
+	Model* signRobeBlue;
+	Model* signRobeGreen;
+	Model* signRobeYellow;
+	Model* signRobePink;
+
+	Model* signDotNormal;
+	Model* signDotRed;
+	Model* signDotBlue;
+	Model* signDotGreen;
+	Model* signDotYellow;
+	Model* signDotPink;
 
 	Math::vec3 bolLeftPos;
 	Math::vec3 bolRightPos;

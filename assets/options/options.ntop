@@ -1,6 +1,6 @@
 {
-	"windowTitle": "GGJ24",
-	"windowIconImagePath": "assets/images/image.ntim",
+	"windowTitle": "Make Me Laugh - Clown Shop",
+	"windowIconImagePath": "assets/models/sign_robe.png",
 	"maxFPS": 60,
 	"firstScenePath": "assets/scenes/title.ntsn"
 }

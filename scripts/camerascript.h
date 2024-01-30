@@ -95,16 +95,32 @@ struct CameraScript : public Script {
 			rigidbody.linearVelocity = Math::vec3(0.0f, rigidbody.linearVelocity.y, 0.0f);
 		}
 
-		Collidable& collidable = getEntityComponent<Collidable>(entityID);
-		ColliderSphere* collider = static_cast<ColliderSphere*>(collidable.collider.get());
-		if (getKeyState(InputKeyboardKey::Space) == InputState::Pressed) {
-			if (!raycast(transform.position + Math::vec3(0.0f, -(collider->radius * transform.scale.x) + 0.001f, 0.0f), Math::vec3(0.0f, -1.0f, 0.0f), 0.0f, 0.001f).empty()) {
-					rigidbody.linearVelocity.y += m_jumpSpeed * deltaTime;
+		if (m_onTheGround) {
+			if (getKeyState(InputKeyboardKey::Space) == InputState::Pressed) {
+				rigidbody.linearVelocity.y += m_jumpSpeed * deltaTime;
 			}
 		}
 	}
 
 	void destroy() {
+	}
+
+	void onCollisionEnter(CollisionInfo collisionInfo) {
+		if (Math::dot(collisionInfo.relativePoints[0], Math::vec3(0.0f, -1.0f, 0.0f)) > 0.0f) {
+			m_onTheGround = true;
+		}
+	}
+
+	void onCollisionStill(CollisionInfo collisionInfo) {
+		if (Math::dot(collisionInfo.relativePoints[0], Math::vec3(0.0f, -1.0f, 0.0f)) > 0.0f) {
+			m_onTheGround = true;
+		}
+	}
+
+	void onCollisionExit(CollisionInfo collisionInfo) {
+		if (Math::dot(collisionInfo.relativePoints[0], Math::vec3(0.0f, -1.0f, 0.0f)) > 0.0f) {
+			m_onTheGround = false;
+		}
 	}
 
 private:
@@ -119,4 +135,6 @@ private:
 
 	float m_yaw = 0.0f;
 	float m_pitch = 0.0f;
+
+	bool m_onTheGround = false;
 };

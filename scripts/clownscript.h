@@ -10,31 +10,19 @@ struct ClownScript : public Script {
 	}
 
 	void update(double dt) {
-		float deltaTime = static_cast<float>(dt);
-		NTSHENGN_UNUSED(deltaTime);
-
-		const Transform& transform = getEntityComponent<Transform>(entityID);
-		const Collidable& collidable = getEntityComponent<Collidable>(entityID);
-		const ColliderSphere* collider = static_cast<ColliderSphere*>(collidable.collider.get());
-		Rigidbody& rigidbody = getEntityComponent<Rigidbody>(entityID);
-
-		if (!raycast(transform.position + Math::vec3(0.0f, -(collider->radius * transform.scale.x) + 0.001f, 0.0f), Math::vec3(0.0f, -1.0f, 0.0f), 0.0f, 0.001f).empty()) {
-			std::uniform_real_distribution<float> distM100To100(-100.0f, 100.0f);
-			std::uniform_real_distribution<float> dist0To2PI(0.0f, 2.0f * Math::PI);
-
-			if (aerial) {
-				playSoundAtPosition(boingSound, transform.position, 0.5f, 1.0f / transform.scale.x);
-				aerial = false;
-			}
-
-			rigidbody.torque += Math::vec3(dist0To2PI(rand), dist0To2PI(rand), dist0To2PI(rand));
-		}
-		else {
-			aerial = true;
-		}
+		NTSHENGN_UNUSED(dt);
 	}
 
 	void destroy() {
+	}
+
+	void onCollisionEnter(CollisionInfo collisionInfo) {
+		const Transform& transform = getEntityComponent<Transform>(entityID);
+		Rigidbody& rigidbody = getEntityComponent<Rigidbody>(entityID);
+
+		playSoundAtPosition(boingSound, transform.position, 0.5f, 1.0f / transform.scale.x);
+		std::uniform_real_distribution<float> dist0To2PI(0.0f, 2.0f * Math::PI);
+		rigidbody.torque += Math::vec3(dist0To2PI(rand), dist0To2PI(rand), dist0To2PI(rand));
 	}
 
 public:
