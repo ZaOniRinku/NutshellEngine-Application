@@ -17,8 +17,9 @@ struct GameControllerScript : public Script {
 		clownTransform.scale = Math::vec3(scale);
 
 		Renderable clownRenderable;
-		clownRenderable.model = clownModels[type];
-		clownRenderable.modelPrimitiveIndex = 0;
+		clownRenderable.mesh = &clownModel->primitives[0].mesh;
+		clownRenderable.material = clownModel->primitives[0].material;
+		clownRenderable.material.diffuseTexture.image = clownImages[type];
 		addEntityComponent(newClown, clownRenderable);
 
 		Collidable clownCollidable;
@@ -42,68 +43,6 @@ struct GameControllerScript : public Script {
 		return newClown;
 	}
 
-	Entity createSign(int location, int color) {
-		Entity newSign = createEntity();
-
-		Transform& signTransform = getEntityComponent<Transform>(newSign);
-		if (location == 0) {
-			signTransform.position = signLeftPosition;
-		}
-		else if (location == 1) {
-			signTransform.position = signRightPosition;
-		}
-
-		Renderable signRenderable;
-		if (location == 0) {
-			if (color == -1) {
-				signRenderable.model = signRobeNormal;
-			}
-			else if (color == 0) {
-				signRenderable.model = signRobeRed;
-			}
-			else if (color == 1) {
-				signRenderable.model = signRobeBlue;
-			}
-			else if (color == 2) {
-				signRenderable.model = signRobeGreen;
-			}
-			else if (color == 3) {
-				signRenderable.model = signRobeYellow;
-			}
-			else if (color == 4) {
-				signRenderable.model = signRobePink;
-			}
-		}
-		else if (location == 1) {
-			if (color == -1) {
-				signRenderable.model = signDotNormal;
-			}
-			else if (color == 0) {
-				signRenderable.model = signDotRed;
-			}
-			else if (color == 1) {
-				signRenderable.model = signDotBlue;
-			}
-			else if (color == 2) {
-				signRenderable.model = signDotGreen;
-			}
-			else if (color == 3) {
-				signRenderable.model = signDotYellow;
-			}
-			else if (color == 4) {
-				signRenderable.model = signDotPink;
-			}
-		}
-		signRenderable.modelPrimitiveIndex = 0;
-		addEntityComponent(newSign, signRenderable);
-
-		Scriptable signScriptable;
-		signScriptable.script = createScript<SignScript>();
-		addEntityComponent(newSign, signScriptable);
-
-		return newSign;
-	}
-
 	void init() {
 		font = getFontID(*loadFont("assets/fonts/JetBrainsMono-Regular.ttf", 32));
 		fontBig = getFontID(*loadFont("assets/fonts/JetBrainsMono-Regular.ttf", 128));
@@ -119,19 +58,21 @@ struct GameControllerScript : public Script {
 		signLeft = findEntityByName("SignLeft");
 		signRight = findEntityByName("SignRight");
 
-		signRobeNormal = loadModel("assets/models/sign_robe.gltf");
-		signRobeRed = loadModel("assets/models/sign_robe_red.gltf");
-		signRobeBlue = loadModel("assets/models/sign_robe_blue.gltf");
-		signRobeGreen = loadModel("assets/models/sign_robe_green.gltf");
-		signRobeYellow = loadModel("assets/models/sign_robe_yellow.gltf");
-		signRobePink = loadModel("assets/models/sign_robe_pink.gltf");
+		signRobeModel = loadModel("assets/models/sign_robe.gltf");
+		signRobeImages[-1] = loadImage("assets/models/sign_robe.png");
+		signRobeImages[0] = loadImage("assets/models/sign_robe_red.png");
+		signRobeImages[1] = loadImage("assets/models/sign_robe_blue.png");
+		signRobeImages[2] = loadImage("assets/models/sign_robe_green.png");
+		signRobeImages[3] = loadImage("assets/models/sign_robe_yellow.png");
+		signRobeImages[4] = loadImage("assets/models/sign_robe_pink.png");
 
-		signDotNormal = loadModel("assets/models/sign_dot.gltf");
-		signDotRed = loadModel("assets/models/sign_dot_red.gltf");
-		signDotBlue = loadModel("assets/models/sign_dot_blue.gltf");
-		signDotGreen = loadModel("assets/models/sign_dot_green.gltf");
-		signDotYellow = loadModel("assets/models/sign_dot_yellow.gltf");
-		signDotPink = loadModel("assets/models/sign_dot_pink.gltf");
+		signDotModel = loadModel("assets/models/sign_dot.gltf");
+		signDotImages[-1] = loadImage("assets/models/sign_dot.png");
+		signDotImages[0] = loadImage("assets/models/sign_dot_red.png");
+		signDotImages[1] = loadImage("assets/models/sign_dot_blue.png");
+		signDotImages[2] = loadImage("assets/models/sign_dot_green.png");
+		signDotImages[3] = loadImage("assets/models/sign_dot_yellow.png");
+		signDotImages[4] = loadImage("assets/models/sign_dot_pink.png");
 
 		buttonRedPosition = getEntityComponent<Transform>(buttonRed).position;
 		buttonBluePosition = getEntityComponent<Transform>(buttonBlue).position;
@@ -144,36 +85,38 @@ struct GameControllerScript : public Script {
 		bolRightPos = getEntityComponent<Transform>(findEntityByName("BolRight")).position;
 		clownMixSpawn = getEntityComponent<Transform>(findEntityByName("Tube")).position + Math::vec3(0.0f, 0.0f, 5.0f);
 
-		clownModels[0] = loadModel("assets/models/clown_red.gltf");
-		clownModels[1] = loadModel("assets/models/clown_blue.gltf");
-		clownModels[2] = loadModel("assets/models/clown_green.gltf");
-		clownModels[3] = loadModel("assets/models/clown_yellow.gltf");
-		clownModels[4] = loadModel("assets/models/clown_pink.gltf");
+		clownModel = loadModel("assets/models/clown.gltf");
 
-		clownModels[5] = loadModel("assets/models/clown_redbluedot.gltf");
-		clownModels[6] = loadModel("assets/models/clown_redgreendot.gltf");
-		clownModels[7] = loadModel("assets/models/clown_redyellowdot.gltf");
-		clownModels[8] = loadModel("assets/models/clown_redpinkdot.gltf");
+		clownImages[0] = loadImage("assets/models/Clown_texture_red.png");
+		clownImages[1] = loadImage("assets/models/Clown_texture_blue.png");
+		clownImages[2] = loadImage("assets/models/Clown_texture_green.png");
+		clownImages[3] = loadImage("assets/models/Clown_texture_yellow.png");
+		clownImages[4] = loadImage("assets/models/Clown_texture_pink.png");
 
-		clownModels[9] = loadModel("assets/models/clown_bluereddot.gltf");
-		clownModels[10] = loadModel("assets/models/clown_bluegreendot.gltf");
-		clownModels[11] = loadModel("assets/models/clown_blueyellowdot.gltf");
-		clownModels[12] = loadModel("assets/models/clown_bluepinkdot.gltf");
+		clownImages[5] = loadImage("assets/models/Clown_texture_redbluedot.png");
+		clownImages[6] = loadImage("assets/models/Clown_texture_redgreendot.png");
+		clownImages[7] = loadImage("assets/models/Clown_texture_redyellowdot.png");
+		clownImages[8] = loadImage("assets/models/Clown_texture_redpinkdot.png");
 
-		clownModels[13] = loadModel("assets/models/clown_greenreddot.gltf");
-		clownModels[14] = loadModel("assets/models/clown_greenbluedot.gltf");
-		clownModels[15] = loadModel("assets/models/clown_greenyellowdot.gltf");
-		clownModels[16] = loadModel("assets/models/clown_greenpinkdot.gltf");
+		clownImages[9] = loadImage("assets/models/Clown_texture_bluereddot.png");
+		clownImages[10] = loadImage("assets/models/Clown_texture_bluegreendot.png");
+		clownImages[11] = loadImage("assets/models/Clown_texture_blueyellowdot.png");
+		clownImages[12] = loadImage("assets/models/Clown_texture_bluepinkdot.png");
 
-		clownModels[17] = loadModel("assets/models/clown_yellowreddot.gltf");
-		clownModels[18] = loadModel("assets/models/clown_yellowbluedot.gltf");
-		clownModels[19] = loadModel("assets/models/clown_yellowgreendot.gltf");
-		clownModels[20] = loadModel("assets/models/clown_yellowpinkdot.gltf");
+		clownImages[13] = loadImage("assets/models/Clown_texture_greenreddot.png");
+		clownImages[14] = loadImage("assets/models/Clown_texture_greenbluedot.png");
+		clownImages[15] = loadImage("assets/models/Clown_texture_greenyellowdot.png");
+		clownImages[16] = loadImage("assets/models/Clown_texture_greenpinkdot.png");
 
-		clownModels[21] = loadModel("assets/models/clown_pinkreddot.gltf");
-		clownModels[22] = loadModel("assets/models/clown_pinkbluedot.gltf");
-		clownModels[23] = loadModel("assets/models/clown_pinkgreendot.gltf");
-		clownModels[24] = loadModel("assets/models/clown_pinkyellowdot.gltf");
+		clownImages[17] = loadImage("assets/models/Clown_texture_yellowreddot.png");
+		clownImages[18] = loadImage("assets/models/Clown_texture_yellowbluedot.png");
+		clownImages[19] = loadImage("assets/models/Clown_texture_yellowgreendot.png");
+		clownImages[20] = loadImage("assets/models/Clown_texture_yellowpinkdot.png");
+
+		clownImages[21] = loadImage("assets/models/Clown_texture_pinkreddot.png");
+		clownImages[22] = loadImage("assets/models/Clown_texture_pinkbluedot.png");
+		clownImages[23] = loadImage("assets/models/Clown_texture_pinkgreendot.png");
+		clownImages[24] = loadImage("assets/models/Clown_texture_pinkyellowdot.png");
 
 		clownBoingSound = getSoundID(*loadSound("assets/sounds/clownboing.wav"));
 
@@ -330,8 +273,10 @@ struct GameControllerScript : public Script {
 					Scriptable& clownScriptable = getEntityComponent<Scriptable>(*it);
 					ClownScript* clownScript = static_cast<ClownScript*>(clownScriptable.script);
 					clownColorLeft = clownScript->color;
-					destroyEntity(signLeft);
-					signLeft = createSign(0, clownColorLeft);
+
+					Renderable& signRenderable = getEntityComponent<Renderable>(signLeft);
+					signRenderable.material.diffuseTexture.image = signRobeImages[clownColorLeft];
+
 					destroyEntity(*it);
 					it = clowns.erase(it);
 					continue;
@@ -344,8 +289,10 @@ struct GameControllerScript : public Script {
 					Scriptable& clownScriptable = getEntityComponent<Scriptable>(*it);
 					ClownScript* clownScript = static_cast<ClownScript*>(clownScriptable.script);
 					clownColorRight = clownScript->color;
-					destroyEntity(signRight);
-					signRight = createSign(1, clownColorRight);
+
+					Renderable& signRenderable = getEntityComponent<Renderable>(signRight);
+					signRenderable.material.diffuseTexture.image = signDotImages[clownColorRight];
+
 					destroyEntity(*it);
 					it = clowns.erase(it);
 					continue;
@@ -363,11 +310,12 @@ struct GameControllerScript : public Script {
 			clowns.insert(createClown(clownMixes[clownColorLeft * 1000 + clownColorRight], clownColorLeft, clownMixSpawn, dist0P5To2P5(rand)));
 			clownColorLeft = -1;
 			clownColorRight = -1;
-			destroyEntity(signLeft);
-			destroyEntity(signRight);
-			signLeft = createSign(0, -1);
-			signRight = createSign(1, -1);
 
+			Renderable& signLeftRenderable = getEntityComponent<Renderable>(signLeft);
+			signLeftRenderable.material.diffuseTexture.image = signRobeImages[-1];
+
+			Renderable& signRightRenderable = getEntityComponent<Renderable>(signRight);
+			signRightRenderable.material.diffuseTexture.image = signDotImages[-1];
 		}
 
 		time += dt;
@@ -389,8 +337,6 @@ struct GameControllerScript : public Script {
 				drawUIText(font, "I need a " + clownColorToString(wantedClownColor) + " clown with " + clownColorToString(wantedClownDot) + " dots.", Math::vec2(20.0f, 50.0f), Math::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 		}
-
-
 
 		/*if (time >= 1000.0) {
 			std::uniform_real_distribution<float> distM10To10(-10.0f, 10.0f);
@@ -434,19 +380,11 @@ private:
 	Entity signRight;
 	Math::vec3 signRightPosition;
 
-	Model* signRobeNormal;
-	Model* signRobeRed;
-	Model* signRobeBlue;
-	Model* signRobeGreen;
-	Model* signRobeYellow;
-	Model* signRobePink;
+	Model* signRobeModel;
+	Bimap<int, Image*> signRobeImages;
 
-	Model* signDotNormal;
-	Model* signDotRed;
-	Model* signDotBlue;
-	Model* signDotGreen;
-	Model* signDotYellow;
-	Model* signDotPink;
+	Model* signDotModel;
+	Bimap<int, Image*> signDotImages;
 
 	Math::vec3 bolLeftPos;
 	Math::vec3 bolRightPos;
@@ -458,7 +396,8 @@ private:
 	bool onButtonYellow = false;
 	bool onButtonPink = false;
 
-	Bimap<int, Model*> clownModels;
+	Model* clownModel;
+	Bimap<int, Image*> clownImages;
 	std::unordered_map<int, int> clownMixes;
 
 	SoundID clownBoingSound;
