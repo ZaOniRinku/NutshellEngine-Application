@@ -12,11 +12,11 @@ struct CameraScript : public Script {
 		m_prevMouseY = getWindowHeight() / 2;
 		setCursorPosition(m_prevMouseX, m_prevMouseY);
 
-		const Transform transform = getEntityComponent<Transform>(entityID);
-		Math::vec3 cameraRotation = Math::vec3(transform.rotation[0], transform.rotation[1], transform.rotation[2]);
+		const Camera& camera = getEntityComponent<Camera>(entityID);
+		Math::vec3 cameraForward = Math::normalize(camera.forward);
 
-		m_yaw = Math::toDeg(std::atan2(cameraRotation.z, cameraRotation.x));
-		m_pitch = Math::toDeg(-std::asin(cameraRotation.y));
+		m_forwardYaw = std::atan2(cameraForward.z, cameraForward.x);
+		m_forwardPitch = -std::asin(cameraForward.y);
 
 		Font* font = loadFont("assets/fonts/JetBrainsMono-Regular.ttf", 24.0f);
 		m_fontID = getFontID(*font);
@@ -55,30 +55,35 @@ struct CameraScript : public Script {
 
 			m_yaw = std::fmod(m_yaw + xOffset, 360.0f);
 			m_pitch = std::max(-89.0f, std::min(89.0f, m_pitch + yOffset));
-
-			float yawRad = Math::toRad(m_yaw);
-			float pitchRad = Math::toRad(m_pitch);
-
-			transform.rotation.x = std::cos(pitchRad) * std::cos(yawRad);
-			transform.rotation.y = -std::sin(pitchRad);
-			transform.rotation.z = std::cos(pitchRad) * std::sin(yawRad);
-			transform.rotation = Math::normalize(transform.rotation);
 		}
+
+		float yawRad = Math::toRad(m_yaw);
+		float pitchRad = Math::toRad(m_pitch);
+
+		transform.rotation.x = pitchRad;
+		transform.rotation.y = yawRad;
+
+		Math::vec3 newForward;
+		newForward.x = std::cos(m_forwardPitch + pitchRad) * std::cos(m_forwardYaw + yawRad);
+		newForward.y = -std::sin(m_forwardPitch + pitchRad);
+		newForward.z = std::cos(m_forwardPitch + pitchRad) * std::sin(m_forwardYaw + yawRad);
+		newForward = Math::normalize(newForward);
 
 		const float cameraSpeed = m_cameraSpeed * static_cast<float>(dt);
+
 		if (getKeyState(InputKeyboardKey::W) == InputState::Held) {
-			transform.position += (transform.rotation * cameraSpeed);
+			transform.position += (newForward * cameraSpeed);
 		}
 		if (getKeyState(InputKeyboardKey::S) == InputState::Held) {
-			transform.position -= (transform.rotation * cameraSpeed);
+			transform.position -= (newForward * cameraSpeed);
 		}
 		if (getKeyState(InputKeyboardKey::A) == InputState::Held) {
-			Math::vec3 t = Math::normalize(Math::vec3(-transform.rotation.z, 0.0, transform.rotation.x));
+			Math::vec3 t = Math::normalize(Math::vec3(-newForward.z, 0.0, newForward.x));
 			transform.position.x -= (t.x * cameraSpeed);
 			transform.position.z -= (t.z * cameraSpeed);
 		}
 		if (getKeyState(InputKeyboardKey::D) == InputState::Held) {
-			Math::vec3 t = Math::normalize(Math::vec3(-transform.rotation.z, 0.0, transform.rotation.x));
+			Math::vec3 t = Math::normalize(Math::vec3(-newForward.z, 0.0, newForward.x));
 			transform.position.x += (t.x * cameraSpeed);
 			transform.position.z += (t.z * cameraSpeed);
 		}
@@ -98,64 +103,63 @@ struct CameraScript : public Script {
 					m_hitEntity = raycastInformation.entity;
 
 					const Renderable& renderable = getEntityComponent<Renderable>(m_hitEntity);
-					const ModelPrimitive& modelPrimitive = renderable.model->primitives[renderable.modelPrimitiveIndex];
 
-					if (modelPrimitive.material.diffuseTexture.image) {
-						m_entityDiffuse = getImageID(*modelPrimitive.material.diffuseTexture.image);
-						m_entityDiffuseFilter = modelPrimitive.material.diffuseTexture.imageSampler.magFilter;
-						m_entityDiffuseSize = std::max(static_cast<float>(modelPrimitive.material.diffuseTexture.image->width), static_cast<float>(modelPrimitive.material.diffuseTexture.image->height));
+					if (renderable.material.diffuseTexture.image) {
+						m_entityDiffuse = getImageID(*renderable.material.diffuseTexture.image);
+						m_entityDiffuseFilter = renderable.material.diffuseTexture.imageSampler.magFilter;
+						m_entityDiffuseSize = std::max(static_cast<float>(renderable.material.diffuseTexture.image->width), static_cast<float>(renderable.material.diffuseTexture.image->height));
 					}
 					else {
 						m_entityDiffuse = std::numeric_limits<ImageID>::max();
 					}
 
-					if (modelPrimitive.material.normalTexture.image) {
-						m_entityNormal = getImageID(*modelPrimitive.material.normalTexture.image);
-						m_entityNormalFilter = modelPrimitive.material.normalTexture.imageSampler.magFilter;
-						m_entityNormalSize = std::max(static_cast<float>(modelPrimitive.material.normalTexture.image->width), static_cast<float>(modelPrimitive.material.normalTexture.image->height));
+					if (renderable.material.normalTexture.image) {
+						m_entityNormal = getImageID(*renderable.material.normalTexture.image);
+						m_entityNormalFilter = renderable.material.normalTexture.imageSampler.magFilter;
+						m_entityNormalSize = std::max(static_cast<float>(renderable.material.normalTexture.image->width), static_cast<float>(renderable.material.normalTexture.image->height));
 					}
 					else {
 						m_entityNormal = std::numeric_limits<ImageID>::max();
 					}
 
-					if (modelPrimitive.material.metalnessTexture.image) {
-						m_entityMetalness = getImageID(*modelPrimitive.material.metalnessTexture.image);
-						m_entityMetalnessFilter = modelPrimitive.material.metalnessTexture.imageSampler.magFilter;
-						m_entityMetalnessSize = std::max(static_cast<float>(modelPrimitive.material.metalnessTexture.image->width), static_cast<float>(modelPrimitive.material.metalnessTexture.image->height));
+					if (renderable.material.metalnessTexture.image) {
+						m_entityMetalness = getImageID(*renderable.material.metalnessTexture.image);
+						m_entityMetalnessFilter = renderable.material.metalnessTexture.imageSampler.magFilter;
+						m_entityMetalnessSize = std::max(static_cast<float>(renderable.material.metalnessTexture.image->width), static_cast<float>(renderable.material.metalnessTexture.image->height));
 					}
 					else {
 						m_entityMetalness = std::numeric_limits<ImageID>::max();
 					}
 
-					if (modelPrimitive.material.roughnessTexture.image) {
-						m_entityRoughness = getImageID(*modelPrimitive.material.roughnessTexture.image);
-						m_entityRoughnessFilter = modelPrimitive.material.roughnessTexture.imageSampler.magFilter;
-						m_entityRoughnessSize = std::max(static_cast<float>(modelPrimitive.material.roughnessTexture.image->width), static_cast<float>(modelPrimitive.material.roughnessTexture.image->height));
+					if (renderable.material.roughnessTexture.image) {
+						m_entityRoughness = getImageID(*renderable.material.roughnessTexture.image);
+						m_entityRoughnessFilter = renderable.material.roughnessTexture.imageSampler.magFilter;
+						m_entityRoughnessSize = std::max(static_cast<float>(renderable.material.roughnessTexture.image->width), static_cast<float>(renderable.material.roughnessTexture.image->height));
 					}
 					else {
 						m_entityRoughness = std::numeric_limits<ImageID>::max();
 					}
 
-					if (modelPrimitive.material.emissiveTexture.image) {
-						m_entityEmissive = getImageID(*modelPrimitive.material.emissiveTexture.image);
-						m_entityEmissiveFilter = modelPrimitive.material.emissiveTexture.imageSampler.magFilter;
-						m_entityEmissiveSize = std::max(static_cast<float>(modelPrimitive.material.emissiveTexture.image->width), static_cast<float>(modelPrimitive.material.emissiveTexture.image->height));
+					if (renderable.material.emissiveTexture.image) {
+						m_entityEmissive = getImageID(*renderable.material.emissiveTexture.image);
+						m_entityEmissiveFilter = renderable.material.emissiveTexture.imageSampler.magFilter;
+						m_entityEmissiveSize = std::max(static_cast<float>(renderable.material.emissiveTexture.image->width), static_cast<float>(renderable.material.emissiveTexture.image->height));
 					}
 					else {
 						m_entityEmissive = std::numeric_limits<ImageID>::max();
 					}
 
-					if (modelPrimitive.material.occlusionTexture.image) {
-						m_entityOcclusion = getImageID(*modelPrimitive.material.occlusionTexture.image);
-						m_entityOcclusionFilter = modelPrimitive.material.occlusionTexture.imageSampler.magFilter;
-						m_entityOcclusionSize = std::max(static_cast<float>(modelPrimitive.material.occlusionTexture.image->width), static_cast<float>(modelPrimitive.material.occlusionTexture.image->height));
+					if (renderable.material.occlusionTexture.image) {
+						m_entityOcclusion = getImageID(*renderable.material.occlusionTexture.image);
+						m_entityOcclusionFilter = renderable.material.occlusionTexture.imageSampler.magFilter;
+						m_entityOcclusionSize = std::max(static_cast<float>(renderable.material.occlusionTexture.image->width), static_cast<float>(renderable.material.occlusionTexture.image->height));
 					}
 					else {
 						m_entityOcclusion = std::numeric_limits<ImageID>::max();
 					}
 
-					m_entityEmissiveFactor = modelPrimitive.material.emissiveFactor;
-					m_entityIOR = modelPrimitive.material.indexOfRefraction;
+					m_entityEmissiveFactor = renderable.material.emissiveFactor;
+					m_entityIOR = renderable.material.indexOfRefraction;
 				}
 			}
 			else {
@@ -221,6 +225,9 @@ private:
 
 	int m_prevMouseX = 0;
 	int m_prevMouseY = 0;
+
+	float m_forwardYaw = 0.0f;
+	float m_forwardPitch = 0.0f;
 
 	float m_yaw = 0.0f;
 	float m_pitch = 0.0f;

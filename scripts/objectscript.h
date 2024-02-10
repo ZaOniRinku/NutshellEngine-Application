@@ -12,7 +12,9 @@ struct ObjectScript : public Script {
 
 	void update(double dt) {
 		Transform& transform = getEntityComponent<Transform>(entityID);
+		const Camera& camera = getEntityComponent<Camera>(m_camera);
 		const Transform& cameraTransform = getEntityComponent<Transform>(m_camera);
+
 		const float objectSpeed = (m_objectSpeed / 200.0f) * static_cast<float>(dt);
 
 		if (transform.position.y < -100.0f) {
@@ -20,21 +22,29 @@ struct ObjectScript : public Script {
 			return;
 		}
 
+		Math::vec3 cameraForward = Math::normalize(camera.forward);
+		float forwardYaw = std::atan2(cameraForward.z, cameraForward.x);
+		float forwardPitch = -std::asin(cameraForward.y);
+		cameraForward.x = std::cos(forwardPitch + cameraTransform.rotation.x) * std::cos(forwardYaw + cameraTransform.rotation.y);
+		cameraForward.y = -std::sin(forwardPitch + cameraTransform.rotation.x);
+		cameraForward.z = std::cos(forwardPitch + cameraTransform.rotation.x) * std::sin(forwardYaw + cameraTransform.rotation.y);
+		cameraForward = Math::normalize(cameraForward);
+
 		if (getKeyState(InputKeyboardKey::Up) == InputState::Held) {
-			transform.position.x += (cameraTransform.rotation.x * objectSpeed);
-			transform.position.z += (cameraTransform.rotation.z * objectSpeed);
+			transform.position.x += (cameraForward.x * objectSpeed);
+			transform.position.z += (cameraForward.z * objectSpeed);
 		}
 		if (getKeyState(InputKeyboardKey::Down) == InputState::Held) {
-			transform.position.x -= (cameraTransform.rotation.x * objectSpeed);
-			transform.position.z -= (cameraTransform.rotation.z * objectSpeed);
+			transform.position.x -= (cameraForward.x * objectSpeed);
+			transform.position.z -= (cameraForward.z * objectSpeed);
 		}
 		if (getKeyState(InputKeyboardKey::Left) == InputState::Held) {
-			Math::vec3 t = Math::normalize(Math::vec3(-cameraTransform.rotation.z, 0.0, cameraTransform.rotation.x));
+			Math::vec3 t = Math::normalize(Math::vec3(-cameraForward.z, 0.0, cameraForward.x));
 			transform.position.x -= (t.x * objectSpeed);
 			transform.position.z -= (t.z * objectSpeed);
 		}
 		if (getKeyState(InputKeyboardKey::Right) == InputState::Held) {
-			Math::vec3 t = Math::normalize(Math::vec3(-cameraTransform.rotation.z, 0.0, cameraTransform.rotation.x));
+			Math::vec3 t = Math::normalize(Math::vec3(-cameraForward.z, 0.0, cameraForward.x));
 			transform.position.x += (t.x * objectSpeed);
 			transform.position.z += (t.z * objectSpeed);
 		}
