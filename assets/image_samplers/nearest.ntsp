@@ -6,5 +6,5 @@
 	"addressModeV": "ClampToEdge",
 	"addressModeW": "ClampToEdge",
 	"borderColor": "FloatOpaqueBlack",
-	"anisotropyLevel": 0.0,
+	"anisotropyLevel": 0.0
 }
