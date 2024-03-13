@@ -1,86 +1,50 @@
 {
 	"entities": [
 		{
-			"name": "Camera",
-			"transform": {
-				"position": [
+			"camera": {
+				"farPlane": 200.0,
+				"forward": [
 					0.0,
 					0.0,
-					-7.0
+					-1.0
+				],
+				"fov": 45.0,
+				"nearPlane": 0.029999999329447746,
+				"up": [
+					0.0,
+					1.0,
+					0.0
 				]
 			},
-			"camera": {
-				"fov": 45.0,
-				"nearPlane": 0.03,
-				"farPlane:": 100.0
-			},
+			"isPersistent": false,
+			"name": "Camera",
 			"scriptable": {
 				"scriptName": "CameraScript"
-			}
-		},
-		{
-			"name": "Top Cube",
+			},
 			"transform": {
 				"position": [
 					0.0,
-					2.0,
+					0.0,
+					7.0
+				],
+				"rotation": [
+					0.0,
+					0.0,
 					0.0
 				],
 				"scale": [
-					0.75,
-					0.1,
-					0.75
+					1.0,
+					1.0,
+					1.0
 				]
-			},
+			}
+		},
+		{
+			"isPersistent": false,
+			"name": "Top Cube",
 			"renderable": {
 				"modelPath": "assets/models/top_cube.ntmd"
-			}
-		},
-		{
-			"name": "Object",
-			"renderable": {
-				"modelPath": "assets/models/cube.ntmd"
 			},
-			"rigidbody": {
-				"isStatic": true,
-				"staticFriction": 0.5,
-				"dynamicFriction": 0.5,
-				"restitution": 1.0
-			},
-			"collidable": {
-				"type": "Box"
-			},
-			"scriptable": {
-				"scriptName": "ObjectScript"
-			}
-		},
-		{
-			"name": "Bot Plane",
-			"transform": {
-				"position": [
-					0.0,
-					-2.0,
-					0.0
-				],
-				"scale": [
-					2.0,
-					2.0,
-					2.0
-				]
-			},
-			"renderable": {
-				"modelPath": "assets/models/bot_plane.ntmd"
-			},
-			"rigidbody": {
-				"isStatic": true,
-				"restitution": 1.0
-			},
-			"collidable": {
-				"type": "Box"
-			}
-		},
-		{
-			"name": "Top Plane",
 			"transform": {
 				"position": [
 					0.0,
@@ -88,7 +52,84 @@
 					0.0
 				],
 				"rotation": [
-					180,
+					0.0,
+					0.0,
+					0.0
+				],
+				"scale": [
+					0.75,
+					0.10000000149011612,
+					0.75
+				]
+			}
+		},
+		{
+			"collidable": {
+				"type": "Box"
+			},
+			"isPersistent": false,
+			"name": "Object",
+			"renderable": {
+				"modelPath": "assets/models/cube.ntmd"
+			},
+			"rigidbody": {
+				"dynamicFriction": 0.5,
+				"inertia": 1.0,
+				"isAffectedByConstants": true,
+				"isStatic": true,
+				"lockRotation": false,
+				"mass": 1.0,
+				"restitution": 1.0,
+				"staticFriction": 0.5
+			},
+			"scriptable": {
+				"scriptName": "ObjectScript"
+			},
+			"transform": {
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"rotation": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		},
+		{
+			"collidable": {
+				"type": "Box"
+			},
+			"isPersistent": false,
+			"name": "Bot Plane",
+			"renderable": {
+				"modelPath": "assets/models/bot_plane.ntmd"
+			},
+			"rigidbody": {
+				"dynamicFriction": 0.0,
+				"inertia": 1.0,
+				"isAffectedByConstants": true,
+				"isStatic": true,
+				"lockRotation": false,
+				"mass": 1.0,
+				"restitution": 1.0,
+				"staticFriction": 0.0
+			},
+			"transform": {
+				"position": [
+					0.0,
+					-2.0,
+					0.0
+				],
+				"rotation": [
+					0.0,
 					0.0,
 					0.0
 				],
@@ -97,20 +138,64 @@
 					2.0,
 					2.0
 				]
+			}
+		},
+		{
+			"collidable": {
+				"type": "Box"
 			},
+			"isPersistent": false,
+			"name": "Top Plane",
 			"renderable": {
 				"modelPath": "assets/models/top_plane.ntmd"
 			},
 			"rigidbody": {
+				"dynamicFriction": 0.0,
+				"inertia": 1.0,
+				"isAffectedByConstants": true,
 				"isStatic": true,
-				"restitution": 1.0
+				"lockRotation": false,
+				"mass": 1.0,
+				"restitution": 1.0,
+				"staticFriction": 0.0
 			},
-			"collidable": {
-				"type": "Box"
+			"transform": {
+				"position": [
+					0.0,
+					2.0,
+					0.0
+				],
+				"rotation": [
+					180.0,
+					0.0,
+					0.0
+				],
+				"scale": [
+					2.0,
+					2.0,
+					2.0
+				]
 			}
 		},
 		{
+			"collidable": {
+				"type": "Box"
+			},
+			"isPersistent": false,
 			"name": "Back Plane",
+			"renderable": {
+				"modelPath": "assets/models/back_plane.ntmd"
+			},
+			"rigidbody": {
+				"dynamicFriction": 0.0,
+				"inertia": 1.0,
+				"isAffectedByConstants": true,
+				"isStatic": true,
+				"lockRotation": false,
+				"mass": 1.0,
+				"restitution": 1.0,
+				"staticFriction": 0.0
+			},
 			"transform": {
 				"position": [
 					0.0,
@@ -118,7 +203,7 @@
 					-2.0
 				],
 				"rotation": [
-					90,
+					90.0,
 					0.0,
 					0.0
 				],
@@ -127,20 +212,27 @@
 					2.0,
 					2.0
 				]
-			},
-			"renderable": {
-				"modelPath": "assets/models/back_plane.ntmd"
-			},
-			"rigidbody": {
-				"isStatic": true,
-				"restitution": 1.0
-			},
-			"collidable": {
-				"type": "Box"
 			}
 		},
 		{
+			"collidable": {
+				"type": "Box"
+			},
+			"isPersistent": false,
 			"name": "Left Plane",
+			"renderable": {
+				"modelPath": "assets/models/left_plane.ntmd"
+			},
+			"rigidbody": {
+				"dynamicFriction": 0.0,
+				"inertia": 1.0,
+				"isAffectedByConstants": true,
+				"isStatic": true,
+				"lockRotation": false,
+				"mass": 1.0,
+				"restitution": 1.0,
+				"staticFriction": 0.0
+			},
 			"transform": {
 				"position": [
 					-2.0,
@@ -148,29 +240,36 @@
 					0.0
 				],
 				"rotation": [
-					90,
 					0.0,
-					-90
+					0.0,
+					-90.0
 				],
 				"scale": [
 					2.0,
 					2.0,
 					2.0
 				]
-			},
-			"renderable": {
-				"modelPath": "assets/models/left_plane.ntmd"
-			},
-			"rigidbody": {
-				"isStatic": true,
-				"restitution": 1.0
-			},
-			"collidable": {
-				"type": "Box"
 			}
 		},
 		{
+			"collidable": {
+				"type": "Box"
+			},
+			"isPersistent": false,
 			"name": "Right Plane",
+			"renderable": {
+				"modelPath": "assets/models/right_plane.ntmd"
+			},
+			"rigidbody": {
+				"dynamicFriction": 0.0,
+				"inertia": 1.0,
+				"isAffectedByConstants": true,
+				"isStatic": true,
+				"lockRotation": false,
+				"mass": 1.0,
+				"restitution": 1.0,
+				"staticFriction": 0.0
+			},
 			"transform": {
 				"position": [
 					2.0,
@@ -178,51 +277,52 @@
 					0.0
 				],
 				"rotation": [
-					90,
+					90.0,
 					0.0,
-					90
+					90.0
 				],
 				"scale": [
 					2.0,
 					2.0,
 					2.0
 				]
-			},
-			"renderable": {
-				"modelPath": "assets/models/right_plane.ntmd"
-			},
-			"rigidbody": {
-				"isStatic": true,
-				"restitution": 1.0
-			},
-			"collidable": {
-				"type": "Box"
 			}
 		},
 		{
-			"name": "Light2",
-			"transform": {
-				"position": [
-					0.0,
-					1.5,
-					0.0
-				]
-			},
+			"isPersistent": false,
 			"light": {
-				"type": "Directional",
 				"color": [
 					1.0,
 					1.0,
 					1.0
+				],
+				"cutoff": [
+					10.0,
+					20.0
 				],
 				"direction": [
 					0.0,
 					-1.0,
 					-1.0
 				],
-				"cutoff": [
-					10.0,
-					20.0
+				"type": "Directional"
+			},
+			"name": "Light2",
+			"transform": {
+				"position": [
+					0.0,
+					1.5,
+					0.0
+				],
+				"rotation": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"scale": [
+					1.0,
+					1.0,
+					1.0
 				]
 			}
 		}
