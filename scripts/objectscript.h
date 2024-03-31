@@ -1,5 +1,5 @@
 #pragma once
-#include "../Core/scripting/ntshengn_script.h"
+#include "../Common/script/ntshengn_script.h"
 #include <random>
 
 using namespace NtshEngn;

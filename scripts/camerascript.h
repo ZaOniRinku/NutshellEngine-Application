@@ -1,5 +1,5 @@
 #pragma once
-#include "../Core/scripting/ntshengn_script.h"
+#include "../Common/script/ntshengn_script.h"
 #include <cmath>
 
 using namespace NtshEngn;
@@ -24,6 +24,7 @@ struct CameraScript : public Script {
 
 	void update(double dt) {
 		float deltaTime = static_cast<float>(dt / 1.0);
+		NTSHENGN_UNUSED(deltaTime);
 
 		if (getKeyState(InputKeyboardKey::Escape) == InputState::Pressed) {
 			m_mouseMiddleMode = !m_mouseMiddleMode;
@@ -67,7 +68,7 @@ struct CameraScript : public Script {
 		newForward.z = std::cos(m_forwardPitch + pitchRad) * std::sin(m_forwardYaw + yawRad);
 		newForward = Math::normalize(newForward);
 
-		Rigidbody& rigidbody = getEntityComponent<Rigidbody>(entityID);
+		//Rigidbody& rigidbody = getEntityComponent<Rigidbody>(entityID);
 
 		Math::vec3 direction = Math::vec3(0.0f, 0.0f, 0.0f);
 		if (getKeyState(InputKeyboardKey::W) == InputState::Held) {
@@ -90,7 +91,7 @@ struct CameraScript : public Script {
 			direction.x += t.x;
 			direction.z += t.z;
 		}
-		if (Math::dot(direction, direction) > 0.0f) {
+		/*if (Math::dot(direction, direction) > 0.0f) {
 			direction = Math::normalize(direction) * (m_cameraSpeed * deltaTime);
 			rigidbody.linearVelocity.x = direction.x;
 			rigidbody.linearVelocity.z = direction.z;
@@ -103,7 +104,7 @@ struct CameraScript : public Script {
 			if (getKeyState(InputKeyboardKey::Space) == InputState::Pressed) {
 				rigidbody.linearVelocity.y += m_jumpSpeed * deltaTime;
 			}
-		}
+		}*/
 	}
 
 	void destroy() {
