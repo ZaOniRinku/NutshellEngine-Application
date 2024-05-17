@@ -3,14 +3,16 @@
 #pragma once
 #include "ntshengn_script_manager.h"
 
-#include "camerascript.h"
-#include "objectscript.h"
+#include "../camerascript.h"
+#include "../objectscript.h"
+#include "../rotatingcollidablescript.h"
 
 NtshEngn::Scriptable NtshEngn::ScriptManager::createScriptable(const std::string& scriptName) {
 	Scriptable scriptable;
 
 	if (scriptName == "CameraScript") { scriptable.script = createScript<CameraScript>(); }
 	else if (scriptName == "ObjectScript") { scriptable.script = createScript<ObjectScript>(); }
+	else if (scriptName == "rotatingcollidablescript") { scriptable.script = createScript<rotatingcollidablescript>(); }
 
 	return scriptable;
 }
